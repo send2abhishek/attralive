@@ -1,0 +1,10 @@
+query getCommentsForAnswer($quesId:String!){
+  Answers(quesId:$quesId){
+    comments{
+    comment
+     replies{
+            replyMsg
+          }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+mutation RateBlog
+(
+$id : ID!,
+$userId : ID!,
+$rating : Int!
+)
+{
+addRating
+(
+blogId:$id
+userId:$userId
+rating:$rating
+)
+{
+  title
+}
+}

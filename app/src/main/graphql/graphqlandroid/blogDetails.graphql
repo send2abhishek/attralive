@@ -1,0 +1,24 @@
+query BlogDetails($id:ID!)
+  {
+  Blog(id:$id){
+    id
+    user
+
+    title
+    likes_count
+    unlikes_count
+    description
+    comments{
+      comment
+      user{
+        name
+        empId
+      }
+      replies{
+        replyMsg
+
+      }
+    }
+  }
+
+}

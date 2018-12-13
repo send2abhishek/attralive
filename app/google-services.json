@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "832495814618",
+    "firebase_url": "https://attralive-be5bc.firebaseio.com",
+    "project_id": "attralive-be5bc",
+    "storage_bucket": "attralive-be5bc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:832495814618:android:f8e2384887215a83",
+        "android_client_info": {
+          "package_name": "com.attra.attralive"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "832495814618-b1rjogja7igumlv4pvptua9m8jpbub2t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjkeviU4ni4em0O6u2K4Rs0CaCa_gSVc4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

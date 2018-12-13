@@ -1,0 +1,10 @@
+mutation UpdateBlog(
+$blogid:ID!
+$description:String!)
+{
+  updateBlog(BlogId:$blogid,
+  description:$description)
+  {
+    description
+  }
+}

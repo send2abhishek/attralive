@@ -1,0 +1,12 @@
+query ForumQuestionList{
+  Questions{
+      id
+    user{
+      empId
+      name
+    }
+      topic
+     watch_count
+timestamp
+    }
+}

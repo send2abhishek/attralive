@@ -1,0 +1,11 @@
+mutation AddCommentsForAnswers(
+$userId:String!,
+$answerId:String!,
+$comment:String!
+)
+{
+  addAnsComment(userId:$userId,answerId:$answerId
+  ,comment:$comment){
+    id
+  }
+}

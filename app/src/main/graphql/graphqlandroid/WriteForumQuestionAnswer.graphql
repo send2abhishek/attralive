@@ -1,0 +1,15 @@
+mutation WriteForumQuestionAnswer
+(
+$questionVal: String!,
+$userVal: String,
+$answerVal: String
+ )
+ {
+  addAnswer(
+    question:$questionVal,
+    user:$userVal,
+    answer:$answerVal
+  ){
+    id
+  }
+}

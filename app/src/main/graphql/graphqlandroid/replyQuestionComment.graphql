@@ -1,0 +1,15 @@
+query replyQuestionComment($id:ID!)
+{
+  Question(id:$id){
+    comments{
+      replies{
+        user{
+          name
+        }
+        replyMsg
+        timestamp
+
+      }
+    }
+  }
+}

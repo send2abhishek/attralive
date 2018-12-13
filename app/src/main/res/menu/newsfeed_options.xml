@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/editFeed"
+        android:title="@string/edit" />
+
+    <item
+        android:id="@+id/deleteFeed"
+        android:title="@string/delete" />
+
+    <item
+        android:id="@+id/reportFeed"
+        android:title="@string/report" />
+
+    <item
+        android:id="@+id/disableFeed"
+        android:title="@string/disable" />
+
+
+</menu>

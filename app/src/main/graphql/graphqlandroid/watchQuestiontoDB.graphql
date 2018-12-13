@@ -1,0 +1,12 @@
+mutation AddWatch(
+$questionId:String!,
+$user:String!
+)
+{
+  addWatch(
+  questionId:$questionId,
+  user:$user)
+  {
+   topic
+  }
+}

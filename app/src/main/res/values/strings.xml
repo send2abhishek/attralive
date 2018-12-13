@@ -1,0 +1,80 @@
+<resources>
+    <string name="app_name">AttraLive</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Awnish Kumar</string>
+    <string name="nav_header_subtitle">awnish.kumar</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <!--Navigation Menu String-->
+    <string name="action_logout">Logout</string>
+    <string name="action_termsAndCondition">Terms and Conditions</string>
+    <string name="action_facilities">Facilities</string>
+    <string name="action_holidayCalender">Holiday Calender</string>
+    <string name="landD">L and D</string>
+    <string name="commingSoon">Coming Soon</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_event">Event</string>
+    <string name="title_blog">Blog</string>
+    <string name="title_forum">Forum</string>
+
+    <!--Dashboard Screen String-->
+    <string name="likes">Likes</string>
+    <string name="comments">Comments</string>
+    <string name="like">Like</string>
+    <string name="comment">Comment</string>
+    <string name="post_your_thought">Post your thoughts</string>
+    <string name="report">Report</string>
+    <string name="disable">Disable</string>
+    <string name="et_title">Title</string>
+    <string name="et_keywords">Key Words</string>
+    <string name="et_description">Description</string>
+    <string name="btn_saveForLater">Save For Later</string>
+    <string name="btn_sendForReview">Send For Review</string>
+    <string name="search_title">Search Here</string>
+
+    <string name="btn_askQuestion">ASK QUESTION</string>
+    <string name="btn_ask">ASK</string>
+    <string name="forumTerms1">* Be on-topic</string>
+    <string name="forumTerms2">* Be Specific</string>
+    <string name="forumTerms3">* Make it relevant to others</string>
+    <string name="forumTerms4">* Keep on open mind</string>
+
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="block">Block</string>
+
+    <!--Notification String-->
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <string name="default_notification_channel_name" translatable="true">Weather</string>
+    <string name="msg_subscribed">Subscribed to weather topic</string>
+    <string name="msg_token_fmt" translatable="false">InstanceID Token: %s</string>
+    <string name="post">Post</string>
+    <string name="msg_subscribe_failed">Failed to subscribe to weather topic</string>
+    <string name="fcm_message">FCM Message</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="tv_my_tasks">My Tasks</string>
+    <string name="tv_message">Messages</string>
+    <string name="tv_events">Events</string>
+    <string name="approve">Approve</string>
+    <string name="blog_description">A blog is a discussion or informational website published on the World Wide Web
+        consisting of discrete,often informal diary-style text entries. Posts are typically displayed in reverse
+        chronological order,so that the most  recent post appears first,at the top of the web page
+        A blog is a discussion or informational website published on the World Wide Web
+        consisting of discrete,often informal diary-style text entries. Posts are typically displayed in reverse</string>
+    <string name="title_activity_create_blog">Create Blog</string>
+    <string name="large_text">
+    "Material is the metaphor.\n\n"
+
+    "A material metaphor is the unifying theory of a rationalized space and a system of motion."
+    "The material is grounded in tactile reality, inspired by the study of paper and ink, yet "
+    "technologically advanced and open to imagination and magic.\n"
+    </string>
+
+
+</resources>

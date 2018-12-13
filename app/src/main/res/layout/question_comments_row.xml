@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
+    <android.support.design.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/mtrl_card_spacing"
+        android:layout_marginTop="@dimen/mtrl_card_spacing"
+        android:layout_marginRight="@dimen/mtrl_card_spacing"
+        android:elevation="10dp">
+        <android.support.v7.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+           <TextView
+               android:layout_width="0dp"
+               android:layout_weight="5"
+               android:layout_height="wrap_content"
+               android:id="@+id/tv_questioncomments"
+               android:text="Provide some more detailed information"
+               android:textSize="16sp"
+               android:paddingTop="8dp"
+               android:paddingLeft="8dp"
+               android:paddingBottom="3dp"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_usercreatedcomments"
+                android:text="Gayathry,Bangalore"
+                android:paddingRight="8dp"
+                android:textSize="13sp"
+                android:paddingTop="8dp"
+                android:paddingLeft="8dp"
+                android:paddingBottom="3dp"
+                android:textColor="#1EBBEE"/>
+        </LinearLayout>
+            <LinearLayout
+                android:layout_below="@+id/linearlayout"
+                android:id="@+id/linearlayout3"
+                android:layout_marginLeft="70dp"
+                android:paddingTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_feedback_black_24dp"
+                    android:onClick="replyComment"/>
+
+                <TextView
+                    android:id="@+id/tv_replay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:onClick="replyComment"
+                    android:text="reply"
+                    android:textSize="15sp" />
+               <!-- <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_noofreplay"
+                    android:textSize="15sp"
+                    android:text="9 reply"
+                    android:layout_marginLeft="50dp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="5dp"/>-->
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rv_questionCommentReply"
+                tools:visibility="visible"
+                >
+
+            </android.support.v7.widget.RecyclerView>
+        </android.support.v7.widget.LinearLayoutCompat>
+    </android.support.design.card.MaterialCardView>
+
+</LinearLayout>

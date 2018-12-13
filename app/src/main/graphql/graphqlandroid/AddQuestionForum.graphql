@@ -1,0 +1,16 @@
+mutation AddQuestionForum(
+$topicVal: String!,
+$userVal: String!,
+$keywordsVal: [String]!,
+$descriptionVal: String!
+){
+  addQuestion(
+    user: $userVal,
+    topic: $topicVal,
+    keywords: $keywordsVal,
+    description: $descriptionVal
+  )
+  {
+  id
+  }
+  }

@@ -1,0 +1,11 @@
+mutation LikeDislikeQuestion(
+$questionId:ID!,
+$userId:String!,
+$like_dislike:String!
+){
+  like_dislike_question(questionId:$questionId,
+  userId:$userId,like_dislike:$like_dislike)
+  {
+    id
+  }
+}

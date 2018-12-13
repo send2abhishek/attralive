@@ -1,0 +1,8 @@
+query SearchQuestionResult(
+$question:String!)
+{
+  searchQuestion(question:$question)
+  {
+    topic
+  }
+}

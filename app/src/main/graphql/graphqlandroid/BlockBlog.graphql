@@ -1,0 +1,11 @@
+mutation BlockBlog(
+  $id : ID!
+)
+{
+  blockStatus(
+    blogId:$id
+  )
+  {
+    user
+  }
+}
