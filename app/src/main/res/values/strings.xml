@@ -36,6 +36,34 @@
     <string name="btn_sendForReview">Send For Review</string>
     <string name="search_title">Search Here</string>
 
+    <!--OTP validation screen-->
+    <string name="enter_the_otp">Please enter the 4-digit OTP</string>
+    <string name="have_not_received_OTP">have_not_received OTP</string>
+    <string name="resend_otp">Resend OTP</string>
+    <string name="validate">VALIDATE</string>
+
+    <!--User Details Update screen-->
+    <string name="please_update_your_details">Please enter the details below</string>
+    <string name="user_name">Enter your Name</string>
+    <string name="gender">Gender</string>
+    <string name="designation">Designation</string>
+    <string name="work_location">Work Location</string>
+    <string name="dob">D.O.B.</string>
+    <string name="bu">B.U.</string>
+    <string name="mobile_no">Mobile no.</string>
+    <string name="radio_male">Male</string>
+    <string name="radio_female">Female</string>
+    <string name="continueBTn">Continue</string>
+
+    <!--Forgot password Screen-->
+    <string name="forgot_password">Forgot Password</string>
+    <string name="we_just_need">We just need your registered Email Id to send your password reset instructions</string>
+    <string name="registered_email_id">Registered Email Id</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="back_to_login_page">Back to Login Page</string>
+
+
+
     <string name="btn_askQuestion">ASK QUESTION</string>
     <string name="btn_ask">ASK</string>
     <string name="forumTerms1">* Be on-topic</string>

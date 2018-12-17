@@ -24,7 +24,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -189,13 +188,18 @@ public class DashboardActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_holidayCalender) {
 
+
         } else if (id == R.id.nav_facilities) {
+            Intent intent = new Intent(getApplicationContext(),OtpValidationActivity.class);
+            startActivity(intent);
 
         }  else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_termsAndCondition) {
 
         }else if (id == R.id.nav_logout) {
+            Intent intent = new Intent(getApplicationContext(),ForgotPasswordActivity.class);
+            startActivity(intent);
 
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -6,4 +6,7 @@
 
     <color name="headerBackground">#eff1f2</color>
     <color name="forumtextheadingcolor">#318CE7</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
 </resources>
