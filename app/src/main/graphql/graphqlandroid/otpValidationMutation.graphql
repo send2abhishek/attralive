@@ -1,0 +1,12 @@
+mutation OtpValidation(
+$emailId:String!,
+$otp:int!
+){
+  otpValidation_M
+  (email:$emailId,
+  OTP:$otp)
+  {
+    otpstatus,
+    message
+  }
+}

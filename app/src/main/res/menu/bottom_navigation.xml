@@ -1,24 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/navigation_home"
         android:icon="@drawable/ic_home_black_24dp"
+        app:labelVisibilityMode="labeled"
         android:title="@string/title_home" />
 
     <item
         android:id="@+id/navigation_event"
         android:icon="@drawable/ic_date_range_black_24dp"
+        app:labelVisibilityMode="labeled"
         android:title="@string/title_event" />
 
     <item
         android:id="@+id/navigation_blog"
         android:icon="@drawable/ic_dashboard_black_24dp"
+        app:labelVisibilityMode="labeled"
         android:title="@string/title_blog" />
 
     <item
         android:id="@+id/navigation_forum"
         android:icon="@drawable/ic_question_answer_black_24dp"
+        app:labelVisibilityMode="labeled"
         android:title="@string/title_forum" />
 
 </menu>

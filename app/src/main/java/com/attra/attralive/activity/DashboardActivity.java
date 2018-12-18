@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.bottomnavigation.LabelVisibilityMode;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -31,6 +32,7 @@ import com.attra.attralive.R;
 import com.attra.attralive.fragment.BlogListFragment;
 import com.attra.attralive.fragment.ForumFragment;
 import com.attra.attralive.fragment.HomeFragment;
+import com.attra.attralive.fragment.NotificationListFragment;
 import com.attra.attralive.model.NewsFeed;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -44,8 +46,7 @@ public class DashboardActivity extends AppCompatActivity
     Fragment fragment = null;
     ArrayList<NewsFeed> notificationArrayList;
     LinearLayoutManager linearLayoutManager;
-    private int hot_number = 0;
-    private TextView ui_hot = null;
+
     private static final String TAG = "DashboardActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +63,7 @@ public class DashboardActivity extends AppCompatActivity
         linearLayoutManager=new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-        BottomNavigationView bottomNavigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        navigation.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_LABELED);
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -194,6 +193,8 @@ public class DashboardActivity extends AppCompatActivity
             startActivity(intent);
 
         }  else if (id == R.id.nav_settings) {
+            fragment = new NotificationListFragment();
+            loadFragment(fragment);
 
         } else if (id == R.id.nav_termsAndCondition) {
 
@@ -246,70 +247,10 @@ public class DashboardActivity extends AppCompatActivity
     @Override public boolean onCreateOptionsMenu(final Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.dashboard_toolbar, menu);
-        final View menu_hotlist = menu.findItem(R.id.menu_hotlist).getActionView();
-//        ui_hot = (TextView) menu_hotlist.findViewById(R.id.hotlist_hot);
-        updateHotCount(hot_number);
-        new MyMenuItemStuffListener(menu_hotlist, "Show hot message") {
-            @Override
-            public void onClick(View v) {
-                /*onHotlistSelected();*/
-            }
-        };
+        final View menu_notification_list = menu.findItem(R.id.menu_notification).getActionView();
+
+
         return super.onCreateOptionsMenu(menu);
     }
-
-    // call the updating code on the main thread,
-// so we can call this asynchronously
-    public void updateHotCount(final int new_hot_number) {
-        hot_number = new_hot_number;
-        if (ui_hot == null) return;
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (new_hot_number == 0)
-                    ui_hot.setVisibility(View.INVISIBLE);
-                else {
-                    ui_hot.setVisibility(View.VISIBLE);
-                    ui_hot.setText(Integer.toString(new_hot_number));
-                }
-            }
-        });
-    }
-
-    static abstract class MyMenuItemStuffListener implements View.OnClickListener, View.OnLongClickListener {
-        private String hint;
-        private View view;
-
-        MyMenuItemStuffListener(View view, String hint) {
-            this.view = view;
-            this.hint = hint;
-//            view.setOnClickListener(this);
-  //          view.setOnLongClickListener(this);
-        }
-
-        @Override abstract public void onClick(View v);
-
-        @Override public boolean onLongClick(View v) {
-            final int[] screenPos = new int[2];
-            final Rect displayFrame = new Rect();
-            view.getLocationOnScreen(screenPos);
-            view.getWindowVisibleDisplayFrame(displayFrame);
-            final Context context = view.getContext();
-            final int width = view.getWidth();
-            final int height = view.getHeight();
-            final int midy = screenPos[1] + height / 2;
-            final int screenWidth = context.getResources().getDisplayMetrics().widthPixels;
-            Toast cheatSheet = Toast.makeText(context, hint, Toast.LENGTH_SHORT);
-            if (midy < displayFrame.height()) {
-                cheatSheet.setGravity(Gravity.TOP | Gravity.RIGHT,
-                        screenWidth - screenPos[0] - width / 2, height);
-            } else {
-                cheatSheet.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, height);
-            }
-            cheatSheet.show();
-            return true;
-        }
-    }
-
 
 }

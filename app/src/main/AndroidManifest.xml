@@ -58,7 +58,6 @@
         <activity android:name=".activity.AddAnswerComments" />
         <activity android:name=".activity.QuestionComments" />
         <activity android:name=".activity.NewsFeedPostActivity" />
-        <activity android:name=".activity.OtpValidation" />
         <activity android:name=".activity.OtpValidationActivity" />
         <activity android:name=".activity.UserDetailsActivity" />
         <activity android:name=".activity.ForgotPasswordActivity"></activity>

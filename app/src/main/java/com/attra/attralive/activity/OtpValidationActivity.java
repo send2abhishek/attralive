@@ -18,12 +18,14 @@ import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.attra.attralive.R;
+import com.attra.attralive.util.NetworkUtil;
 
 public class OtpValidationActivity extends AppCompatActivity {
     TextView validateOTP;
     EditText motpNumber1, motpNumber2, motpNumber3, motpNumber4;
     ProgressDialog prgDialog;
     TextView resendOtp;
+    NetworkUtil networkUtil= null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,7 @@ public class OtpValidationActivity extends AppCompatActivity {
         motpNumber3.addTextChangedListener(CardNum3EntryWatcher);
         motpNumber4.addTextChangedListener(CardNum4EntryWatcher);
 
+        networkUtil = new NetworkUtil();
         validateOTP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
