@@ -1,0 +1,12 @@
+mutation
+  userRegistration(
+  $name:String!,
+  $email:String!,
+    $password:String!)
+    {
+    addUser_M(name:$name,email:$email,password:$password)
+  {
+    status
+    message
+  }
+}

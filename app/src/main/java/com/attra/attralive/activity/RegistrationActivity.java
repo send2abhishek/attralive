@@ -1,21 +1,37 @@
 package com.attra.attralive.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.apollographql.apollo.ApolloCall;
+import com.apollographql.apollo.api.Response;
+import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
+import com.attra.attralive.Service.MyAppolloClient;
+
+import javax.annotation.Nonnull;
+
+import graphqlandroid.UserRegistration;
 
 public class RegistrationActivity extends AppCompatActivity {
 EditText fullname,email,password,confirmpassword;
+CardView regbutton;
+LinearLayout linearLayout1,linearLayout2;
 TextInputLayout fullnametil,emailtil,passwodtil,confirmpasswordtil;
 TextView passworderror,emailerror,fullnameerror,confrmpswderror,attraEmail;
+     String status,message;
     String numRegex   = ".*[0-9].*";
     String alphaRegex = ".*[a-zA-Z].*";
     @SuppressLint("ResourceAsColor")
@@ -25,6 +41,8 @@ TextView passworderror,emailerror,fullnameerror,confrmpswderror,attraEmail;
         setContentView(R.layout.activity_registration);
         fullname=findViewById(R.id.et_fullname);
         email=findViewById(R.id.et_email);
+        linearLayout1=findViewById(R.id.Ll_layout1);
+        linearLayout2=findViewById(R.id.Ll_layout2);
         password=findViewById(R.id.et_regpassword);
         confirmpassword=findViewById(R.id.et_confirmpassword);
         fullnametil=findViewById(R.id.til_regusername);
@@ -36,8 +54,10 @@ TextView passworderror,emailerror,fullnameerror,confrmpswderror,attraEmail;
         confrmpswderror=findViewById(R.id.tv_confrmpswderror);
         attraEmail=findViewById(R.id.tv_attraemail);
         //fullname.requestFocus();
+        regbutton=findViewById(R.id.crd_regbutton);
         fullnameerror.setTextColor(getResources().getColor(R.color.text_coloring_login));
-
+linearLayout2.setVisibility(View.VISIBLE);
+linearLayout2.setVisibility(View.VISIBLE);
        /* password.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @SuppressLint("ResourceAsColor")
             @Override
@@ -202,6 +222,45 @@ confirmpassword.addTextChangedListener(new TextWatcher() {
             confrmpswderror.setTextColor(getResources().getColor(R.color.redcolor));
             confrmpswderror.setText("Password not matching");
         }
+    }
+});
+regbutton.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        MyAppolloClient.getMyAppolloClient().mutate(UserRegistration.builder().name(fullname.getText().toString()).
+                email((email.getText().toString()+attraEmail.getText().toString())).password(password.getText().toString()).build()).
+                enqueue(new ApolloCall.Callback<UserRegistration.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<UserRegistration.Data> response) {
+
+                        status = response.data().addUser_M().status().toString();
+                        message = response.data().addUser_M().message().toString();
+                        RegistrationActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (status.equals("Success")) {
+                                    linearLayout1.setVisibility(View.GONE);
+                                    linearLayout2.setVisibility(View.GONE);
+                                    Toast.makeText(RegistrationActivity.this, "otp sent to your registered emailid", Toast.LENGTH_LONG).show();
+                                }
+                                else if ((status.equals("Failure"))&&(message.equals("User already exists"))) {
+                                    linearLayout1.setVisibility(View.GONE);
+                                    linearLayout2.setVisibility(View.GONE);
+                                    Toast.makeText(RegistrationActivity.this, "Already registered", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
+                        Intent intent = new Intent(RegistrationActivity.this, OtpValidationActivity.class);
+                        startActivity(intent);
+
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+
+                    }
+                });
+
     }
 });
     }

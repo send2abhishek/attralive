@@ -39,7 +39,7 @@
         </service>
 
         <activity
-            android:name=".activity.LoginActivity"
+            android:name=".activity.RegistrationActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -50,7 +50,7 @@
         </activity>
         <activity android:name=".activity.CreateBlogActivity" />
         <activity android:name=".activity.BlogDetails" />
-        <activity android:name=".activity.RegistrationActivity" />
+        <activity android:name=".activity.LoginActivity" />
         <activity android:name=".activity.DashboardActivity" />
         <activity android:name=".activity.ReplayActivity" />
         <activity android:name=".activity.UpdateBlogActivity" />

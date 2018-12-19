@@ -12,7 +12,7 @@ query BlogDetails($id:ID!)
       comment
       user{
         name
-        empId
+
       }
       replies{
         replyMsg

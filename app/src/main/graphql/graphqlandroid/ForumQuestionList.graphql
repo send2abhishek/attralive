@@ -2,7 +2,7 @@ query ForumQuestionList{
   Questions{
       id
     user{
-      empId
+
       name
     }
       topic
