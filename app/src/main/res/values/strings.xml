@@ -39,7 +39,7 @@
 
     <!--OTP validation screen-->
     <string name="enter_the_otp">Please enter the 4-digit OTP</string>
-    <string name="have_not_received_OTP">Haven't received OTP</string>
+    <string name="have_not_received_OTP">Haven\'t received OTP</string>
     <string name="resend_otp">Resend OTP</string>
     <string name="validate">VALIDATE</string>
 
