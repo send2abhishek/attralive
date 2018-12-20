@@ -8,17 +8,17 @@
 
     <item
         android:id="@+id/navigation_event"
-        android:icon="@drawable/ic_date_range_black_24dp"
+        android:icon="@drawable/iconeventfilled"
         android:title="@string/title_event" />
 
     <item
         android:id="@+id/navigation_blog"
-        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:icon="@drawable/iconblogfilled"
         android:title="@string/title_blog" />
 
     <item
         android:id="@+id/navigation_forum"
-        android:icon="@drawable/ic_question_answer_black_24dp"
+        android:icon="@drawable/iconforumline"
         android:title="@string/title_forum" />
 
 </menu>
