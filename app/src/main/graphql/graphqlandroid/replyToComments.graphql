@@ -3,7 +3,7 @@ mutation ReplayToComments
 $replyMsg:String!
 )
 {
-  addReply(caId:"5bf28587fb9b000d00f04c1f",
+  addReply(commentId:"5bf28587fb9b000d00f04c1f",
     UserId:"5bf27fe2bbfa3185af136dcc",
   replyMsg:$replyMsg)
   {

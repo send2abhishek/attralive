@@ -6,6 +6,7 @@
 
     <color name="headerBackground">#eff1f2</color>
     <color name="forumtextheadingcolor">#318CE7</color>
+
     <color name="splashScreenTextColor">#4c5a52</color>
 
 
@@ -26,4 +27,10 @@
     <color name="lightBlue">#32b0e4</color>
     <color name="shadowcolor">#3d000000</color>
 
+
+    <color name="linecoloring">#d8d8d8</color>
+    <color name="text_coloring_login">#b2dfdb</color>
+    <color name="forgotpsw">#32b0e4</color>
+    <color name="redcolor">#ff0000</color>
+    <color name="black">#000000</color>
 </resources>
