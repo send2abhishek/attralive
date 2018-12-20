@@ -1,13 +1,16 @@
 package com.attra.attralive.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
@@ -31,7 +34,10 @@ CardView regbutton;
 LinearLayout linearLayout1,linearLayout2;
 TextInputLayout fullnametil,emailtil,passwodtil,confirmpasswordtil;
 TextView passworderror,emailerror,fullnameerror,confrmpswderror,attraEmail;
-     String status,message;
+    public static String MY_PREFS_NAME = "MyPrefsFile";
+
+    String emailId;
+    String status,message;
     String numRegex   = ".*[0-9].*";
     String alphaRegex = ".*[a-zA-Z].*";
     @SuppressLint("ResourceAsColor")
@@ -58,6 +64,11 @@ TextView passworderror,emailerror,fullnameerror,confrmpswderror,attraEmail;
         fullnameerror.setTextColor(getResources().getColor(R.color.text_coloring_login));
 linearLayout2.setVisibility(View.VISIBLE);
 linearLayout2.setVisibility(View.VISIBLE);
+
+
+     //   SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+        // 0 - for private mode`
+
        /* password.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @SuppressLint("ResourceAsColor")
             @Override
@@ -227,6 +238,16 @@ confirmpassword.addTextChangedListener(new TextWatcher() {
 regbutton.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View v) {
+         emailId= email.getText().toString()+attraEmail.getText().toString();
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MY_PREFS_NAME", 0);
+
+
+
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("email", emailId);
+        Log.i("email id.....",emailId);
+        // Log.i("Email id===========", pref.getString("email", null));
+        editor.apply();
         MyAppolloClient.getMyAppolloClient().mutate(UserRegistration.builder().name(fullname.getText().toString()).
                 email((email.getText().toString()+attraEmail.getText().toString())).password(password.getText().toString()).build()).
                 enqueue(new ApolloCall.Callback<UserRegistration.Data>() {
@@ -242,16 +263,31 @@ regbutton.setOnClickListener(new View.OnClickListener() {
                                     linearLayout1.setVisibility(View.GONE);
                                     linearLayout2.setVisibility(View.GONE);
                                     Toast.makeText(RegistrationActivity.this, "otp sent to your registered emailid", Toast.LENGTH_LONG).show();
+                                    try {
+                                        Thread.sleep(5000);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                    Intent intent = new Intent(RegistrationActivity.this, OtpValidationActivity.class);
+                                    intent.putExtra("emailId",emailId );
+                                    startActivity(intent);
                                 }
                                 else if ((status.equals("Failure"))&&(message.equals("User already exists"))) {
                                     linearLayout1.setVisibility(View.GONE);
                                     linearLayout2.setVisibility(View.GONE);
-                                    Toast.makeText(RegistrationActivity.this, "Already registered", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(RegistrationActivity.this, "Already registered. Please Login", Toast.LENGTH_LONG).show();
+                                    try {
+                                        Thread.sleep(5000);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                    Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
+                                    intent.putExtra("emailId",emailId );
+                                    startActivity(intent);
                                 }
                             }
                         });
-                        Intent intent = new Intent(RegistrationActivity.this, OtpValidationActivity.class);
-                        startActivity(intent);
+
 
                     }
 
