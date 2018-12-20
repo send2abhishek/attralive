@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+
         android:background="@drawable/background_gradient">
 
     <LinearLayout
@@ -20,14 +21,15 @@
         android:layout_marginBottom="175dp"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:background="@color/white"
+        android:background="@drawable/layout_bg"
+
         android:orientation="vertical">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="5dp"
-            android:paddingRight="5dp"
+            android:paddingTop="10dp"
+            android:paddingRight="10dp"
             android:src="@drawable/ic_close_black_24dp"
             android:layout_gravity="right"
             />
@@ -98,6 +100,7 @@
                 android:lineSpacingExtra="11sp"
                 android:textColor="#32b0e4"
                 android:textSize="13sp"
+                android:textStyle="italic"
                 android:text="@string/have_not_received_OTP" />
 
             <android.support.v7.widget.AppCompatTextView
@@ -108,6 +111,7 @@
                 android:textColor="#32b0e4"
                 android:letterSpacing="0.01"
                 android:lineSpacingExtra="3sp"
+                android:textStyle="bold"
                 android:gravity="center_horizontal"
                 android:layout_marginLeft="30dp"
                 android:text="@string/resend_otp"/>
@@ -125,8 +129,9 @@
             android:letterSpacing="0.01"
             android:lineSpacingExtra="3sp"
             android:text="@string/validate"
+            android:textStyle="bold"
             android:textColor="#1eaa4b"
-            android:textSize="14sp" />
+            android:textSize="18sp" />
 
 
     </LinearLayout>

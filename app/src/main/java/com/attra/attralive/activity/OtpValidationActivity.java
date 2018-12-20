@@ -2,10 +2,12 @@ package com.attra.attralive.activity;
 
 import android.app.ActionBar;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -47,6 +50,8 @@ public class OtpValidationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_otp_validation);
         //android.support.v7.app.ActionBar actionBar = this.getSupportActionBar();
+        Window window = this.getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(this,R.color.white));
 
 
         Intent intent=this.getIntent();

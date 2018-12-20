@@ -12,7 +12,7 @@
     <string name="action_termsAndCondition">Terms and Conditions</string>
     <string name="action_facilities">Facilities</string>
     <string name="action_holidayCalender">Holiday Calender</string>
-    <string name="landD">L and D</string>
+    <string name="landD">L&amp;D</string>
     <string name="commingSoon">Coming Soon</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
@@ -23,6 +23,7 @@
 
     <!--Dashboard Screen String-->
     <string name="likes">Likes</string>
+    <string name="presents">Presents</string>
     <string name="comments">Comments</string>
     <string name="like">Like</string>
     <string name="comment">Comment</string>
@@ -38,7 +39,7 @@
 
     <!--OTP validation screen-->
     <string name="enter_the_otp">Please enter the 4-digit OTP</string>
-    <string name="have_not_received_OTP">have_not_received OTP</string>
+    <string name="have_not_received_OTP">Haven't received OTP</string>
     <string name="resend_otp">Resend OTP</string>
     <string name="validate">VALIDATE</string>
 
@@ -80,7 +81,7 @@
     <string name="default_notification_channel_name" translatable="true">Weather</string>
     <string name="msg_subscribed">Subscribed to weather topic</string>
     <string name="msg_token_fmt" translatable="false">InstanceID Token: %s</string>
-    <string name="post">Post</string>
+    <string name="post">POST</string>
     <string name="msg_subscribe_failed">Failed to subscribe to weather topic</string>
     <string name="fcm_message">FCM Message</string>
 

@@ -6,10 +6,31 @@
 
     <color name="headerBackground">#eff1f2</color>
     <color name="forumtextheadingcolor">#318CE7</color>
+
+    <color name="splashScreenTextColor">#4c5a52</color>
+
+
+    <!--For flash screen-->
+    <color name="presents">#454545</color>
+    <!--For flash screen-->
+
+    <color name="blue">#FF0000FF</color>
+    <color name="newsFeedTextColor">#999</color>
+    <color name="newsFeedDesc">#000</color>
+    <color name="postyourthoughts">#a0aaa0</color>
+    <color name="linecolor">#949c97</color>
+    <color name="dashboardheader">#4c5a52</color>
+    <color name="white">#ffffff</color>
+    <color name="time">#a0aaa0</color>
+    <color name="name">#111211</color>
+    <color name="postThoughtsLineColor">#f1f5f4</color>
+    <color name="lightBlue">#32b0e4</color>
+    <color name="shadowcolor">#3d000000</color>
+
+
     <color name="linecoloring">#d8d8d8</color>
     <color name="text_coloring_login">#b2dfdb</color>
     <color name="forgotpsw">#32b0e4</color>
     <color name="redcolor">#ff0000</color>
-    <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
 </resources>

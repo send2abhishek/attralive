@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_marginTop="10dp"
-    android:layout_marginBottom="10dp">
+    android:layout_marginTop="8dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="16dp">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,6 +31,7 @@
             android:orientation="vertical">
             <TextView
                 android:id="@+id/tv_username"
+                android:textColor="@color/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=""/>
@@ -42,7 +47,7 @@
             android:layout_weight="2"
             android:id="@+id/tv_time"
             android:text=""
-            android:textColor="#999"
+            android:textColor="@color/time"
             android:layout_gravity="right"
             android:gravity="right"
             android:textSize="14sp"
@@ -66,21 +71,27 @@
             android:textAppearance="?android:textAppearanceLarge" />-->
 
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tv_newsfeedDesc"
         android:text=""
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="14dp"
         android:textSize="16sp"
-        android:textColor="#000"
-        android:layout_marginLeft="8dp"/>
+        android:textColor="@color/name"
+        android:layout_marginLeft="20dp"/>
 
     <ImageView
         android:id="@+id/img_descImage"
+        android:layout_marginTop="13dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -89,76 +100,90 @@
         android:gravity="right"
         android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tv_noOfLikes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/likes"
-                />
-          <TextView
-              android:id="@+id/tv_noOfComments"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_marginLeft="8dp" />
-          <TextView
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="@string/comments" />
+        <TextView
+            android:id="@+id/tv_noOfLikes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/linecolor"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/likes"
+            android:textColor="@color/linecolor"
+            />
+        <ImageView
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            android:src="@drawable/solid_circle_dot"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginTop="7dp"/>
+        <TextView
+            android:id="@+id/tv_noOfComments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:textColor="@color/linecolor"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/comments"
+            android:textColor="@color/linecolor"
+            android:layout_marginRight="10dp"/>
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:minHeight="42dp">
 
-    <LinearLayout
-        android:id="@+id/linearLayout1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="12dp"
-        >
-
-        <ImageView
-            android:id="@+id/img_like"
+        <LinearLayout
+            android:id="@+id/linearLayout1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_thumb_up_grey_24dp" />
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="12dp"
+            >
 
-        <TextView
-            android:id="@+id/tv_like"
+            <ImageView
+                android:id="@+id/img_like"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_thumb_up_grey_24dp" />
+
+            <TextView
+                android:id="@+id/tv_like"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:text="@string/like"
+                android:textSize="13sp" />
+        </LinearLayout>
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:text="@string/like"
-            android:textSize="13sp" />
+            android:layout_alignParentEnd="true"
+            android:layout_marginLeft="8dp">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_comment_black_24dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/comment"
+                android:id="@+id/tv_comment"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/newsFeedTextColor"
+                android:textSize="13sp"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginLeft="8dp">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_comment_black_24dp"
-            />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/comment"
-            android:id="@+id/tv_comment"
-            android:layout_marginLeft="10dp"
-            android:textColor="#999"
-            android:textSize="13sp"
-            android:layout_gravity="center"/>
-
     </LinearLayout>
-    </LinearLayout>
-</LinearLayout>
+</android.support.v7.widget.CardView>
