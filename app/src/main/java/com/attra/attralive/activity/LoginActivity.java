@@ -119,12 +119,12 @@ String status,message;
        else {
             passwordtil.setError(null);
 
-            MyAppolloClient.getMyAppolloClient().query(UserLogin.builder().username(username.getText().toString()).
+            MyAppolloClient.getMyAppolloClient().query(UserLogin.builder().username(username.getText().toString()+attraemail.getText().toString().trim()).
                     password(password.getText().toString()).build()).enqueue(new ApolloCall.Callback<UserLogin.Data>() {
                 @Override
                 public void onResponse(@Nonnull Response<UserLogin.Data> response) {
                     status = response.data().userLoginAuth_Q().status().toString();
-                    message = response.data().userLoginAuth_Q().message().toString();
+                    message = response.data().userLoginAuth_Q().message();
                     LoginActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
