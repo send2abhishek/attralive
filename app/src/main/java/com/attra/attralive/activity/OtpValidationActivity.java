@@ -109,6 +109,7 @@ public class OtpValidationActivity extends AppCompatActivity {
 
                     }else{
                         int opt = Integer.parseInt(otpNumber);
+
                         MyAppolloClient.getMyAppolloClient().mutate(
                                 OtpValidation.builder().email(emailId)
                                         .otp(opt)
@@ -116,22 +117,24 @@ public class OtpValidationActivity extends AppCompatActivity {
                                 new ApolloCall.Callback<OtpValidation.Data>() {
                                     @Override
                                     public void onResponse(@Nonnull Response<OtpValidation.Data> response) {
-                                        String message= response.data().otpValidation_M().otpstatus();
-                                        final String otpStatus = response.data().otpValidation_M().otpstatus();
-                                        Log.i("res_message",message);
-                                        OtpValidationActivity.this.runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                               // Toast.makeText(OtpValidationActivity.this,message, Toast.LENGTH_SHORT).show();
+                                        if(response!=null) {
+                                            String message = response.data().otpValidation_M().otpstatus();
+                                            final String otpStatus = response.data().otpValidation_M().otpstatus();
+                                            Log.i("res_message", message);
+                                            OtpValidationActivity.this.runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    // Toast.makeText(OtpValidationActivity.this,message, Toast.LENGTH_SHORT).show();
 
-                                                if(otpStatus.equals("Success")){
-                                                    Intent intent1 = new Intent(getApplicationContext(),DashboardActivity.class);
-                                                    startActivity(intent1);
+                                                    if (otpStatus.equals("Success")) {
+                                                        Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
+                                                        startActivity(intent1);
+                                                    }
+                                                    Toast.makeText(OtpValidationActivity.this, otpStatus, Toast.LENGTH_SHORT).show();
+
                                                 }
-                                                Toast.makeText(OtpValidationActivity.this,otpStatus,Toast.LENGTH_SHORT).show();
-
-                                            }
-                                        });
+                                            });
+                                        }
                                     }
 
                                     @Override

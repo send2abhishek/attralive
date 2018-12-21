@@ -52,7 +52,8 @@
         </activity>
         <activity android:name=".activity.CreateBlogActivity" />
         <activity android:name=".activity.BlogDetails" />
-        <activity android:name=".activity.LoginActivity" />
+        <activity android:name=".activity.LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".activity.DashboardActivity"
             android:theme="@style/AppTheme.NoActionBar"
             />
@@ -63,7 +64,9 @@
         <activity android:name=".activity.DetailedForumScreen" />
         <activity android:name=".activity.AddAnswerComments" />
         <activity android:name=".activity.QuestionComments" />
-        <activity android:name=".activity.NewsFeedPostActivity" />
+        <activity android:name=".activity.NewsFeedPostActivity"
+            android:label="Post"
+            />
         <activity android:name=".activity.OtpValidationActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".activity.RegistrationActivity"
@@ -71,7 +74,8 @@
         android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".activity.UserDetailsActivity" />
-        <activity android:name=".activity.ForgotPasswordActivity"></activity>
+        <activity android:name=".activity.ForgotPasswordActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

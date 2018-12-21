@@ -1,0 +1,22 @@
+query userLogin(
+$username:String!,
+$password:String!
+)
+{
+userLoginAuth_Q(username:$username,password:$password,grant_type:"password")
+  {
+    accessToken
+    accessTokenExpiresAt
+    RefreshToken
+    refreshTokenExpiresAt
+    client_id
+    user
+    scope
+    statusCode
+    status
+    code
+    message
+    name
+    user_id
+  }
+}

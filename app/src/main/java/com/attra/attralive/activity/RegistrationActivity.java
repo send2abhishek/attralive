@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -35,7 +36,6 @@ LinearLayout linearLayout1,linearLayout2;
 TextInputLayout fullnametil,emailtil,passwodtil,confirmpasswordtil;
 TextView passworderror,emailerror,fullnameerror,confrmpswderror,attraEmail;
     public static String MY_PREFS_NAME = "MyPrefsFile";
-
     String emailId;
     String status,message;
     String numRegex   = ".*[0-9].*";
@@ -45,6 +45,7 @@ TextView passworderror,emailerror,fullnameerror,confrmpswderror,attraEmail;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+        this.getWindow().setStatusBarColor(Color.TRANSPARENT);
         fullname=findViewById(R.id.et_fullname);
         email=findViewById(R.id.et_email);
         linearLayout1=findViewById(R.id.Ll_layout1);
@@ -62,10 +63,8 @@ TextView passworderror,emailerror,fullnameerror,confrmpswderror,attraEmail;
         //fullname.requestFocus();
         regbutton=findViewById(R.id.crd_regbutton);
         fullnameerror.setTextColor(getResources().getColor(R.color.text_coloring_login));
-linearLayout2.setVisibility(View.VISIBLE);
-linearLayout2.setVisibility(View.VISIBLE);
-
-
+        linearLayout2.setVisibility(View.VISIBLE);
+        linearLayout2.setVisibility(View.VISIBLE);
      //   SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
         // 0 - for private mode`
 
@@ -123,9 +122,10 @@ linearLayout2.setVisibility(View.VISIBLE);
                     fullnameerror.setText("Enter valid username");
                     fullname.requestFocus();
                 }
-                else {
+                else
+                    {
                     fullnameerror.setText("");
-                }
+                    }
             }
 
             @Override
@@ -135,22 +135,25 @@ linearLayout2.setVisibility(View.VISIBLE);
         });
         email.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!(Patterns.EMAIL_ADDRESS.matcher((email.getText().toString()+attraEmail.getText().toString()).trim()).matches() ) ){
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+                if (!(Patterns.EMAIL_ADDRESS.matcher((email.getText().toString().trim()+
+                        attraEmail.getText().toString()).trim()).matches() ) )
+                    {
                     emailerror.setTextColor(getResources().getColor(R.color.redcolor));
                     emailerror.setText("Email should be valid emailID");
-
-                }
-                else {
+                    }
+                else
+                    {
                     emailerror.setText("");
-                }
+                    }
             }
-
             @Override
             public void afterTextChanged(Editable s) {
                 if((fullname.getText().toString().trim().isEmpty()))
@@ -173,7 +176,12 @@ linearLayout2.setVisibility(View.VISIBLE);
                         ( password.getText().toString().trim().matches(alphaRegex))) ) {
                     // passworderror.setText("");
                     passworderror.setTextColor(getResources().getColor(R.color.redcolor));
-                    passworderror.setText("Password should contain alphanumeric");
+                    passworderror.setText("Password should contain 6 alphanumeric characters");
+                }
+                else if((password.getText().toString().trim().length()<6))
+                {
+                    passworderror.setTextColor(getResources().getColor(R.color.redcolor));
+                    passworderror.setText("Password should contain 6 alphanumeric characters");
                 }
                else
             passworderror.setText("");
@@ -238,66 +246,87 @@ confirmpassword.addTextChangedListener(new TextWatcher() {
 regbutton.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View v) {
-         emailId= email.getText().toString()+attraEmail.getText().toString();
-        SharedPreferences pref = getApplicationContext().getSharedPreferences("MY_PREFS_NAME", 0);
+        if ((fullname.getText().toString().trim().isEmpty())) {
+            fullnameerror.setTextColor(getResources().getColor(R.color.redcolor));
+            fullnameerror.setText("username cannot be empty");
+            fullname.requestFocus();
+        } else if (email.getText().toString().trim().isEmpty()) {
+            emailerror.setTextColor(getResources().getColor(R.color.redcolor));
+            emailerror.setText("email cannot be empty");
+            email.requestFocus();
+        } else if ((password.getText().toString().trim().isEmpty())) {
+            passworderror.setTextColor(getResources().getColor(R.color.redcolor));
+            passworderror.setText("Password cannot be empty");
+            password.requestFocus();
+        } else if (!(password.getText().toString().trim().equals(confirmpassword.getText().toString()))) {
+            confrmpswderror.setTextColor(getResources().getColor(R.color.redcolor));
+            confrmpswderror.setText("Password not matching");
+        } else {
+
+            emailId = email.getText().toString() + attraEmail.getText().toString();
+            SharedPreferences pref = getApplicationContext().getSharedPreferences("MY_PREFS_NAME", 0);
 
 
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putString("email", emailId);
+            Log.i("email id.....", emailId);
+            // Log.i("Email id===========", pref.getString("email", null));
+            editor.apply();
 
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putString("email", emailId);
-        Log.i("email id.....",emailId);
-        // Log.i("Email id===========", pref.getString("email", null));
-        editor.apply();
-        MyAppolloClient.getMyAppolloClient().mutate(UserRegistration.builder().name(fullname.getText().toString()).
-                email((email.getText().toString()+attraEmail.getText().toString())).password(password.getText().toString()).build()).
-                enqueue(new ApolloCall.Callback<UserRegistration.Data>() {
-                    @Override
-                    public void onResponse(@Nonnull Response<UserRegistration.Data> response) {
 
-                        status = response.data().addUser_M().status().toString();
-                        message = response.data().addUser_M().message().toString();
-                        RegistrationActivity.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (status.equals("Success")) {
-                                    linearLayout1.setVisibility(View.GONE);
-                                    linearLayout2.setVisibility(View.GONE);
-                                    Toast.makeText(RegistrationActivity.this, "otp sent to your registered emailid", Toast.LENGTH_LONG).show();
-                                    try {
-                                        Thread.sleep(5000);
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
+            MyAppolloClient.getMyAppolloClient().mutate(UserRegistration.builder().name(fullname.getText().toString()).
+                    email((email.getText().toString() + attraEmail.getText().toString())).password(password.getText().toString()).build()).
+                    enqueue(new ApolloCall.Callback<UserRegistration.Data>() {
+                        @Override
+                        public void onResponse(@Nonnull Response<UserRegistration.Data> response) {
+
+                            status = response.data().addUser_M().status().toString();
+                            message = response.data().addUser_M().message().toString();
+                            RegistrationActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (status.equals("Success")) {
+                                        linearLayout1.setVisibility(View.GONE);
+                                        linearLayout2.setVisibility(View.GONE);
+                                        Toast.makeText(RegistrationActivity.this, "Otp sent to your Registered EmailId", Toast.LENGTH_LONG).show();
+                                        /*try {
+                                            Thread.sleep(5000);
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }*/
+                                        Intent intent = new Intent(RegistrationActivity.this, OtpValidationActivity.class);
+                                        intent.putExtra("emailId", emailId);
+                                        startActivity(intent);
+                                    } else if ((status.equals("Failure")) && (message.equals("User already exists")))
+                                    {
+                                        linearLayout1.setVisibility(View.GONE);
+                                        linearLayout2.setVisibility(View.GONE);
+                                        Toast.makeText(RegistrationActivity.this, "Already registered. Please Login", Toast.LENGTH_LONG).show();
+                                        /*try {
+                                            Thread.sleep(5000);
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }*/
+                                        Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
+                                        intent.putExtra("emailId", emailId);
+                                        startActivity(intent);
                                     }
-                                    Intent intent = new Intent(RegistrationActivity.this, OtpValidationActivity.class);
-                                    intent.putExtra("emailId",emailId );
-                                    startActivity(intent);
                                 }
-                                else if ((status.equals("Failure"))&&(message.equals("User already exists"))) {
-                                    linearLayout1.setVisibility(View.GONE);
-                                    linearLayout2.setVisibility(View.GONE);
-                                    Toast.makeText(RegistrationActivity.this, "Already registered. Please Login", Toast.LENGTH_LONG).show();
-                                    try {
-                                        Thread.sleep(5000);
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
-                                    Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
-                                    intent.putExtra("emailId",emailId );
-                                    startActivity(intent);
-                                }
-                            }
-                        });
+                            });
 
 
-                    }
+                        }
 
-                    @Override
-                    public void onFailure(@Nonnull ApolloException e) {
+                        @Override
+                        public void onFailure(@Nonnull ApolloException e) {
 
-                    }
-                });
+                        }
+                    });
 
+        }
     }
 });
-    }
+        }
+
+
 }

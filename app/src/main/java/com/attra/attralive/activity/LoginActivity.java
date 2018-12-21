@@ -1,6 +1,7 @@
 package com.attra.attralive.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -13,17 +14,27 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.apollographql.apollo.ApolloCall;
+import com.apollographql.apollo.api.Response;
+import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
+import com.attra.attralive.Service.MyAppolloClient;
+
+import javax.annotation.Nonnull;
+
+import graphqlandroid.UserLogin;
 
 public class LoginActivity extends AppCompatActivity {
 CardView loginbutton;
 EditText username,password;
 TextView attraemail,forgotpswd;
 TextInputLayout passwordtil,usernametil;
+String status,message;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        this.getWindow().setStatusBarColor(Color.TRANSPARENT);
         loginbutton=findViewById(R.id.crd_loginbutton);
         loginbutton.setBackgroundResource(R.drawable.color_gradient_login_btn);
         username=findViewById(R.id.et_username);
@@ -72,7 +83,7 @@ TextInputLayout passwordtil,usernametil;
 
             @Override
             public void afterTextChanged(Editable s) {
-                Toast.makeText(LoginActivity.this,"passwrd"+s,Toast.LENGTH_LONG).show();
+
             }
         });
         username.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -107,9 +118,34 @@ TextInputLayout passwordtil,usernametil;
         }
        else {
             passwordtil.setError(null);
-            Intent i=new Intent(LoginActivity.this,RegistrationActivity.class);
-            startActivity(i);
+
+            MyAppolloClient.getMyAppolloClient().query(UserLogin.builder().username(username.getText().toString()).
+                    password(password.getText().toString()).build()).enqueue(new ApolloCall.Callback<UserLogin.Data>() {
+                @Override
+                public void onResponse(@Nonnull Response<UserLogin.Data> response) {
+                    status = response.data().userLoginAuth_Q().status().toString();
+                    message = response.data().userLoginAuth_Q().message().toString();
+                    LoginActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (status.equals("Success")) {
+                                Toast.makeText(LoginActivity.this, "Login success", Toast.LENGTH_LONG).show();
+                                Intent i=new Intent(LoginActivity.this,DashboardActivity.class);
+                                startActivity(i);
+                            } else if ((status.equals("Failure")) && (message.equals("Invalid Username or Password"))) {
+                                Toast.makeText(LoginActivity.this,"Username or password is incorrect",Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailure(@Nonnull ApolloException e) {
+
+                }
+            });
         }
+
 
 
     }

@@ -11,8 +11,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-
-        android:background="@drawable/background_gradient">
+        >
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".5"
+            android:background="#000"
+            >
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:foreground="@drawable/color_gradient"
+            android:src="@drawable/homescreenimage" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -135,6 +146,7 @@
 
 
     </LinearLayout>
+        </FrameLayout>
     </LinearLayout>
 
 </LinearLayout>

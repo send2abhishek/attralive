@@ -199,7 +199,7 @@ public class DashboardActivity extends AppCompatActivity
         } else if (id == R.id.nav_termsAndCondition) {
 
         }else if (id == R.id.nav_logout) {
-            Intent intent = new Intent(getApplicationContext(),ForgotPasswordActivity.class);
+            Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
             startActivity(intent);
 
         }
