@@ -11,7 +11,7 @@
     android:text="Attra"
     android:textSize="30sp"
     android:gravity="center"
-    android:paddingTop="200dp"/>
+    android:paddingTop="250dp"/>
 
     <TextView
         android:layout_width="match_parent"

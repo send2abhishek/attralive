@@ -64,6 +64,7 @@
         <activity android:name=".activity.UserDetailsActivity" />
         <activity android:name=".activity.ForgotPasswordActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".activity.NewsFeedPostActivity"></activity>
     </application>
 
 </manifest>

@@ -23,7 +23,7 @@ import static java.lang.System.in;
 
 public class SplashScreen extends AppCompatActivity {
 
-    private static int splashTimeOut = 1000;
+    private static int splashTimeOut = 3500;
     TextView tv_attralive;
 
 
@@ -31,7 +31,7 @@ public class SplashScreen extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-         getSupportActionBar().hide();
+        getSupportActionBar().hide();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash_screen);
 
@@ -43,9 +43,13 @@ public class SplashScreen extends AppCompatActivity {
         String text = "<font color=#707070>Attra</font><font color=#f44f4b>LIVE</font>";
         tv_attralive.setText(Html.fromHtml(text));
 
-     //  tv_attralive.startAnimation(AnimationUtils.loadAnimation(this,R.anim.textview_fade_animation));
+        //  tv_attralive.startAnimation(AnimationUtils.loadAnimation(this,R.anim.textview_fade_animation));
 
-
+        try {
+            RunAnimation();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -56,4 +60,17 @@ public class SplashScreen extends AppCompatActivity {
         }, splashTimeOut);
     }
 
+    private void RunAnimation() throws InterruptedException {
+        Animation a = AnimationUtils.loadAnimation(this, R.anim.splash_animation);
+
+        a.reset();
+        TextView tv = (TextView) findViewById(R.id.presents);
+        tv.clearAnimation();
+        tv.startAnimation(a);
+        a.reset();
+        TextView tv1= findViewById(R.id.attralive);
+        tv1.clearAnimation();
+        tv1.startAnimation(a);
+
+    }
 }

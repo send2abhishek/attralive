@@ -7,80 +7,88 @@
     tools:context=".fragment.HomeFragment"
     android:orientation="vertical"
     android:background="@color/headerBackground">
-    <android.support.v7.widget.LinearLayoutCompat
+
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:orientation="horizontal"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:layout_marginBottom="5dp"
-        android:background="#ffffff">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="40dp">
 
-        <ImageView
-            android:id="@+id/img_postFeed"
-            android:layout_width="24dp"
-            android:layout_weight="1"
-            android:layout_height="34dp"
-            android:layout_marginLeft="12dp"
-            android:src="@drawable/icon_textbox"/>
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/tv_postThought"
-            android:layout_width="124dp"
-            android:layout_weight="3"
-            android:padding="4dp"
-            android:textAlignment="textStart"
-            android:textSize="18sp"
-            android:textColor="@color/postyourthoughts"
-            android:layout_height="wrap_content"
-            android:text="@string/post_your_thought" />
-        <View
-            android:layout_width="1dp"
-            android:layout_height="30dp"
-            android:background="@color/linecolor" />
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/img_gallery"
-            android:layout_width="20dp"
-            android:layout_weight="1"
-            android:layout_height="33dp"
-            android:src="@drawable/iconcameraline"/>
-        <View
-            android:layout_width="1dp"
-            android:layout_height="30dp"
-            android:background="@color/linecolor" />
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/img_video"
-            android:layout_width="18dp"
-            android:layout_weight="1"
-            android:layout_height="34dp"
-            android:src="@drawable/iconvideoline"/>
-
-    </android.support.v7.widget.LinearLayoutCompat>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview1"
-        android:scrollbars="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="177dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="7dp"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
-
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:orientation="horizontal"
+                android:paddingTop="10dp"
+                android:nestedScrollingEnabled="false"
+                android:paddingBottom="10dp"
+                android:layout_marginBottom="5dp"
+                android:background="#ffffff">
+
+                <ImageView
+                    android:id="@+id/img_postFeed"
+                    android:layout_width="24dp"
+                    android:layout_weight="1"
+                    android:layout_height="34dp"
+                    android:layout_marginLeft="12dp"
+                    android:src="@drawable/icon_textbox"/>
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tv_postThought"
+                    android:layout_width="124dp"
+                    android:layout_weight="3"
+                    android:padding="4dp"
+                    android:textAlignment="textStart"
+                    android:textSize="18sp"
+                    android:textColor="@color/postyourthoughts"
+                    android:layout_height="wrap_content"
+                    android:text="@string/post_your_thought" />
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="30dp"
+                    android:background="@color/linecolor" />
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/img_gallery"
+                    android:layout_width="20dp"
+                    android:layout_weight="1"
+                    android:layout_height="33dp"
+                    android:src="@drawable/iconcameraline"/>
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="30dp"
+                    android:background="@color/linecolor" />
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/img_video"
+                    android:layout_width="18dp"
+                    android:layout_weight="1"
+                    android:layout_height="34dp"
+                    android:src="@drawable/iconvideoline"/>
+
+            </android.support.v7.widget.LinearLayoutCompat>
+
+
+            <android.support.v4.view.ViewPager
+                android:layout_width="match_parent"
+                android:layout_height="177dp"
+                android:layout_marginTop="6dp"
+                android:id="@+id/viewPager"/>
+
+
 
             <android.support.v7.widget.RecyclerView
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
                 android:scrollbars="vertical"
+                android:layout_marginTop="6dp"
                 android:id="@+id/rv_newsFeed">
             </android.support.v7.widget.RecyclerView>
+        </LinearLayout>
 
-
-        </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 
 
 

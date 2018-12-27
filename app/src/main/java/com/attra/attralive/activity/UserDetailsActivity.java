@@ -38,6 +38,7 @@ public class UserDetailsActivity extends AppCompatActivity {
     private RadioButton radioSexButton;
     String emailId,password;
     String empId;
+    static String authheader;
     String name;
     String designationValue ;
     String locationValue ;
