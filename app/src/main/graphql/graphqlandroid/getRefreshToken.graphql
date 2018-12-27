@@ -1,0 +1,11 @@
+query getAccessToken(
+$username: String!
+$password: String!
+$grant_type: String!)
+{
+  userLoginAuth_Q(username:$username,password:$password,grant_type:$grant_type)
+  {
+    accessToken
+    accessTokenExpiresAt
+  }
+}

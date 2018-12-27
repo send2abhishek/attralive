@@ -15,8 +15,6 @@
     <string name="landD">L&amp;D</string>
     <string name="commingSoon">Coming Soon</string>
     <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
     <string name="title_event">Event</string>
     <string name="title_blog">Blog</string>
     <string name="title_forum">Forum</string>
@@ -30,12 +28,6 @@
     <string name="post_your_thought">Post your thoughts</string>
     <string name="report">Report</string>
     <string name="disable">Disable</string>
-    <string name="et_title">Title</string>
-    <string name="et_keywords">Key Words</string>
-    <string name="et_description">Description</string>
-    <string name="btn_saveForLater">Save For Later</string>
-    <string name="btn_sendForReview">Send For Review</string>
-    <string name="search_title">Search Here</string>
 
     <!--OTP validation screen-->
     <string name="enter_the_otp">Please enter the 4-digit OTP</string>
@@ -64,46 +56,19 @@
     <string name="back_to_login_page">Back to Login Page</string>
 
 
-
-    <string name="btn_askQuestion">ASK QUESTION</string>
-    <string name="btn_ask">ASK</string>
-    <string name="forumTerms1">* Be on-topic</string>
-    <string name="forumTerms2">* Be Specific</string>
-    <string name="forumTerms3">* Make it relevant to others</string>
-    <string name="forumTerms4">* Keep on open mind</string>
-
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
-    <string name="block">Block</string>
 
     <!--Notification String-->
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
     <string name="default_notification_channel_name" translatable="true">Weather</string>
     <string name="msg_subscribed">Subscribed to weather topic</string>
-    <string name="msg_token_fmt" translatable="false">InstanceID Token: %s</string>
     <string name="post">POST</string>
     <string name="msg_subscribe_failed">Failed to subscribe to weather topic</string>
     <string name="fcm_message">FCM Message</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="tv_my_tasks">My Tasks</string>
-    <string name="tv_message">Messages</string>
-    <string name="tv_events">Events</string>
-    <string name="approve">Approve</string>
-    <string name="blog_description">A blog is a discussion or informational website published on the World Wide Web
-        consisting of discrete,often informal diary-style text entries. Posts are typically displayed in reverse
-        chronological order,so that the most  recent post appears first,at the top of the web page
-        A blog is a discussion or informational website published on the World Wide Web
-        consisting of discrete,often informal diary-style text entries. Posts are typically displayed in reverse</string>
-    <string name="title_activity_create_blog">Create Blog</string>
-    <string name="large_text">
-    "Material is the metaphor.\n\n"
 
-    "A material metaphor is the unifying theory of a rationalized space and a system of motion."
-    "The material is grounded in tactile reality, inspired by the study of paper and ink, yet "
-    "technologically advanced and open to imagination and magic.\n"
-    </string>
     //Login Screen
     <string name="welcome">Hi! Welcome to</string>
     <string name="attra">Attra</string>
@@ -121,7 +86,6 @@
     <string name="signup_text">SIGN UP!</string>
     <string name="fullname_text">FULL NAME</string>
     <string name="regemail_text">EMAIL</string>
-    <string name="regpaswd_text">PASSWORD</string>
     <string name="confirmpswd_text">CONFIRM PASSWORD</string>
     <string name="continue_text">CONTINUE</string>
 

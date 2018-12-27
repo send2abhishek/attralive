@@ -1,0 +1,5 @@
+query getLocation{
+  getLocations_Q{
+    locations
+  }
+}

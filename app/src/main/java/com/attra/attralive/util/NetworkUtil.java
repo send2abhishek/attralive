@@ -42,4 +42,6 @@ public class NetworkUtil {
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }
+
+
 }

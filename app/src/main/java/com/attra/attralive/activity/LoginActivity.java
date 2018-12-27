@@ -117,7 +117,10 @@ String status,message;
 
         }
        else {
-            passwordtil.setError(null);
+
+            Intent i=new Intent(LoginActivity.this,DashboardActivity.class);
+            startActivity(i);
+           /* passwordtil.setError(null);
 
             MyAppolloClient.getMyAppolloClient().query(UserLogin.builder().username(username.getText().toString()+attraemail.getText().toString().trim()).
                     password(password.getText().toString()).build()).enqueue(new ApolloCall.Callback<UserLogin.Data>() {
@@ -143,7 +146,7 @@ String status,message;
                 public void onFailure(@Nonnull ApolloException e) {
 
                 }
-            });
+            });*/
         }
 
 

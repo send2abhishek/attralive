@@ -2,13 +2,11 @@ package com.attra.attralive.activity;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Rect;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.bottomnavigation.LabelVisibilityMode;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -20,17 +18,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.attra.attralive.R;
-import com.attra.attralive.fragment.BlogListFragment;
-import com.attra.attralive.fragment.ForumFragment;
 import com.attra.attralive.fragment.HomeFragment;
 import com.attra.attralive.fragment.NotificationListFragment;
 import com.attra.attralive.model.NewsFeed;
@@ -54,7 +48,7 @@ public class DashboardActivity extends AppCompatActivity
         setContentView(R.layout.activity_dashboard);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        this.getWindow().setStatusBarColor(Color.TRANSPARENT);
         subscribeToTopic();
 
         fragment = new HomeFragment();
@@ -63,7 +57,7 @@ public class DashboardActivity extends AppCompatActivity
         linearLayoutManager=new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-       // navigation.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_LABELED);
+        // navigation.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_LABELED);
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -75,11 +69,6 @@ public class DashboardActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Intent intent = getIntent();
-        String message = intent.getStringExtra("FORUM");
-        if(message!=null&& message.equals("LOAD_FORUM")){
-            loadFragment(new ForumFragment());
-        }
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -101,9 +90,9 @@ public class DashboardActivity extends AppCompatActivity
         }
         // [END handle_data_extras]
 
-            String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-            Log.d(TAG, "Refreshed token: " + refreshedToken);
-            // TODO: Implement this method to send any registration to your app's servers.
+        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        Log.d(TAG, "Refreshed token: " + refreshedToken);
+        // TODO: Implement this method to send any registration to your app's servers.
 
     }
 
@@ -181,8 +170,7 @@ public class DashboardActivity extends AppCompatActivity
         if (id == R.id.nav_landD) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
-            fragment = new BlogListFragment();
-            loadFragment(fragment);
+
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_holidayCalender) {
@@ -222,13 +210,11 @@ public class DashboardActivity extends AppCompatActivity
                 case R.id.navigation_event:
                     return true;
                 case R.id.navigation_blog:
-                    fragment = new BlogListFragment();
-                    loadFragment(fragment);
+
                     return true;
                 case R.id.navigation_forum:
 
-                    fragment = new ForumFragment();
-                    loadFragment(fragment);
+
                     return true;
             }
             return false;

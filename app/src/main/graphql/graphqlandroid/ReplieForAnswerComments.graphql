@@ -1,7 +1,0 @@
-query getRepliesForAnswerComments($commId:String!)
-{
-  Replies(commId:$commId) {
-   replyMsg
-    }
-  }
-

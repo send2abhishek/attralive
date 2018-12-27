@@ -1,0 +1,6 @@
+mutation ResendOtp($email:String!){
+resendOTP_M(email:$email){
+otpstatus
+message
+}
+}

@@ -50,22 +50,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.CreateBlogActivity" />
-        <activity android:name=".activity.BlogDetails" />
         <activity android:name=".activity.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".activity.DashboardActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            />
-        <activity android:name=".activity.ReplayActivity" />
-        <activity android:name=".activity.UpdateBlogActivity" />
-        <activity android:name=".activity.CreateForumActivity" />
-        <activity android:name=".activity.MainBlogCategoryActivity" />
-        <activity android:name=".activity.DetailedForumScreen" />
-        <activity android:name=".activity.AddAnswerComments" />
-        <activity android:name=".activity.QuestionComments" />
-        <activity android:name=".activity.NewsFeedPostActivity"
-            android:label="Post"
             />
         <activity android:name=".activity.OtpValidationActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
