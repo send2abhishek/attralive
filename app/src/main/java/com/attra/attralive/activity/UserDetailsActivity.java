@@ -1,5 +1,6 @@
 package com.attra.attralive.activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,23 +22,27 @@ import com.attra.attralive.R;
 import com.attra.attralive.Service.MyAppolloClient;
 import com.attra.attralive.fragment.DatePickerFragment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Nonnull;
 
-import graphqlandroid.GetAccessToken;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.logging.HttpLoggingInterceptor;
+import graphqlandroid.GetBusinessUnit;
+import graphqlandroid.GetLocation;
+
+import static com.attra.attralive.activity.RegistrationActivity.MY_PREFS_NAME;
 
 public class UserDetailsActivity extends AppCompatActivity {
     Spinner designation,bu,location;
     Button continueBtn;
     private static final String[] designList = {"Please select","Software Engineer","Project Lead", "Project Lead", "Project manager"};
-    private static final String[] buList = {"Please select","Synchrony","Practice", "APAC", "Corporate"};
-    private static final String[] locationList = {"Please select","Bangalore","Hydrabad", "Pune", "Melburn"};
+    List<String> buList = new ArrayList<String>();
+    List<String> locationList = new ArrayList<String>();
     private RadioGroup radioSexGroup;
     private RadioButton radioSexButton;
-    String emailId,password;
+    String emailId,password,authToken;
     String empId;
+    String accessToken;
     static String authheader;
     String name;
     String designationValue ;
@@ -59,11 +64,9 @@ public class UserDetailsActivity extends AppCompatActivity {
         continueBtn = findViewById(R.id.btn_continue);
         radioSexGroup = (RadioGroup) findViewById(R.id.radioSex);
 
+        getUserBU();
+        getUserLocation();
 
-        Intent intent=this.getIntent();
-        if(intent !=null)
-            emailId = intent.getStringExtra("emailId");
-            password= intent.getStringExtra("pass");
         ArrayAdapter<String>designationAdapter = new ArrayAdapter<String>(UserDetailsActivity.this,
                 android.R.layout.simple_spinner_item,designList);
 
@@ -71,17 +74,7 @@ public class UserDetailsActivity extends AppCompatActivity {
         designation.setAdapter(designationAdapter);
         designation.setSelection(0);
 
-        ArrayAdapter<String> locationAdapter = new ArrayAdapter<>(UserDetailsActivity.this,
-                android.R.layout.simple_spinner_item,locationList);
 
-        locationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        location.setAdapter(locationAdapter);
-        location.setSelection(0);
-        ArrayAdapter<String> userBuAdapter = new ArrayAdapter<>(UserDetailsActivity.this,
-                android.R.layout.simple_spinner_item,buList);
-
-        userBuAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        bu.setAdapter(userBuAdapter);
 
         continueBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,11 +98,11 @@ public class UserDetailsActivity extends AppCompatActivity {
                     Toast.makeText(UserDetailsActivity.this, "Please Select Location", Toast.LENGTH_SHORT).show();
                 }else if(buValue.equals("Please select")){
                     Toast.makeText(UserDetailsActivity.this, "Please Select BU", Toast.LENGTH_SHORT).show();
-                }/*else if(designationValue==null){
+                }else if(designationValue==null){
                     Toast.makeText(UserDetailsActivity.this, "Please Select Designation", Toast.LENGTH_SHORT).show();
-                }*//*else if(designationValue==null){
+                }else if(designationValue==null){
                     Toast.makeText(UserDetailsActivity.this, "Please Select Designation", Toast.LENGTH_SHORT).show();
-                }*/
+                }
                 else {
 
 
@@ -128,7 +121,99 @@ public class UserDetailsActivity extends AppCompatActivity {
         newFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
-  public static ApolloClient getToken(){
+    private void getUserLocation(){
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+        String restoredText = prefs.getString("text", null);
+        if (restoredText != null) {
+            accessToken= prefs.getString("access_token",null);
+            Log.i("token in user detail",accessToken);
+        }
+
+        String token="Bearer"+" "+accessToken;
+        Log.i("brarer token",token);
+        MyAppolloClient.getMyAppolloClient("Bearer eb60aab61fc96a8e22960b468710088f04c2feab").query(
+                GetLocation.builder()
+                        .build()).enqueue(
+                new ApolloCall.Callback<GetLocation.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<GetLocation.Data> response) {
+                        Log.i("res", String.valueOf(response));
+                        for(int loopVar= 0; loopVar<response.data().getLocations_Q().locations().size(); loopVar++){
+                           String  locationData= response.data().getLocations_Q().locations().get(loopVar);
+                           locationList.add(locationData);
+                            Log.i("location",locationData);
+
+                        }
+
+                        UserDetailsActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ArrayAdapter<String> locationAdapter = new ArrayAdapter<>(UserDetailsActivity.this,
+                                        android.R.layout.simple_spinner_item,locationList);
+                                locationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                location.setAdapter(locationAdapter);
+                                location.setSelection(0);
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+                    }
+                }
+        );
+
+    }
+
+    private void getUserBU(){
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+        String restoredText = prefs.getString("text", null);
+        if (restoredText != null) {
+            accessToken= prefs.getString("access_token",null);
+            Log.i("token in user detail",accessToken);
+        }
+
+        String token="Bearer"+" "+accessToken;
+        Log.i("brarer token",token);
+        MyAppolloClient.getMyAppolloClient("Bearer eb60aab61fc96a8e22960b468710088f04c2feab").query(
+                GetBusinessUnit.builder()
+                        .build()).enqueue(
+                new ApolloCall.Callback<GetBusinessUnit.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<GetBusinessUnit.Data> response) {
+                        Log.i("res", String.valueOf(response));
+                        for(int loopVar= 0; loopVar<response.data().getBusinessUnits_Q().businessUnits().size(); loopVar++){
+                            String  businessUnitData= response.data().getBusinessUnits_Q().businessUnits().get(loopVar);
+                            buList.add(businessUnitData);
+                            Log.i("location",businessUnitData);
+
+                        }
+
+                        UserDetailsActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ArrayAdapter<String> userBuAdapter = new ArrayAdapter<>(UserDetailsActivity.this,
+                                        android.R.layout.simple_spinner_item,buList);
+
+                                userBuAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                bu.setAdapter(userBuAdapter);
+                                bu.setSelection(0);
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+                    }
+                }
+        );
+
+    }
+
+
+/*  public static ApolloClient getToken(){
       HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
       loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
@@ -149,7 +234,7 @@ public class UserDetailsActivity extends AppCompatActivity {
 
       return apolloClient;
 
-    }
+    }*/
 
 
 }

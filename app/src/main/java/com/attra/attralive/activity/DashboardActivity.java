@@ -25,6 +25,9 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.attra.attralive.R;
+import com.attra.attralive.fragment.AboutUsFragment;
+import com.attra.attralive.fragment.DigiquizFragment;
+import com.attra.attralive.fragment.HolidayCalender;
 import com.attra.attralive.fragment.HomeFragment;
 import com.attra.attralive.fragment.NotificationListFragment;
 import com.attra.attralive.model.NewsFeed;
@@ -169,12 +172,12 @@ public class DashboardActivity extends AppCompatActivity
 
         if (id == R.id.nav_landD) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_gallery) {
-
+        }else if (id == R.id.nav_gallery) {
+            fragment = new AboutUsFragment();
+            loadFragment(fragment);
         } else if (id == R.id.nav_holidayCalender) {
-
+            fragment = new HolidayCalender();
+            loadFragment(fragment);
 
         } else if (id == R.id.nav_facilities) {
             Intent intent = new Intent(getApplicationContext(),OtpValidationActivity.class);
@@ -185,6 +188,8 @@ public class DashboardActivity extends AppCompatActivity
             loadFragment(fragment);
 
         } else if (id == R.id.nav_termsAndCondition) {
+            Intent intent = new Intent(getApplicationContext(),TermsConditionsActivity.class);
+            startActivity(intent);
 
         }else if (id == R.id.nav_logout) {
             Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
@@ -210,6 +215,8 @@ public class DashboardActivity extends AppCompatActivity
                 case R.id.navigation_event:
                     return true;
                 case R.id.navigation_blog:
+                    fragment = new DigiquizFragment();
+                    loadFragment(fragment);
 
                     return true;
                 case R.id.navigation_forum:

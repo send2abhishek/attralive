@@ -41,7 +41,8 @@
 
         <activity
 
-            android:name=".activity.SplashScreen">
+            android:name=".activity.DashboardActivity"
+            android:theme="@style/AppTheme.NoActionBar">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"
@@ -52,9 +53,10 @@
         </activity>
         <activity android:name=".activity.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".activity.DashboardActivity"
+        <activity android:name=".activity.SplashScreen"
             android:theme="@style/AppTheme.NoActionBar"
             />
+        <activity android:name=".activity.TermsConditionsActivity"></activity>
         <activity android:name=".activity.OtpValidationActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".activity.RegistrationActivity"

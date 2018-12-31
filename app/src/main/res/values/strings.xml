@@ -89,4 +89,77 @@
     <string name="confirmpswd_text">CONFIRM PASSWORD</string>
     <string name="continue_text">CONTINUE</string>
 
+    <string name="termscontent">
+        1. The app will be hosted on Amazon Web Services (AWS) cloud till Attraction 2018 till 28th Feb 2018 \n
+        2. The app will be migrated to internal Attra servers post Attraction 2018\n
+        3. Mobile numbers and Attra email ids of the employees installing this app, will be stored on AWS for sending updates and generic org wide messages till 28th Feb 2018\n
+        4. Pictures taken by Attra employees through this app, will be stored in the AWS cloud for the entire duration of apps being available i.e., till 28th Feb 2018\n
+        5. Mobile numbers, email ids and the pictures will NOT be used for any purposes apart from the org wide updates if any, through the app.\n
+        6. Employee\'s mobile numbers will be retained to send generic org wise updates and for newer features of the app. This communication mode will continue till he/she is an Attra employee\n
+        7. The terms and conditions will be updated, for the app with additional features and usage post Attraction 2018\n
+        8. On acceptance of these terms and conditions, Attra will not be liable for any personal data misuse
+    </string>
+    <string name="about_us_content">Attraction 2018 is an Attra in-house built application by Digital Practice team, L &amp; D Team and with inputs from Corporate Strategy.\nIt reinstates our focused direction towards \'Attra 3.0 journey\' and thus first time our own in-house customized mobile application has been launched.\nThe application was made within a quick turnaround of approximately only two weeks.\n\nWe will appreciate your feedbacks on this application. Please reach out to <b><u>mobility@attra.com.au</u></b> in case of your feedbacks and suggestions.</string>
+
+    <string name="answer_submitted">Your answers has been submitted.</string>
+    <string name="alert_quiz">Your answers has been submitted already.</string>
+    <string name="alert">Alert</string>
+    <string name="score">Score</string>
+    <string name="score_content"><b>Your score is: </b></string>
+    <string name="quiz_content">Quiz is available for <b>1 time participation only</b> for all employees across locations. For a selected set of users with all <b>right answers in the 1st attempt</b>, will get some surprise gifts. Happy Quizzing !!!</string>
+    <string name="submit_quiz_content">Note: Thanks for participating. The correct answers will be supplied post Attraction 2018. The quiz will be available for multiple Q&amp;A. The intent of the Quiz is to generate interest in Digital Payments. For more details, please refer to Digipedia.</string>
+
+    <string name="error_answer">Please answer all the questions</string>
+    <string name="digiquiz">Digi Quiz</string>
+    <string name="okbtn">OK</string>
+    <string name="submit_btn">Submit</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+   <!-- Holiday Calender-->
+    <string name="sn1">1</string>
+    <string name="sn2">2</string>
+    <string name="sn3">3</string>
+    <string name="sn4">4</string>
+    <string name="sn5">5</string>
+    <string name="sn6">6</string>
+    <string name="sn7">7</string>
+    <string name="sn8">8</string>
+    <string name="sn9">9</string>
+    <string name="sn10">10</string>
+    <string name="sn11">11</string>
+
+    <string name="Jan_1">1-Jan-19 </string>
+    <string name="jan_14">14-Jan-19</string>
+    <string name="mar_21">21-Mar-19</string>
+    <string name="may_1">1-May-19</string>
+    <string name="aug_15">15-Aug-19</string>
+    <string name="sept_2">2-Sep-19</string>
+    <string name="oct_2"> 2-Oct-19</string>
+    <string name="oct_7">7-Oct-19</string>
+    <string name="oct_28">28-Oct-19</string>
+    <string name="nov_1">1-Nov-19</string>
+    <string name="dec_25">25-Dec-19</string>
+
+
+    <string name="tuesday">Tuesday</string>
+    <string name="monday">Monday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+
+    <string name="new_year_day">New year</string>
+    <string name="Sankranti">Sankranti</string>
+    <string name="Holi">Holi</string>
+    <string name="May_Day_Labor_Day_Maharashtra_Day">May Day</string>
+    <string name="Independence_Day">Independence Day</string>
+    <string name="Ganesh_Chathurthi">Ganesh Chathurthi</string>
+    <string name="Gandhi_Jayanti">Gandhi Jayanti</string>
+    <string name="Dasara_Dussehra">Dasara/ Dussehra </string>
+    <string name="Diwali">Diwali</string>
+    <string name="Kannada_Rajyotsava">Kannada Rajyotsava</string>
+    <string name="Christmas">Christmas</string>
+
+
 </resources>

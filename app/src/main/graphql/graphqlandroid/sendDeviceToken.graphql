@@ -1,0 +1,12 @@
+mutation sendDeviceToken(
+$userId:String!,
+$deviceId:String!){
+registerDeviceId_M(
+userId:$userId
+deviceId:$deviceId
+){
+message
+status
+}
+
+}

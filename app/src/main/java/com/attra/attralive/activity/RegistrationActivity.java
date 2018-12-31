@@ -41,7 +41,7 @@ public class RegistrationActivity extends AppCompatActivity {
     TextInputLayout fullnametil,emailtil,passwodtil,confirmpasswordtil;
     TextView passworderror,emailerror,fullnameerror,confrmpswderror,attraEmail;
     public static String MY_PREFS_NAME = "MyPrefsFile";
-
+    String token="";
     String emailId,pwd;
     String status,message;
     String numRegex   = ".*[0-9].*";
@@ -247,15 +247,13 @@ public class RegistrationActivity extends AppCompatActivity {
                 final ProgressDialog loading = ProgressDialog.show(RegistrationActivity.this, "Registering", "Please wait ", false, false);
                 Handler handler = new Handler();
                 pwd= password.getText().toString();
-                Intent intent = new Intent(RegistrationActivity.this, OtpValidationActivity.class);
-                intent.putExtra("emailId",emailId );
-                intent.putExtra("pass",pwd);
-                startActivity(intent);
+                /*Intent intent = new Intent(RegistrationActivity.this, OtpValidationActivity.class);*/
+
                 handler.postDelayed(new Runnable() {
                     public void run() {
                         loading.dismiss();
                         emailId= email.getText().toString()+attraEmail.getText().toString();
-                        MyAppolloClient.getMyAppolloClient().mutate(UserRegistration.builder().name(fullname.getText().toString()).
+                        MyAppolloClient.getMyAppolloClient(token).mutate(UserRegistration.builder().name(fullname.getText().toString()).
                                 email((email.getText().toString()+attraEmail.getText().toString())).password(password.getText().toString()).build()).
                                 enqueue(new ApolloCall.Callback<UserRegistration.Data>() {
                                     @Override
@@ -272,6 +270,9 @@ public class RegistrationActivity extends AppCompatActivity {
                                                     Toast.makeText(RegistrationActivity.this, "otp sent to your registered emailid", Toast.LENGTH_LONG).show();
                                                     Intent intent = new Intent(RegistrationActivity.this, OtpValidationActivity.class);
                                                     intent.putExtra("emailId",emailId );
+                                                    intent.putExtra("pass",pwd);
+                                                    Log.i("email in reg",emailId);
+                                                    Log.i("pass in Reg",pwd);
                                                     startActivity(intent);
                                                 }
                                                 else if ((status.equals("Failure"))&&(message.equals("User already exists"))) {

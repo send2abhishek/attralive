@@ -1,11 +1,21 @@
-query getAccessToken(
-$username: String!
-$password: String!
+query getRefreshToken(
+$refreshToken: String!
 $grant_type: String!)
 {
-  userLoginAuth_Q(username:$username,password:$password,grant_type:$grant_type)
+  userLoginAuth_Q(refreshToken:$refreshToken,grant_type:$grant_type)
   {
     accessToken
-    accessTokenExpiresAt
+     accessTokenExpiresAt
+     RefreshToken
+     refreshTokenExpiresAt
+     client_id
+     user
+     scope
+     statusCode
+     status
+     code
+     message
+     name
+     user_id
   }
 }

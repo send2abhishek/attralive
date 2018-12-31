@@ -5,8 +5,10 @@
     <color name="colorAccent">#D81B60</color>
 
     <color name="headerBackground">#eff1f2</color>
-
-
+    <color name="reg_edit_text_bg">#ffcbcb</color>
+    <color name="graybackground">#f5f5f5</color>
+    <color name="event_tv">#7a7a7a</color>
+    <color name="button_background">#851f2a</color>
     <!--For flash screen-->
     <color name="presents">#454545</color>
     <!--For flash screen-->

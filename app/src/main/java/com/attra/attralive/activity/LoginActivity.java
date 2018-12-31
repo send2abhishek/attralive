@@ -1,6 +1,8 @@
 package com.attra.attralive.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -10,6 +12,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,14 +26,20 @@ import com.attra.attralive.Service.MyAppolloClient;
 
 import javax.annotation.Nonnull;
 
-import graphqlandroid.UserLogin;
+import graphqlandroid.UserLoginAuth;
 
 public class LoginActivity extends AppCompatActivity {
+    private String username,password;
 CardView loginbutton;
-EditText username,password;
+EditText userName,userPassword;
 TextView attraemail,forgotpswd;
 TextInputLayout passwordtil,usernametil;
+CheckBox saveLoginCheckBox;
 String status,message;
+    private SharedPreferences loginPreferences;
+    private SharedPreferences.Editor loginPrefsEditor;
+    private Boolean saveLogin;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,12 +47,24 @@ String status,message;
         this.getWindow().setStatusBarColor(Color.TRANSPARENT);
         loginbutton=findViewById(R.id.crd_loginbutton);
         loginbutton.setBackgroundResource(R.drawable.color_gradient_login_btn);
-        username=findViewById(R.id.et_username);
-        password=findViewById(R.id.et_password);
+        userName=findViewById(R.id.et_username);
+        userPassword=findViewById(R.id.et_password);
         attraemail=findViewById(R.id.tv_attraemail);
         passwordtil=findViewById(R.id.testtil);
         usernametil=findViewById(R.id.usernametil);
         forgotpswd=findViewById(R.id.tv_forgotpassword);
+        saveLoginCheckBox = findViewById(R.id.chk_remmebrme);
+
+        loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
+        loginPrefsEditor = loginPreferences.edit();
+        saveLogin = loginPreferences.getBoolean("saveLogin", false);
+        if (saveLogin == true) {
+            userName.setText(loginPreferences.getString("username", ""));
+            userPassword.setText(loginPreferences.getString("password", ""));
+            saveLoginCheckBox.setChecked(true);
+        }
+
+
         forgotpswd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,7 +72,7 @@ String status,message;
                 startActivity(intent);
             }
         });
-        password.addTextChangedListener(new TextWatcher() {
+        userPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -70,7 +92,7 @@ String status,message;
 
         // passwopard.getBackground().setColorFilter(getResources().getColor(R.color.text_coloring_login), PorterDuff.Mode.SRC_ATOP);
        // password.getBackground().clearColorFilter();
-        username.addTextChangedListener(new TextWatcher() {
+        userName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -86,11 +108,11 @@ String status,message;
 
             }
         });
-        username.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        userName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                if(hasFocus==false)
-                if(username.getText().toString().trim().isEmpty()) {
+                if(userName.getText().toString().trim().isEmpty()) {
                     usernametil.setError(getString(R.string.emptyusername_text));
 
                 }
@@ -98,34 +120,50 @@ String status,message;
         });
     }
 
+
     public void login(View view) {
-        if(username.getText().toString().trim().isEmpty()) {
+        if(userName.getText().toString().trim().isEmpty()) {
             usernametil.setError(getString(R.string.emptyusername_text));
-            username.requestFocus();
+            userName.requestFocus();
 
         }
-            else if(!Patterns.EMAIL_ADDRESS.matcher((username.getText().toString()+attraemail.getText().toString()).trim()).matches())
+            else if(!Patterns.EMAIL_ADDRESS.matcher((userName.getText().toString()+attraemail.getText().toString()).trim()).matches())
         {
             usernametil.setError(getString(R.string.usernameerror_text));
-            username.requestFocus();
+            userName.requestFocus();
 
-        }else if (password.getText().toString().trim().isEmpty()) {
+        }else if (userPassword.getText().toString().trim().isEmpty()) {
             passwordtil.setError(getString(R.string.passworderror_text));
             //password.setError();
             //password.setText("");
-            password.requestFocus();
+            userPassword.requestFocus();
 
         }
        else {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(userName.getWindowToken(), 0);
+
+            username = userName.getText().toString();
+            password = userPassword.getText().toString();
+
+            if (saveLoginCheckBox.isChecked()) {
+                loginPrefsEditor.putBoolean("saveLogin", true);
+                loginPrefsEditor.putString("username", username);
+                loginPrefsEditor.putString("password", password);
+                loginPrefsEditor.commit();
+            } else {
+                loginPrefsEditor.clear();
+                loginPrefsEditor.commit();
+            }
 
             Intent i=new Intent(LoginActivity.this,DashboardActivity.class);
             startActivity(i);
-           /* passwordtil.setError(null);
-
-            MyAppolloClient.getMyAppolloClient().query(UserLogin.builder().username(username.getText().toString()+attraemail.getText().toString().trim()).
-                    password(password.getText().toString()).build()).enqueue(new ApolloCall.Callback<UserLogin.Data>() {
+            passwordtil.setError(null);
+            /*
+            MyAppolloClient.getMyAppolloClient("").query(UserLoginAuth.builder().username(username.getText().toString()+attraemail.getText().toString().trim()).
+                    password(password.getText().toString()).build()).enqueue(new ApolloCall.Callback<UserLoginAuth.Data>() {
                 @Override
-                public void onResponse(@Nonnull Response<UserLogin.Data> response) {
+                public void onResponse(@Nonnull Response<UserLoginAuth.Data> response) {
                     status = response.data().userLoginAuth_Q().status().toString();
                     message = response.data().userLoginAuth_Q().message();
                     LoginActivity.this.runOnUiThread(new Runnable() {

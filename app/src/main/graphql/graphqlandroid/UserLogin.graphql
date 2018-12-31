@@ -1,4 +1,4 @@
-query userLogin(
+query userLoginAuth(
 $username:String!,
 $password:String!
 )

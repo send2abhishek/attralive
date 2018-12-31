@@ -10,6 +10,7 @@ import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -18,6 +19,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.attra.attralive.R;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import static java.lang.System.in;
 
@@ -38,6 +40,7 @@ public class SplashScreen extends AppCompatActivity {
 
         tv_attralive = findViewById(R.id.attralive);
 
+        Log.i("device token",FirebaseInstanceId.getInstance().getToken());
 
 
         String text = "<font color=#707070>Attra</font><font color=#f44f4b>LIVE</font>";

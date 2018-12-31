@@ -3,6 +3,7 @@ package com.attra.attralive.activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
@@ -23,11 +24,18 @@ import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
 import com.attra.attralive.Service.MyAppolloClient;
 import com.attra.attralive.util.NetworkUtil;
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import javax.annotation.Nonnull;
 
-import graphqlandroid.GetAccessToken;
+import graphqlandroid.GetRefreshToken;
 import graphqlandroid.OtpValidation;
 import graphqlandroid.ResendOtp;
+
+import graphqlandroid.SendDeviceToken;
+import graphqlandroid.UserLoginAuth;
+
+import static com.attra.attralive.activity.RegistrationActivity.MY_PREFS_NAME;
 
 
 public class OtpValidationActivity extends AppCompatActivity {
@@ -39,8 +47,10 @@ public class OtpValidationActivity extends AppCompatActivity {
     NetworkUtil networkUtil= null;
     String emailId,password;
     String otpNumber;
-    String token;
-
+    String token="";
+    String refreshToken;
+    private static String accessToken,authToken;
+    public static String  Authorization= "Basic YXBwbGljYXRpb246c2VjcmV0";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,12 +60,12 @@ public class OtpValidationActivity extends AppCompatActivity {
 
         closeOtp = findViewById(R.id.iv_close_otp);
 
-
-
         Intent intent=this.getIntent();
         if(intent !=null)
             emailId = intent.getStringExtra("emailId");
             password= intent.getStringExtra("pass");
+//            Log.i("email id",emailId);
+
 
         validateOTP =  findViewById(R.id.validate);
         motpNumber1 = (EditText) findViewById(R.id.otp_num1);
@@ -80,6 +90,8 @@ public class OtpValidationActivity extends AppCompatActivity {
             }
         });
 
+
+
         resendOtp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,7 +101,7 @@ public class OtpValidationActivity extends AppCompatActivity {
                 motpNumber4.setText("");
                 motpNumber1.requestFocus();
 
-                MyAppolloClient.getMyAppolloClient().mutate(
+                MyAppolloClient.getMyAppolloClient(token).mutate(
                         ResendOtp.builder().email(emailId)
                                 .build()).enqueue(
                         new ApolloCall.Callback<ResendOtp.Data>() {
@@ -102,6 +114,7 @@ public class OtpValidationActivity extends AppCompatActivity {
                                     @Override
                                     public void run() {
                                         if(otpStatus.equals("Success")){
+
                                             Toast.makeText(OtpValidationActivity.this, "OTP has been sent successfully to you registered email id", Toast.LENGTH_SHORT).show();
                                         }
                                     }
@@ -154,7 +167,7 @@ public class OtpValidationActivity extends AppCompatActivity {
                             public void run() {
                                 int opt = Integer.parseInt(otpNumber);
                                 loading.dismiss();
-                                MyAppolloClient.getMyAppolloClient().mutate(
+                                MyAppolloClient.getMyAppolloClient(token).mutate(
                                         OtpValidation.builder().email(emailId)
                                                 .otp(opt)
                                                 .build()).enqueue(
@@ -168,9 +181,13 @@ public class OtpValidationActivity extends AppCompatActivity {
                                                     @Override
                                                     public void run() {
                                                         if(otpStatus.equals("Success")){
+                                                            getToken();
+                                                            sendDeviceToken();
                                                             Intent intent1 = new Intent(getApplicationContext(),UserDetailsActivity.class);
+                                                            //intent.putExtra("accessToken",token);
                                                             startActivity(intent1);
-                                                        }else{
+                                                        }
+                                                        else{
                                                             new AlertDialog.Builder(OtpValidationActivity.this)
                                                                     .setTitle("Wrong OTP")
                                                                     .setMessage("The OTP you entered doesn't match. Please re-enter the correct OTP")
@@ -206,6 +223,113 @@ public class OtpValidationActivity extends AppCompatActivity {
     }
 
 
+    private void sendDeviceToken(){
+
+        String deviceToken = FirebaseInstanceId.getInstance().getToken();
+        MyAppolloClient.getMyAppolloClient(token).mutate(
+                SendDeviceToken.builder().userId(emailId)
+                        .deviceId(deviceToken)
+                        .build()).enqueue(
+                new ApolloCall.Callback<SendDeviceToken.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<SendDeviceToken.Data> response) {
+                        String message= response.data().registerDeviceId_M().message();
+                        final String status = response.data().registerDeviceId_M().status();
+                        Log.i("res_message",message);
+
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+                    }
+                }
+        );
+
+    }
+
+    public void getToken(){
+        MyAppolloClient.getMyAppolloClient(Authorization).query(
+                UserLoginAuth.builder().username(emailId).password(password)
+                        .build()).enqueue(
+                new ApolloCall.Callback<UserLoginAuth.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<UserLoginAuth.Data> response) {
+                        accessToken= response.data().userLoginAuth_Q().accessToken();
+                        String tokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
+                        refreshToken = response.data().userLoginAuth_Q().accessToken();
+                        String refreshTokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
+                        String user = response.data().userLoginAuth_Q().user();
+                        String message = response.data().userLoginAuth_Q().message();
+                        String userName = response.data().userLoginAuth_Q().name();
+                        String status = response.data().userLoginAuth_Q().status();
+                        Log.i("access Token",accessToken);
+                        authToken="Bearer"+" "+accessToken;
+                        Log.i("brarer token",authToken);
+                        if(status.equals("success")){
+                            SharedPreferences sp = getSharedPreferences("your_shared_pref_name", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sp.edit();
+                            editor.putString("access_token",accessToken);
+                            editor.putString("emailId",emailId);
+                            editor.putString("password",password);
+                            editor.apply();
+
+                        }else if(status.equals("Failure")){
+                            if(message.equals("Invalid token: access token has expired")){
+                                getNewRefreshToken(refreshToken);
+                            }
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+                    }
+                }
+        );
+
+    }
+
+
+    private void getNewRefreshToken(String refreshToken){
+        MyAppolloClient.getMyAppolloClient(Authorization).query(
+                GetRefreshToken.builder().refreshToken(refreshToken).grant_type("refresh_token")
+                        .build()).enqueue(
+                new ApolloCall.Callback<GetRefreshToken.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<GetRefreshToken.Data> response) {
+                        String message = response.data().userLoginAuth_Q().message();
+                        String status = response.data().userLoginAuth_Q().status();
+                        if(status.equals("success")){
+                            accessToken= response.data().userLoginAuth_Q().accessToken();
+                            String tokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
+                            String newRefreshToken = response.data().userLoginAuth_Q().accessToken();
+                            String refreshTokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
+                            String user = response.data().userLoginAuth_Q().user();
+                            String userName = response.data().userLoginAuth_Q().name();
+                            Log.i("access Token",accessToken);
+                            authToken="Bearer"+" "+accessToken;
+                            Log.i("brarer token",authToken);
+                            SharedPreferences sp = getSharedPreferences("your_shared_pref_name", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sp.edit();
+                            editor.putString("access_token",accessToken);
+                            editor.putString("refreshToken",newRefreshToken);
+                            editor.putString("emailId",emailId);
+                            editor.putString("password",password);
+                            editor.apply();
+
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+                    }
+                }
+        );
+
+    }
     private TextWatcher CardNum1EntryWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
