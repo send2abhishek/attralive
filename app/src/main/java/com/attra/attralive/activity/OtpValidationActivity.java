@@ -61,10 +61,11 @@ public class OtpValidationActivity extends AppCompatActivity {
         closeOtp = findViewById(R.id.iv_close_otp);
 
         Intent intent=this.getIntent();
-        if(intent !=null)
+        if(intent !=null) {
             emailId = intent.getStringExtra("emailId");
-            password= intent.getStringExtra("pass");
-//            Log.i("email id",emailId);
+            password = intent.getStringExtra("pass");
+            Log.i("email id",emailId);
+        }
 
 
         validateOTP =  findViewById(R.id.validate);
@@ -266,7 +267,7 @@ public class OtpValidationActivity extends AppCompatActivity {
                         Log.i("access Token",accessToken);
                         authToken="Bearer"+" "+accessToken;
                         Log.i("brarer token",authToken);
-                        if(status.equals("success")){
+                        if(status.equals("Success")){
 
                           SharedPreferences  preferences = getApplicationContext().getSharedPreferences(PREFS_AUTH, 0);
                             SharedPreferences.Editor editor = preferences.edit();

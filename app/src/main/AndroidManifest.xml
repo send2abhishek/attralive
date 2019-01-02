@@ -41,7 +41,7 @@
 
         <activity
 
-            android:name=".activity.SplashScreen">
+            android:name=".activity.UserDetailsActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"
@@ -62,7 +62,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme.NoActionBar"/>
 
-        <activity android:name=".activity.UserDetailsActivity" />
+        <activity android:name=".activity.SplashScreen" />
         <activity android:name=".activity.ForgotPasswordActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".activity.NewsFeedPostActivity"></activity>

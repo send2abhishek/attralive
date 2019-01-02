@@ -1,18 +1,22 @@
 package com.attra.attralive.activity;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
@@ -25,6 +29,7 @@ import com.attra.attralive.fragment.DatePickerFragment;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -39,7 +44,8 @@ import graphqlandroid.UserLoginAuth;
 
 public class UserDetailsActivity extends AppCompatActivity {
     Spinner designation,bu,location;
-    Button continueBtn;
+    CardView continueBtn;
+    TextView dob;
     private static final String[] designList = {"Please select","Software Engineer","Project Lead", "Project Lead", "Project manager"};
     List<String> buList = new ArrayList<String>();
     List<String> locationList = new ArrayList<String>();
@@ -67,17 +73,18 @@ public class UserDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_details);
-        designation = findViewById(R.id.sp_userDesignation);
-        bu = findViewById(R.id.sp_userBU);
+        designation = findViewById(R.id.sp_userWorkLocation);
+        bu = findViewById(R.id.sp_selectbu);
         location = findViewById(R.id.sp_userWorkLocation);
-        continueBtn = findViewById(R.id.btn_continue);
+        continueBtn = findViewById(R.id.crd_regbutton);
         radioSexGroup = (RadioGroup) findViewById(R.id.radioSex);
+        dob=findViewById(R.id.tv_userDob);
         Intent intent = getIntent();
         emailId = intent.getStringExtra("emailId");
         password = intent.getStringExtra("password");
-        getToken();
+       /* getToken();
         getNewRefreshToken(refreshToken);
-
+*/
         ArrayAdapter<String>designationAdapter = new ArrayAdapter<String>(UserDetailsActivity.this,
                 android.R.layout.simple_spinner_item,designList);
 
@@ -132,8 +139,22 @@ public class UserDetailsActivity extends AppCompatActivity {
 
     }
     public void showDatePickerDialog(View v) {
-        DialogFragment newFragment = new DatePickerFragment();
+        /*DialogFragment newFragment = new DatePickerFragment();
         newFragment.show(getSupportFragmentManager(), "datePicker");
+        */
+        final Calendar calendar = Calendar.getInstance();
+        int yy = calendar.get(Calendar.YEAR);
+        int mm = calendar.get(Calendar.MONTH);
+        int dd = calendar.get(Calendar.DAY_OF_MONTH);
+        DatePickerDialog datePicker = new DatePickerDialog(UserDetailsActivity.this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                String date = dayOfMonth+"/"+(monthOfYear+1)+"/"+year;
+                dob.setText(date);
+               // tfDate.setText(date);
+            }
+        }, yy, mm, dd);
+        datePicker.show();
     }
 
     private void getUserLocation(){
@@ -144,11 +165,12 @@ public class UserDetailsActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(@Nonnull Response<GetLocation.Data> response) {
                         Log.i("res", String.valueOf(response));
-                        for(int loopVar= 0; loopVar<response.data().getLocations_Q().locations().size(); loopVar++){
-                           String  locationData= response.data().getLocations_Q().locations().get(loopVar);
-                           locationList.add(locationData);
-                            Log.i("location",locationData);
-
+                        if(response.data().getLocations_Q().locations()!=null){
+                        for(int loopVar= 0; loopVar<response.data().getLocations_Q().locations().size(); loopVar++) {
+                            String locationData = response.data().getLocations_Q().locations().get(loopVar);
+                            locationList.add(locationData);
+                            Log.i("location", locationData);
+                        }
                         }
 
                         UserDetailsActivity.this.runOnUiThread(new Runnable() {
@@ -184,13 +206,14 @@ public class UserDetailsActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(@Nonnull Response<GetBusinessUnit.Data> response) {
                         Log.i("res", String.valueOf(response));
-                        for(int loopVar= 0; loopVar<response.data().getBusinessUnits_Q().businessUnits().size(); loopVar++){
-                            String  businessUnitData= response.data().getBusinessUnits_Q().businessUnits().get(loopVar);
-                            buList.add(businessUnitData);
-                            Log.i("location",businessUnitData);
+                        if(response.data().getBusinessUnits_Q().businessUnits()!=null) {
+                            for (int loopVar = 0; loopVar < response.data().getBusinessUnits_Q().businessUnits().size(); loopVar++) {
+                                String businessUnitData = response.data().getBusinessUnits_Q().businessUnits().get(loopVar);
+                                buList.add(businessUnitData);
+                                Log.i("location", businessUnitData);
 
+                            }
                         }
-
                         UserDetailsActivity.this.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -262,7 +285,7 @@ public class UserDetailsActivity extends AppCompatActivity {
 
     }
 
-    public void getToken(){
+   /* public void getToken(){
 
         MyAppolloClient.getMyAppolloClient(Authorization).query(
                 UserLoginAuth.builder().username(emailId).password(password)
@@ -344,5 +367,5 @@ public class UserDetailsActivity extends AppCompatActivity {
                 }
         );
 
-    }
+    }*/
 }

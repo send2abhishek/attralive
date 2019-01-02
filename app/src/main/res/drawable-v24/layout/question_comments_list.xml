@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+           <TextView
+               android:layout_width="0dp"
+               android:layout_weight="5"
+               android:layout_height="wrap_content"
+               android:id="@+id/tv_questioncomments"
+               android:text="Provide some more detailed information"
+               android:textSize="13sp"
+               android:paddingTop="8dp"
+               android:paddingLeft="8dp"
+               android:paddingBottom="3dp"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_usercreatedcomments"
+                android:text="Gayathry,Bangalore"
+                android:paddingRight="8dp"
+                android:textSize="13sp"
+                android:paddingTop="8dp"
+                android:paddingLeft="8dp"
+                android:paddingBottom="3dp"
+                android:textColor="#1EBBEE"/>
+        </LinearLayout>
+
+
+</LinearLayout>
