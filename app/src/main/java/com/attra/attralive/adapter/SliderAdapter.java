@@ -18,6 +18,7 @@ public class SliderAdapter extends PagerAdapter {
     Context context;
     int images[];
     LayoutInflater layoutInflater;
+    int image;
 
 
     public SliderAdapter(Context context, int images[]) {

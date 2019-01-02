@@ -131,7 +131,7 @@ public class UserDetailsActivity extends AppCompatActivity {
 
         String token="Bearer"+" "+accessToken;
         Log.i("brarer token",token);
-        MyAppolloClient.getMyAppolloClient("Bearer eb60aab61fc96a8e22960b468710088f04c2feab").query(
+        MyAppolloClient.getMyAppolloClient("Bearer 6fb3e5a2fe8040aacaf8290af36ad5920748be81").query(
                 GetLocation.builder()
                         .build()).enqueue(
                 new ApolloCall.Callback<GetLocation.Data>() {

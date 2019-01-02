@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,16 +21,25 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.apollographql.apollo.ApolloCall;
+import com.apollographql.apollo.api.Response;
+import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
+import com.attra.attralive.Service.MyAppolloClient;
 import com.attra.attralive.activity.NewsFeedPostActivity;
 import com.attra.attralive.adapter.NewsFeedListAdapter;
 import com.attra.attralive.adapter.SliderAdapter;
 import com.attra.attralive.adapter.WidgetAdapter;
 import com.attra.attralive.model.NewsFeed;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javax.annotation.Nonnull;
+
+import graphqlandroid.GetPosts;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -80,6 +90,11 @@ public class HomeFragment extends Fragment {
         newsFeed.setAdapter(newsFeedListAdapter);
 
         viewPager = view.findViewById(R.id.viewPager);
+        ImageView example = view.findViewById(R.id.imageView);
+
+//        Picasso.with(getActivity())
+//                .load("https://attralive.s3.ap-south-1.amazonaws.com/NewsFeedsPictures/1546237731525-launcher.jpeg")
+//                .into(example);
 
         myCustomPagerAdapter = new SliderAdapter(getActivity(), images);
         viewPager.setAdapter(myCustomPagerAdapter);
@@ -123,27 +138,60 @@ public class HomeFragment extends Fragment {
     }
 
     private void prepareNewsfeed() {
-        newsFeedList = new NewsFeed(R.drawable.ic_behance, R.drawable.blogreadimage, "Sangraj",
-                "This is tmy first post", "1 day ago", "Blockchain Technology", "12", "3");
-        newsFeedArrayList.add(newsFeedList);
-        newsFeedList = new NewsFeed(R.drawable.ic_behance, R.drawable.blogreadimage, "Sangraj",
-                "This is tmy first post", "1 day ago", "Blockchain Technology", "12", "3");
-        newsFeedArrayList.add(newsFeedList);
-        newsFeedList = new NewsFeed(R.drawable.ic_behance, R.drawable.blogreadimage, "Sangraj",
-                "This is tmy first post", "1 day ago", "Blockchain Technology", "12", "3");
-        newsFeedArrayList.add(newsFeedList);
-        newsFeedList = new NewsFeed(R.drawable.ic_behance, R.drawable.blogreadimage, "Sangraj",
-                "This is tmy first post", "1 day ago", "Blockchain Technology", "12", "3");
-        newsFeedArrayList.add(newsFeedList);
-        newsFeedList = new NewsFeed(R.drawable.ic_behance, R.drawable.blogreadimage, "Sangraj",
-                "This is tmy first post", "1 day ago", "Blockchain Technology", "12", "3");
-        newsFeedArrayList.add(newsFeedList);
-        newsFeedList = new NewsFeed(R.drawable.ic_behance, R.drawable.blogreadimage, "Sangraj",
-                "This is tmy first post", "1 day ago", "Blockchain Technology", "12", "3");
-        newsFeedArrayList.add(newsFeedList);
-        newsFeedList = new NewsFeed(R.drawable.ic_behance, R.drawable.blogreadimage, "Sangraj",
-                "This is tmy first post", "1 day ago", "Blockchain Technology", "12", "3");
-        newsFeedArrayList.add(newsFeedList);
+
+       MyAppolloClient.getMyAppolloClient("Bearer 5121b93ce464dc428d57ac3b3dbd262d1414c8fd").query(
+               GetPosts.builder().build()).enqueue(
+               new ApolloCall.Callback<GetPosts.Data>() {
+                   @Override
+                   public void onResponse(@Nonnull Response<GetPosts.Data> response) {
+                       String status = response.data().getPosts_Q().status();
+
+                       if(status.equals("Success"))
+                       {
+                           Log.i("","inside success");
+
+                           for(int i =0;i<response.data().getPosts_Q().posts().size();i++)
+                           {
+
+                           //   String data = response.data().getPosts_Q().posts().get(i).description();
+                               Log.i("",response.data().getPosts_Q().posts().get(i).description());
+                              newsFeedList = new NewsFeed(R.drawable.ic_behance,R.drawable.blogreadimage,"Mohseen Pasha","","",
+                                      response.data().getPosts_Q().posts().get(i).description(),"","");
+                              Log.i("",response.data().getPosts_Q().posts().get(i).description());
+                              newsFeedArrayList.add(newsFeedList);
+
+                           }
+                       }
+                   }
+
+                   @Override
+                   public void onFailure(@Nonnull ApolloException e) {
+
+                   }
+               }
+       );
+
+//        newsFeedList = new NewsFeed(R.drawable.ic_behance, R.drawable.blogreadimage, "Sangraj",
+//                "This is tmy first post", "1 day ago", "Blockchain Technology", "12", "3");
+//        newsFeedArrayList.add(newsFeedList);
+//        newsFeedList = new NewsFeed(R.drawable.ic_behance, R.drawable.blogreadimage, "Sangraj",
+//                "This is tmy first post", "1 day ago", "Blockchain Technology", "12", "3");
+//        newsFeedArrayList.add(newsFeedList);
+//        newsFeedList = new NewsFeed(R.drawable.ic_behance, R.drawable.blogreadimage, "Sangraj",
+//                "This is tmy first post", "1 day ago", "Blockchain Technology", "12", "3");
+//        newsFeedArrayList.add(newsFeedList);
+//        newsFeedList = new NewsFeed(R.drawable.ic_behance, R.drawable.blogreadimage, "Sangraj",
+//                "This is tmy first post", "1 day ago", "Blockchain Technology", "12", "3");
+//        newsFeedArrayList.add(newsFeedList);
+//        newsFeedList = new NewsFeed(R.drawable.ic_behance, R.drawable.blogreadimage, "Sangraj",
+//                "This is tmy first post", "1 day ago", "Blockchain Technology", "12", "3");
+//        newsFeedArrayList.add(newsFeedList);
+//        newsFeedList = new NewsFeed(R.drawable.ic_behance, R.drawable.blogreadimage, "Sangraj",
+//                "This is tmy first post", "1 day ago", "Blockchain Technology", "12", "3");
+//        newsFeedArrayList.add(newsFeedList);
+//        newsFeedList = new NewsFeed(R.drawable.ic_behance, R.drawable.blogreadimage, "Sangraj",
+//                "This is tmy first post", "1 day ago", "Blockchain Technology", "12", "3");
+//        newsFeedArrayList.add(newsFeedList);
     }
 
     public void AddItemsToRecyclerViewArrayList() {

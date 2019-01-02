@@ -5,13 +5,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="Attra"
-    android:textSize="30sp"
-    android:gravity="center"
-    android:paddingTop="250dp"/>
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="250dp"
+        android:layout_marginLeft="103dp"
+        android:src="@drawable/attra_logo"
+        android:layout_marginTop="60dp"
+        android:gravity="center"
+        android:paddingTop="90dp" />
 
     <TextView
         android:layout_width="match_parent"
