@@ -32,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     private String username,password;
 CardView loginbutton;
 EditText userName,userPassword;
-TextView attraemail,forgotpswd;
+TextView attraemail,forgotpswd,registerHere;
 TextInputLayout passwordtil,usernametil;
 CheckBox saveLoginCheckBox;
 String status,message;
@@ -54,6 +54,7 @@ String status,message;
         usernametil=findViewById(R.id.usernametil);
         forgotpswd=findViewById(R.id.tv_forgotpassword);
         saveLoginCheckBox = findViewById(R.id.chk_remmebrme);
+        registerHere = findViewById(R.id.tv_registerHere);
 
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         loginPrefsEditor = loginPreferences.edit();
@@ -63,6 +64,14 @@ String status,message;
             userPassword.setText(loginPreferences.getString("password", ""));
             saveLoginCheckBox.setChecked(true);
         }
+
+        registerHere.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),RegistrationActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
         forgotpswd.setOnClickListener(new View.OnClickListener() {

@@ -1,0 +1,15 @@
+mutation userDetailsUpdate(
+$userId:String!,
+$userName:String!,
+$designation:String!,
+$gender:String!,
+$location:String!,
+$bu:String!,
+$mobileNumber:String!,
+$profileImagePath:String!){
+updateUserDetails_M(userId:$userId,username:$userName,designation:$designation,gender:$gender,location:$location,bu:$bu,mobileNumber:$mobileNumber,profileImagePath:$profileImagePath){
+status
+message
+
+}
+}

@@ -75,8 +75,6 @@ public class UserDetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         emailId = intent.getStringExtra("emailId");
         password = intent.getStringExtra("password");
-        getToken();
-        getNewRefreshToken(refreshToken);
 
         ArrayAdapter<String>designationAdapter = new ArrayAdapter<String>(UserDetailsActivity.this,
                 android.R.layout.simple_spinner_item,designList);
@@ -262,87 +260,5 @@ public class UserDetailsActivity extends AppCompatActivity {
 
     }
 
-    public void getToken(){
 
-        MyAppolloClient.getMyAppolloClient(Authorization).query(
-                UserLoginAuth.builder().username(emailId).password(password)
-                        .build()).enqueue(
-                new ApolloCall.Callback<UserLoginAuth.Data>() {
-                    @Override
-                    public void onResponse(@Nonnull Response<UserLoginAuth.Data> response) {
-                        accessToken= response.data().userLoginAuth_Q().accessToken();
-                        String tokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
-                        refreshToken = response.data().userLoginAuth_Q().accessToken();
-                        String refreshTokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
-                        String user = response.data().userLoginAuth_Q().user();
-                        String message = response.data().userLoginAuth_Q().message();
-                        String userName = response.data().userLoginAuth_Q().name();
-                        String status = response.data().userLoginAuth_Q().status();
-                        Log.i("access Token",accessToken);
-                        authToken="Bearer"+" "+accessToken;
-                        Log.i("brarer token",authToken);
-                        if(status.equals("success")){
-
-                            SharedPreferences  preferences = getApplicationContext().getSharedPreferences(PREFS_AUTH, 0);
-                            SharedPreferences.Editor editor = preferences.edit();
-                            editor.putString("authToken",authToken);
-                            editor.commit();
-
-                        }else if(status.equals("Failure")){
-                            if(message.equals("Invalid token: access token has expired")){
-                                getNewRefreshToken(refreshToken);
-                            }
-
-                        }
-
-                    }
-
-                    @Override
-                    public void onFailure(@Nonnull ApolloException e) {
-                    }
-                }
-        );
-
-    }
-
-
-    private void getNewRefreshToken(String refreshToken){
-        MyAppolloClient.getMyAppolloClient(Authorization).query(
-                GetRefreshToken.builder().refreshToken(refreshToken).grant_type("refresh_token")
-                        .build()).enqueue(
-                new ApolloCall.Callback<GetRefreshToken.Data>() {
-                    @Override
-                    public void onResponse(@Nonnull Response<GetRefreshToken.Data> response) {
-                        String message = response.data().userLoginAuth_Q().message();
-                        String status = response.data().userLoginAuth_Q().status();
-                        if(status.equals("success")){
-                            accessToken= response.data().userLoginAuth_Q().accessToken();
-                            String tokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
-                            String newRefreshToken = response.data().userLoginAuth_Q().accessToken();
-                            String refreshTokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
-                            String user = response.data().userLoginAuth_Q().user();
-                            String userName = response.data().userLoginAuth_Q().name();
-                            Log.i("access Token",accessToken);
-                            authToken="Bearer"+" "+accessToken;
-                            Log.i("brarer token",authToken);
-                            SharedPreferences sp = getSharedPreferences("your_shared_pref_name", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sp.edit();
-                            editor.putString("access_token",accessToken);
-                            editor.putString("refreshToken",newRefreshToken);
-                            editor.putString("emailId",emailId);
-                            editor.putString("password",password);
-                            editor.apply();
-
-                        }
-
-
-                    }
-
-                    @Override
-                    public void onFailure(@Nonnull ApolloException e) {
-                    }
-                }
-        );
-
-    }
 }

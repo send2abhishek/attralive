@@ -9,7 +9,7 @@
 
     <!--Navigation Menu String-->
     <string name="action_logout">Logout</string>
-    <string name="action_termsAndCondition">Terms and Conditions</string>
+    <string name="action_about">About</string>
     <string name="action_facilities">Facilities</string>
     <string name="action_holidayCalender">Holiday Calender</string>
     <string name="landD">L&amp;D</string>
@@ -88,6 +88,9 @@
     <string name="regemail_text">EMAIL</string>
     <string name="confirmpswd_text">CONFIRM PASSWORD</string>
     <string name="continue_text">CONTINUE</string>
+    <string name="register_here">Not a user? Register Here</string>
+    <string name="agree">I agree to the</string>
+    <string name="tnm"><u>Terms and Conditions</u></string>
 
     <string name="termscontent">
         1. The app will be hosted on Amazon Web Services (AWS) cloud till Attraction 2018 till 28th Feb 2018 \n
@@ -117,7 +120,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-   <!-- Holiday Calender-->
+    <!-- Holiday Calender-->
     <string name="sn1">1</string>
     <string name="sn2">2</string>
     <string name="sn3">3</string>

@@ -319,8 +319,6 @@ public class OtpValidationActivity extends AppCompatActivity {
                             editor.apply();
 
                         }
-
-
                     }
 
                     @Override
