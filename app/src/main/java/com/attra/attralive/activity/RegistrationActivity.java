@@ -18,6 +18,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,6 +29,7 @@ import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
 import com.attra.attralive.Service.MyAppolloClient;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import javax.annotation.Nonnull;
 
@@ -39,13 +41,13 @@ public class RegistrationActivity extends AppCompatActivity {
     CardView regbutton;
     LinearLayout linearLayout1,linearLayout2;
     TextInputLayout fullnametil,emailtil,passwodtil,confirmpasswordtil;
-    TextView passworderror,emailerror,fullnameerror,confrmpswderror,attraEmail;
-    public static String MY_PREFS_NAME = "MyPrefsFile";
+    TextView passworderror,emailerror,fullnameerror,confrmpswderror,attraEmail,termsCondition;
     String token="";
     String emailId,pwd;
     String status,message;
     String numRegex   = ".*[0-9].*";
     String alphaRegex = ".*[a-zA-Z].*";
+    private CheckBox mi_agree;
     @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,10 @@ public class RegistrationActivity extends AppCompatActivity {
         emailerror=findViewById(R.id.tv_emailerror);
         confrmpswderror=findViewById(R.id.tv_confrmpswderror);
         attraEmail=findViewById(R.id.tv_attraemail);
+        termsCondition = findViewById(R.id.tnms);
+        mi_agree = (CheckBox) findViewById(R.id.i_agree);
+
+        fullname.setText(FirebaseInstanceId.getInstance().getToken());
         //fullname.requestFocus();
         regbutton=findViewById(R.id.crd_regbutton);
         fullnameerror.setTextColor(getResources().getColor(R.color.text_coloring_login));
@@ -203,6 +209,15 @@ public class RegistrationActivity extends AppCompatActivity {
             }
         });
 
+        termsCondition.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*Intent intent = new Intent(getApplicationContext(),TermsConditions.class);
+                startActivity(intent);*/
+                alertTermsCondition();
+            }
+        });
+
         confirmpassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -244,62 +259,78 @@ public class RegistrationActivity extends AppCompatActivity {
         regbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final ProgressDialog loading = ProgressDialog.show(RegistrationActivity.this, "Registering", "Please wait ", false, false);
-                Handler handler = new Handler();
-                pwd= password.getText().toString();
-                /*Intent intent = new Intent(RegistrationActivity.this, OtpValidationActivity.class);*/
 
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        loading.dismiss();
-                        emailId= email.getText().toString()+attraEmail.getText().toString();
-                        MyAppolloClient.getMyAppolloClient(token).mutate(UserRegistration.builder().name(fullname.getText().toString()).
-                                email((email.getText().toString()+attraEmail.getText().toString())).password(password.getText().toString()).build()).
-                                enqueue(new ApolloCall.Callback<UserRegistration.Data>() {
-                                    @Override
-                                    public void onResponse(@Nonnull Response<UserRegistration.Data> response) {
+                if (!(mi_agree.isChecked())) {
+                    Toast.makeText(RegistrationActivity.this, R.string.error_checkbox, Toast.LENGTH_SHORT).show();
+                } else {
+                    final ProgressDialog loading = ProgressDialog.show(RegistrationActivity.this, "Registering", "Please wait ", false, false);
+                    Handler handler = new Handler();
+                    pwd = password.getText().toString();
+                    /*Intent intent = new Intent(RegistrationActivity.this, OtpValidationActivity.class);*/
 
-                                        status = response.data().addUser_M().status();
-                                        message = response.data().addUser_M().message();
-                                        RegistrationActivity.this.runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                if (status.equals("Success")) {
-                                                    linearLayout1.setVisibility(View.GONE);
-                                                    linearLayout2.setVisibility(View.GONE);
-                                                    Toast.makeText(RegistrationActivity.this, "otp sent to your registered emailid", Toast.LENGTH_LONG).show();
-                                                    Intent intent = new Intent(RegistrationActivity.this, OtpValidationActivity.class);
-                                                    intent.putExtra("emailId",emailId );
-                                                    intent.putExtra("pass",pwd);
-                                                    Log.i("email in reg",emailId);
-                                                    Log.i("pass in Reg",pwd);
-                                                    startActivity(intent);
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                            loading.dismiss();
+                            emailId = email.getText().toString() + attraEmail.getText().toString();
+                            MyAppolloClient.getMyAppolloClient(token).mutate(UserRegistration.builder().name(fullname.getText().toString()).
+                                    email((email.getText().toString() + attraEmail.getText().toString())).password(password.getText().toString()).build()).
+                                    enqueue(new ApolloCall.Callback<UserRegistration.Data>() {
+                                        @Override
+                                        public void onResponse(@Nonnull Response<UserRegistration.Data> response) {
+
+                                            status = response.data().addUser_M().status();
+                                            message = response.data().addUser_M().message();
+                                            RegistrationActivity.this.runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    if (status.equals("Success")) {
+                                                        linearLayout1.setVisibility(View.GONE);
+                                                        linearLayout2.setVisibility(View.GONE);
+                                                        Toast.makeText(RegistrationActivity.this, "otp sent to your registered emailid", Toast.LENGTH_LONG).show();
+                                                        Intent intent = new Intent(RegistrationActivity.this, OtpValidationActivity.class);
+                                                        intent.putExtra("emailId", emailId);
+                                                        intent.putExtra("pass", pwd);
+                                                        Log.i("email in reg", emailId);
+                                                        Log.i("pass in Reg", pwd);
+                                                        startActivity(intent);
+                                                    } else if ((status.equals("Failure")) && (message.equals("User already exists"))) {
+                                                        linearLayout1.setVisibility(View.GONE);
+                                                        linearLayout2.setVisibility(View.GONE);
+                                                        Toast.makeText(RegistrationActivity.this, "Already registered. Please Login", Toast.LENGTH_LONG).show();
+                                                        Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
+                                                        intent.putExtra("emailId", emailId);
+                                                        startActivity(intent);
+                                                    }
                                                 }
-                                                else if ((status.equals("Failure"))&&(message.equals("User already exists"))) {
-                                                    linearLayout1.setVisibility(View.GONE);
-                                                    linearLayout2.setVisibility(View.GONE);
-                                                    Toast.makeText(RegistrationActivity.this, "Already registered. Please Login", Toast.LENGTH_LONG).show();
-                                                    Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
-                                                    intent.putExtra("emailId",emailId );
-                                                    startActivity(intent);
-                                                }
-                                            }
-                                        });
-                                    }
+                                            });
+                                        }
 
-                                    @Override
-                                    public void onFailure(@Nonnull ApolloException e) {
+                                        @Override
+                                        public void onFailure(@Nonnull ApolloException e) {
 
-                                    }
-                                });
+                                        }
+                                    });
 
 
-                    }
-                }, 4000);
+                        }
+                    }, 4000);
 
 
-
+                }
             }
         });
+    }
+    public void alertTermsCondition()
+    {
+        View myScrollView = getLayoutInflater().inflate(R.layout.activity_terms_conditions,null,false);
+
+        new AlertDialog.Builder(RegistrationActivity.this).setView(myScrollView)
+                .setTitle(R.string.tnms)
+                .setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        dialog.cancel();
+                    }
+                }).show();
     }
 }

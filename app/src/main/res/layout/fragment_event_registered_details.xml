@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:paddingTop="26dp"
+    tools:context=".fragment.EventDetailsFragment"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:layout_marginLeft="33dp"
+                android:id="@+id/tv_regid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:paddingLeft="35dp"
+                android:paddingRight="34dp"
+                android:paddingTop="38dp"
+                android:layout_marginTop="0dp"
+                android:paddingBottom="67dp"
+                android:background="@drawable/blue_rectangle"
+                android:gravity="center"
+                android:text="@string/registrationid"
+                android:textColor="#fefefe"
+                android:textSize="12dp" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="31dp"
+                android:layout_marginLeft="10dp"
+                android:paddingLeft="13dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp"
+                android:paddingRight="12dp"
+                android:src="@drawable/qrcode"
+                android:layout_toRightOf="@+id/tv_regid"
+                android:background="@drawable/grey_rectangle"
+                android:layout_alignParentEnd="true"/>
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+<android.support.v7.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="2dp"
+    android:layout_marginTop="20dp"
+    android:layout_marginLeft="33dp"
+    android:layout_marginRight="31dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:layout_marginLeft="44dp"
+            android:paddingTop="17dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:drawablePadding="10dp"
+            android:drawableLeft="@drawable/ic_place_red_24dp"
+            android:text="@string/hello_blank_fragment"
+            android:paddingRight="17dp"/>
+
+
+    <TextView
+        android:layout_marginLeft="44dp"
+        android:paddingTop="17dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:drawablePadding="10dp"
+        android:drawableLeft="@drawable/ic_date_range_blue_24dp"
+        android:text="26 JAN,2019"
+        android:paddingRight="17dp"/>
+    <TextView
+        android:layout_marginLeft="44dp"
+        android:paddingTop="17dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:drawablePadding="10dp"
+        android:drawableLeft="@drawable/ic_restore_black_24dp"
+        android:text="WED-05:00PM"
+        android:paddingRight="17dp"
+        android:paddingBottom="17dp"/>
+    </LinearLayout>
+</android.support.v7.widget.CardView>
+</LinearLayout>

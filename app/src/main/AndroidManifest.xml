@@ -19,13 +19,13 @@
         android:required="false"></uses-feature>
 
     <application
-        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="default" />
@@ -70,9 +70,9 @@
 
         <activity android:name=".activity.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <!--<activity android:name=".activity.SplashScreen"-->
-            <!--android:theme="@style/AppTheme.NoActionBar"-->
-            <!--/>-->
+        <activity android:name=".activity.SplashScreen"
+            android:theme="@style/AppTheme.NoActionBar"
+            />
         <activity android:name=".activity.TermsConditionsActivity"></activity>
         <activity android:name=".activity.OtpValidationActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
@@ -83,7 +83,7 @@
         <activity android:name=".activity.UserDetailsActivity" />
         <activity android:name=".activity.ForgotPasswordActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <!--<activity android:name=".activity.NewsFeedPostActivity"></activity>-->
+        <activity android:name=".activity.NewsFeedPostActivity"></activity>
     </application>
 
 </manifest>

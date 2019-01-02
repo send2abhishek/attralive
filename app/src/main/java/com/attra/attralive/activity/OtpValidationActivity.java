@@ -1,6 +1,7 @@
 package com.attra.attralive.activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -35,8 +36,6 @@ import graphqlandroid.ResendOtp;
 import graphqlandroid.SendDeviceToken;
 import graphqlandroid.UserLoginAuth;
 
-import static com.attra.attralive.activity.RegistrationActivity.MY_PREFS_NAME;
-
 
 public class OtpValidationActivity extends AppCompatActivity {
     TextView validateOTP;
@@ -51,6 +50,7 @@ public class OtpValidationActivity extends AppCompatActivity {
     String refreshToken;
     private static String accessToken,authToken;
     public static String  Authorization= "Basic YXBwbGljYXRpb246c2VjcmV0";
+    public static final String PREFS_AUTH ="my_auth";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,10 +61,11 @@ public class OtpValidationActivity extends AppCompatActivity {
         closeOtp = findViewById(R.id.iv_close_otp);
 
         Intent intent=this.getIntent();
-        if(intent !=null)
+        if(intent !=null) {
             emailId = intent.getStringExtra("emailId");
-            password= intent.getStringExtra("pass");
-//            Log.i("email id",emailId);
+            password = intent.getStringExtra("pass");
+            Log.i("email id",emailId);
+        }
 
 
         validateOTP =  findViewById(R.id.validate);
@@ -174,9 +175,9 @@ public class OtpValidationActivity extends AppCompatActivity {
                                         new ApolloCall.Callback<OtpValidation.Data>() {
                                             @Override
                                             public void onResponse(@Nonnull Response<OtpValidation.Data> response) {
-                                                String message= response.data().otpValidation_M().otpstatus();
+//                                                String message= response.data().otpValidation_M().otpstatus();
                                                 final String otpStatus = response.data().otpValidation_M().otpstatus();
-                                                Log.i("res_message",message);
+//                                                Log.i("res_message",message);
                                                 OtpValidationActivity.this.runOnUiThread(new Runnable() {
                                                     @Override
                                                     public void run() {
@@ -184,7 +185,8 @@ public class OtpValidationActivity extends AppCompatActivity {
                                                             getToken();
                                                             sendDeviceToken();
                                                             Intent intent1 = new Intent(getApplicationContext(),UserDetailsActivity.class);
-                                                            //intent.putExtra("accessToken",token);
+                                                            intent.putExtra("emailId",emailId);
+                                                            intent.putExtra("password",password);
                                                             startActivity(intent1);
                                                         }
                                                         else{
@@ -265,13 +267,12 @@ public class OtpValidationActivity extends AppCompatActivity {
                         Log.i("access Token",accessToken);
                         authToken="Bearer"+" "+accessToken;
                         Log.i("brarer token",authToken);
-                        if(status.equals("success")){
-                            SharedPreferences sp = getSharedPreferences("your_shared_pref_name", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sp.edit();
-                            editor.putString("access_token",accessToken);
-                            editor.putString("emailId",emailId);
-                            editor.putString("password",password);
-                            editor.apply();
+                        if(status.equals("Success")){
+
+                          SharedPreferences  preferences = getApplicationContext().getSharedPreferences(PREFS_AUTH, 0);
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString("authToken",authToken);
+                            editor.commit();
 
                         }else if(status.equals("Failure")){
                             if(message.equals("Invalid token: access token has expired")){
@@ -319,8 +320,6 @@ public class OtpValidationActivity extends AppCompatActivity {
                             editor.apply();
 
                         }
-
-
                     }
 
                     @Override
