@@ -37,7 +37,7 @@
 
     <!--User Details Update screen-->
     <string name="please_update_your_details">Welcome user,Update Your details</string>
-    <string name="user_name">EmployeeID</string>
+    <string name="user_name">Enter your Name</string>
     <string name="gender">Gender</string>
     <string name="designation">Designation</string>
     <string name="work_location">Work Location</string>
@@ -68,8 +68,7 @@
     <string name="fcm_message">FCM Message</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">EC-Phase II,Hosur road,"\n"
-    560068</string>
+
     //Login Screen
     <string name="welcome">Hi! Welcome to</string>
     <string name="attra">Attra</string>
@@ -123,8 +122,15 @@
     <string name="submit_btn">Submit</string>
 
     <!-- TODO: Remove or change this placeholder text -->
+<<<<<<< HEAD
 
 
+=======
+    <string name="hello_blank_fragment">EC-Phase II,Hosur road,"\n"
+    560068</string>
+    <string name="registrationid">REGISTRATION ID"\n\n"
+    ATT3224312</string>
+>>>>>>> 7a623b0fdf9d81195f08784a27ae21b1c1a216b6
     <!-- Holiday Calender-->
     <string name="sn1">1</string>
     <string name="sn2">2</string>

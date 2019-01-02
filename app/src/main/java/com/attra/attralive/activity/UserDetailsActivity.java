@@ -48,34 +48,39 @@ import graphqlandroid.UserDetailsUpdate;
 
 
 public class UserDetailsActivity extends AppCompatActivity {
-    Spinner bu,location;
+    Spinner bu, location;
     CardView continueBtn;
     TextView dob;
-  /*  List<String> buList = new ArrayList<String>();
-    List<String> locationList = new ArrayList<String>();*/
+      List<String> buList = new ArrayList<String>();
+      List<String> locationList = new ArrayList<String>();
     private RadioGroup radioSexGroup;
     private RadioButton radioSexButton;
     Button submitDetails;
-    String emailId,password,authToken;
-    EditText empId,phNo,userDesign;
+    String emailId, password, authToken;
+    EditText empId, phNo, userDesign;
     String accessToken;
     static String authheader;
     String name;
-    String designationValue ;
-    String locationValue ;
-    String buValue ;
+    String designationValue;
+    String locationValue;
+    String buValue;
     String phoneNumValue;
     String dobValue;
     String gender;
-    String token="";
+    String token = "";
     String refreshToken;
-    public static String  authHeader= "Basic YXBwbGljYXRpb246c2VjcmV0";
+    public static String authHeader = "Basic YXBwbGljYXRpb246c2VjcmV0";
     private static final String URL = "http://192.168.1.100/graphql/";
     private static ApolloClient apolloClient;
-    public static final String PREFS_AUTH ="my_auth";
-    public static String  Authorization= "Basic YXBwbGljYXRpb246c2VjcmV0";
-    private static final String[] buList = {"Please select","Synchrony","Practice", "APAC", "Corporate"};
-    private static final String[] locationList = {"Please select","Banalore","Practice", "APAC", "Corporate"};
+    public static final String PREFS_AUTH = "my_auth";
+    public static String Authorization = "Basic YXBwbGljYXRpb246c2VjcmV0";
+
+    private static final String[] userbuList = {"Please select", "Synchrony", "Practice", "APAC", "Corporate"};
+    private static final String[] userlocationList = {"Please select", "Banalore", "Practice", "APAC", "Corporate"};
+
+    private SharedPreferences sharedPreferences;
+    String tokrn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,25 +90,40 @@ public class UserDetailsActivity extends AppCompatActivity {
         location = findViewById(R.id.sp_userWorkLocation);
         continueBtn = findViewById(R.id.crd_regbutton);
         radioSexGroup = (RadioGroup) findViewById(R.id.radioSex);
-        dob=findViewById(R.id.tv_userDob);
+        dob = findViewById(R.id.tv_userDob);
         Intent intent = getIntent();
         emailId = intent.getStringExtra("emailId");
         password = intent.getStringExtra("password");
+
         empId = findViewById(R.id.et_entername);
         phNo = findViewById(R.id.et_mobilenumber);
 
         ArrayAdapter<String> locationAdapter = new ArrayAdapter<>(UserDetailsActivity.this,
-                android.R.layout.simple_spinner_item,locationList);
+                android.R.layout.simple_spinner_item, userlocationList);
         locationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         location.setAdapter(locationAdapter);
         location.setSelection(0);
 
         ArrayAdapter<String> userBuAdapter = new ArrayAdapter<>(UserDetailsActivity.this,
-                android.R.layout.simple_spinner_item,buList);
+                android.R.layout.simple_spinner_item, userbuList);
 
         userBuAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         bu.setAdapter(userBuAdapter);
         bu.setSelection(0);
+
+
+        sharedPreferences = getSharedPreferences(PREFS_AUTH, Context.MODE_PRIVATE);
+        if (sharedPreferences.contains("authToken")) {
+            tokrn = sharedPreferences.getString("authToken", "");
+            Toast.makeText(getApplicationContext(), tokrn, Toast.LENGTH_LONG).show();
+
+        }
+
+       /* getToken();
+        getNewRefreshToken(refreshToken);
+*//*
+        ArrayAdapter<String>designationAdapter = new ArrayAdapter<String>(UserDetailsActivity.this,
+                android.R.layout.simple_spinner_item,designList);*/
 
 
       /*  SharedPreferences sp = getSharedPreferences(PREFS_AUTH,Context.MODE_PRIVATE);
@@ -117,7 +137,7 @@ public class UserDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String userName="Awnish";
+                String userName = "Awnish";
                 String userId = "asd";
                 String designation = userDesign.getText().toString();
                 String dobValue = dob.getText().toString();
@@ -128,34 +148,25 @@ public class UserDetailsActivity extends AppCompatActivity {
                 String imagePath = "wqeqeqweqe";
                 String gender = "Male";
 
-                if(employeeId.trim().equals("")){
+                if (employeeId.trim().equals("")) {
                     empId.setError("Employee Id is required");
                     empId.requestFocus();
-                }
-                else if(designation.trim().equals(""))
-                {
+                } else if (designation.trim().equals("")) {
                     userDesign.setError("Designation is required");
                     userDesign.requestFocus();
-                }
-                else if (workLoc.trim().equals("")) {
-                    ((TextView)location.getSelectedView()).setError("Select Location");
-                    ((TextView)location.getSelectedView()).requestFocus();
-                }
-                else if (dobValue.trim().equals("")){
+                } else if (workLoc.trim().equals("")) {
+                    ((TextView) location.getSelectedView()).setError("Select Location");
+                    ((TextView) location.getSelectedView()).requestFocus();
+                } else if (dobValue.trim().equals("")) {
                     dob.setError("Dob is required");
                     dob.requestFocus();
-                }
-                else if (userBu.trim().equals("")) {
-                    ((TextView)bu.getSelectedView()).setError("Select BU");
-                    ((TextView)bu.getSelectedView()).requestFocus();
-                }
-                else if(mobile.length()<10)
-                {
+                } else if (userBu.trim().equals("")) {
+                    ((TextView) bu.getSelectedView()).setError("Select BU");
+                    ((TextView) bu.getSelectedView()).requestFocus();
+                } else if (mobile.length() < 10) {
                     phNo.setError("Enter valid Contact Number");
                     phNo.requestFocus();
-                }
-                else
-                {
+                } else {
                     MyAppolloClient.getMyAppolloClient("Bearer ae56400f9ab034a2b21366eb86bc0561e1a3739c").mutate(
                             UserDetailsUpdate.builder().userId(userId).userName(userName).gender(gender).bu(buValue).designation(designation).dob(dobValue).empId(employeeId).location(workLoc)
                                     .bu(userBu).mobileNumber(mobile).profileImagePath(imagePath)
@@ -166,15 +177,15 @@ public class UserDetailsActivity extends AppCompatActivity {
 //                                                String message= response.data().otpValidation_M().otpstatus();
                                     final String status = response.data().updateUserDetails_M().status();
                                     final String message = response.data().updateUserDetails_M().message();
-                                    Log.i("res_message",message);
-                                    Log.i("res_status userDetails",status);
+                                    Log.i("res_message", message);
+                                    Log.i("res_status userDetails", status);
 
                                     UserDetailsActivity.this.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            if(status.equals("Success")){
-                                             Intent intent1 = new Intent(getApplicationContext(),DashboardActivity.class);
-                                             startActivity(intent1);
+                                            if (status.equals("Success")) {
+                                                Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
+                                                startActivity(intent1);
                                             }
                                         }
                                     });
@@ -228,9 +239,8 @@ public class UserDetailsActivity extends AppCompatActivity {
         });*/
 
 
-
-
     }
+
     public void showDatePickerDialog(View v) {
         /*DialogFragment newFragment = new DatePickerFragment();
         newFragment.show(getSupportFragmentManager(), "datePicker");
@@ -242,16 +252,21 @@ public class UserDetailsActivity extends AppCompatActivity {
         DatePickerDialog datePicker = new DatePickerDialog(UserDetailsActivity.this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                String date = dayOfMonth+"/"+(monthOfYear+1)+"/"+year;
+                String date = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
                 dob.setText(date);
-               // tfDate.setText(date);
+                // tfDate.setText(date);
             }
         }, yy, mm, dd);
         datePicker.show();
     }
 
+
    /* private void getUserLocation(){
         MyAppolloClient.getMyAppolloClient("ae56400f9ab034a2b21366eb86bc0561e1a3739c").query(
+=======
+    private void getUserLocation(){
+        MyAppolloClient.getMyAppolloClient(tokrn).query(
+>>>>>>> 7a623b0fdf9d81195f08784a27ae21b1c1a216b6
                 GetLocation.builder()
                         .build()).enqueue(
                 new ApolloCall.Callback<GetLocation.Data>() {
@@ -287,12 +302,11 @@ public class UserDetailsActivity extends AppCompatActivity {
 
     }*/
 
-   /* private void getUserBU(){
-       *//* SharedPreferences sp = getSharedPreferences(PREFS_AUTH,Context.MODE_PRIVATE);
-        String token = sp.getString(authToken,"");
-*//*
-        Log.i("token in user details",token);
-        MyAppolloClient.getMyAppolloClient("ae56400f9ab034a2b21366eb86bc0561e1a3739c").query(
+     private void getUserBU(){
+
+
+        Log.i("token in user details",tokrn);
+        MyAppolloClient.getMyAppolloClient(tokrn).query(
                 GetBusinessUnit.builder()
                         .build()).enqueue(
                 new ApolloCall.Callback<GetBusinessUnit.Data>() {
@@ -329,7 +343,7 @@ public class UserDetailsActivity extends AppCompatActivity {
 
     }
 
-*/
+
 /*  public static ApolloClient getToken(){
       HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
       loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);

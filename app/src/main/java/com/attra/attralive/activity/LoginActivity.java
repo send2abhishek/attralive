@@ -36,6 +36,8 @@ TextView attraemail,forgotpswd,registerHere;
 TextInputLayout passwordtil,usernametil;
 CheckBox saveLoginCheckBox;
 String status,message;
+
+
     private SharedPreferences loginPreferences;
     private SharedPreferences.Editor loginPrefsEditor;
     private Boolean saveLogin;
