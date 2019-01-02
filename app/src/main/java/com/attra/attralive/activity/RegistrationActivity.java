@@ -40,7 +40,6 @@ public class RegistrationActivity extends AppCompatActivity {
     LinearLayout linearLayout1,linearLayout2;
     TextInputLayout fullnametil,emailtil,passwodtil,confirmpasswordtil;
     TextView passworderror,emailerror,fullnameerror,confrmpswderror,attraEmail;
-    public static String MY_PREFS_NAME = "MyPrefsFile";
     String token="";
     String emailId,pwd;
     String status,message;

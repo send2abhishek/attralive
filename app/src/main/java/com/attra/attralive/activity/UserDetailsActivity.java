@@ -1,4 +1,5 @@
 package com.attra.attralive.activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.app.DialogFragment;
@@ -21,6 +22,7 @@ import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
 import com.attra.attralive.Service.MyAppolloClient;
 import com.attra.attralive.fragment.DatePickerFragment;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +31,11 @@ import javax.annotation.Nonnull;
 
 import graphqlandroid.GetBusinessUnit;
 import graphqlandroid.GetLocation;
+import graphqlandroid.GetRefreshToken;
+import graphqlandroid.SendDeviceToken;
+import graphqlandroid.UserLoginAuth;
 
-import static com.attra.attralive.activity.RegistrationActivity.MY_PREFS_NAME;
+
 
 public class UserDetailsActivity extends AppCompatActivity {
     Spinner designation,bu,location;
@@ -51,9 +56,13 @@ public class UserDetailsActivity extends AppCompatActivity {
     String phoneNumValue;
     String dobValue;
     String gender;
+    String token="";
+    String refreshToken;
     public static String  authHeader= "Basic YXBwbGljYXRpb246c2VjcmV0";
     private static final String URL = "http://192.168.1.100/graphql/";
     private static ApolloClient apolloClient;
+    public static final String PREFS_AUTH ="my_auth";
+    public static String  Authorization= "Basic YXBwbGljYXRpb246c2VjcmV0";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,9 +72,11 @@ public class UserDetailsActivity extends AppCompatActivity {
         location = findViewById(R.id.sp_userWorkLocation);
         continueBtn = findViewById(R.id.btn_continue);
         radioSexGroup = (RadioGroup) findViewById(R.id.radioSex);
-
-        getUserBU();
-        getUserLocation();
+        Intent intent = getIntent();
+        emailId = intent.getStringExtra("emailId");
+        password = intent.getStringExtra("password");
+        getToken();
+        getNewRefreshToken(refreshToken);
 
         ArrayAdapter<String>designationAdapter = new ArrayAdapter<String>(UserDetailsActivity.this,
                 android.R.layout.simple_spinner_item,designList);
@@ -73,7 +84,11 @@ public class UserDetailsActivity extends AppCompatActivity {
         designationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         designation.setAdapter(designationAdapter);
         designation.setSelection(0);
-
+      /*  SharedPreferences sp = getSharedPreferences(PREFS_AUTH,Context.MODE_PRIVATE);
+        token = sp.getString(authToken,"");
+        Log.i("token in UserDetails",token);*/
+        getUserBU();
+        getUserLocation();
 
 
         continueBtn.setOnClickListener(new View.OnClickListener() {
@@ -122,16 +137,7 @@ public class UserDetailsActivity extends AppCompatActivity {
     }
 
     private void getUserLocation(){
-        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-        String restoredText = prefs.getString("text", null);
-        if (restoredText != null) {
-            accessToken= prefs.getString("access_token",null);
-            Log.i("token in user detail",accessToken);
-        }
-
-        String token="Bearer"+" "+accessToken;
-        Log.i("brarer token",token);
-        MyAppolloClient.getMyAppolloClient("Bearer eb60aab61fc96a8e22960b468710088f04c2feab").query(
+        MyAppolloClient.getMyAppolloClient(token).query(
                 GetLocation.builder()
                         .build()).enqueue(
                 new ApolloCall.Callback<GetLocation.Data>() {
@@ -167,16 +173,11 @@ public class UserDetailsActivity extends AppCompatActivity {
     }
 
     private void getUserBU(){
-        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-        String restoredText = prefs.getString("text", null);
-        if (restoredText != null) {
-            accessToken= prefs.getString("access_token",null);
-            Log.i("token in user detail",accessToken);
-        }
-
-        String token="Bearer"+" "+accessToken;
-        Log.i("brarer token",token);
-        MyAppolloClient.getMyAppolloClient("Bearer eb60aab61fc96a8e22960b468710088f04c2feab").query(
+       /* SharedPreferences sp = getSharedPreferences(PREFS_AUTH,Context.MODE_PRIVATE);
+        String token = sp.getString(authToken,"");
+*/
+        Log.i("token in user details",token);
+        MyAppolloClient.getMyAppolloClient(token).query(
                 GetBusinessUnit.builder()
                         .build()).enqueue(
                 new ApolloCall.Callback<GetBusinessUnit.Data>() {
@@ -237,4 +238,111 @@ public class UserDetailsActivity extends AppCompatActivity {
     }*/
 
 
+    private void sendDeviceToken(){
+
+        String deviceToken = FirebaseInstanceId.getInstance().getToken();
+        MyAppolloClient.getMyAppolloClient(token).mutate(
+                SendDeviceToken.builder().userId(emailId)
+                        .deviceId(deviceToken)
+                        .build()).enqueue(
+                new ApolloCall.Callback<SendDeviceToken.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<SendDeviceToken.Data> response) {
+                        String message= response.data().registerDeviceId_M().message();
+                        final String status = response.data().registerDeviceId_M().status();
+                        Log.i("res_message",message);
+
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+                    }
+                }
+        );
+
+    }
+
+    public void getToken(){
+
+        MyAppolloClient.getMyAppolloClient(Authorization).query(
+                UserLoginAuth.builder().username(emailId).password(password)
+                        .build()).enqueue(
+                new ApolloCall.Callback<UserLoginAuth.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<UserLoginAuth.Data> response) {
+                        accessToken= response.data().userLoginAuth_Q().accessToken();
+                        String tokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
+                        refreshToken = response.data().userLoginAuth_Q().accessToken();
+                        String refreshTokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
+                        String user = response.data().userLoginAuth_Q().user();
+                        String message = response.data().userLoginAuth_Q().message();
+                        String userName = response.data().userLoginAuth_Q().name();
+                        String status = response.data().userLoginAuth_Q().status();
+                        Log.i("access Token",accessToken);
+                        authToken="Bearer"+" "+accessToken;
+                        Log.i("brarer token",authToken);
+                        if(status.equals("success")){
+
+                            SharedPreferences  preferences = getApplicationContext().getSharedPreferences(PREFS_AUTH, 0);
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString("authToken",authToken);
+                            editor.commit();
+
+                        }else if(status.equals("Failure")){
+                            if(message.equals("Invalid token: access token has expired")){
+                                getNewRefreshToken(refreshToken);
+                            }
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+                    }
+                }
+        );
+
+    }
+
+
+    private void getNewRefreshToken(String refreshToken){
+        MyAppolloClient.getMyAppolloClient(Authorization).query(
+                GetRefreshToken.builder().refreshToken(refreshToken).grant_type("refresh_token")
+                        .build()).enqueue(
+                new ApolloCall.Callback<GetRefreshToken.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<GetRefreshToken.Data> response) {
+                        String message = response.data().userLoginAuth_Q().message();
+                        String status = response.data().userLoginAuth_Q().status();
+                        if(status.equals("success")){
+                            accessToken= response.data().userLoginAuth_Q().accessToken();
+                            String tokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
+                            String newRefreshToken = response.data().userLoginAuth_Q().accessToken();
+                            String refreshTokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
+                            String user = response.data().userLoginAuth_Q().user();
+                            String userName = response.data().userLoginAuth_Q().name();
+                            Log.i("access Token",accessToken);
+                            authToken="Bearer"+" "+accessToken;
+                            Log.i("brarer token",authToken);
+                            SharedPreferences sp = getSharedPreferences("your_shared_pref_name", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sp.edit();
+                            editor.putString("access_token",accessToken);
+                            editor.putString("refreshToken",newRefreshToken);
+                            editor.putString("emailId",emailId);
+                            editor.putString("password",password);
+                            editor.apply();
+
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+                    }
+                }
+        );
+
+    }
 }
