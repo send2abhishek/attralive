@@ -30,12 +30,12 @@ import graphqlandroid.UserLoginAuth;
 
 public class LoginActivity extends AppCompatActivity {
     private String username,password;
-CardView loginbutton;
-EditText userName,userPassword;
-TextView attraemail,forgotpswd;
-TextInputLayout passwordtil,usernametil;
-CheckBox saveLoginCheckBox;
-String status,message;
+    CardView loginbutton;
+    EditText userName,userPassword;
+    TextView attraemail,forgotpswd;
+    TextInputLayout passwordtil,usernametil;
+    CheckBox saveLoginCheckBox;
+    String status,message;
     private SharedPreferences loginPreferences;
     private SharedPreferences.Editor loginPrefsEditor;
     private Boolean saveLogin;

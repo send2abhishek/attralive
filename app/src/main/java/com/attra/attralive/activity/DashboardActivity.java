@@ -180,8 +180,8 @@ public class DashboardActivity extends AppCompatActivity
             loadFragment(fragment);
 
         } else if (id == R.id.nav_facilities) {
-            Intent intent = new Intent(getApplicationContext(),OtpValidationActivity.class);
-            startActivity(intent);
+            /*Intent intent = new Intent(getApplicationContext(),OtpValidationActivity.class);
+            startActivity(intent);*/
 
         }  else if (id == R.id.nav_settings) {
             fragment = new NotificationListFragment();
@@ -213,6 +213,8 @@ public class DashboardActivity extends AppCompatActivity
                     loadFragment(fragment);
                     return true;
                 case R.id.navigation_event:
+                    Intent i=new Intent(getApplicationContext(),EventDetailsActivity.class);
+                    startActivity(i);
                     return true;
                 case R.id.navigation_blog:
                     fragment = new DigiquizFragment();

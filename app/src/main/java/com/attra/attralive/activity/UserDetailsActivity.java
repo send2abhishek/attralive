@@ -69,6 +69,8 @@ public class UserDetailsActivity extends AppCompatActivity {
     private static ApolloClient apolloClient;
     public static final String PREFS_AUTH ="my_auth";
     public static String  Authorization= "Basic YXBwbGljYXRpb246c2VjcmV0";
+    private SharedPreferences sharedPreferences;
+    String tokrn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +84,14 @@ public class UserDetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         emailId = intent.getStringExtra("emailId");
         password = intent.getStringExtra("password");
+        sharedPreferences = getSharedPreferences(PREFS_AUTH, Context.MODE_PRIVATE);
+        if (sharedPreferences.contains("authToken"))
+        {
+            tokrn = sharedPreferences.getString("authToken", "");
+            Toast.makeText(getApplicationContext(),tokrn,Toast.LENGTH_LONG).show();
+
+        }
+
        /* getToken();
         getNewRefreshToken(refreshToken);
 */
@@ -158,7 +168,7 @@ public class UserDetailsActivity extends AppCompatActivity {
     }
 
     private void getUserLocation(){
-        MyAppolloClient.getMyAppolloClient(token).query(
+        MyAppolloClient.getMyAppolloClient(tokrn).query(
                 GetLocation.builder()
                         .build()).enqueue(
                 new ApolloCall.Callback<GetLocation.Data>() {
@@ -198,8 +208,8 @@ public class UserDetailsActivity extends AppCompatActivity {
        /* SharedPreferences sp = getSharedPreferences(PREFS_AUTH,Context.MODE_PRIVATE);
         String token = sp.getString(authToken,"");
 */
-        Log.i("token in user details",token);
-        MyAppolloClient.getMyAppolloClient(token).query(
+        Log.i("token in user details",tokrn);
+        MyAppolloClient.getMyAppolloClient(tokrn).query(
                 GetBusinessUnit.builder()
                         .build()).enqueue(
                 new ApolloCall.Callback<GetBusinessUnit.Data>() {
