@@ -32,7 +32,6 @@ import com.attra.attralive.fragment.Gallery;
 import com.attra.attralive.fragment.HolidayCalender;
 import com.attra.attralive.fragment.HomeFragment;
 import com.attra.attralive.fragment.LearningD;
-import com.attra.attralive.fragment.NotificationListFragment;
 import com.attra.attralive.model.NewsFeed;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
