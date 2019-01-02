@@ -2,6 +2,7 @@ package com.attra.attralive.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,7 +16,10 @@ LinearLayout backtologinbtn;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
-        backtologinbtn=findViewById(R.id.backtologin);
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar!=null)
+        actionBar.hide();
+        backtologinbtn=findViewById(R.id.back_to_login_layout);
         this.getWindow().setStatusBarColor(Color.TRANSPARENT);
         backtologinbtn.setOnClickListener(new View.OnClickListener() {
             @Override
