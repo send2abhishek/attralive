@@ -362,7 +362,7 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
 
                     }
 
-                    Toast.makeText(getApplicationContext(), response.code() + " ", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Successfully posted" + " ", Toast.LENGTH_LONG).show();
                 }
 
                 @Override
@@ -404,6 +404,7 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
                     }
                 }
         );
+        finish();
     }
 
     @Override
@@ -418,10 +419,12 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
                     multipartImageUpload();
                 else {
                     Toast.makeText(getApplicationContext(), "Bitmap is null. Try again", Toast.LENGTH_SHORT).show();
+
                 }
                 break;
 
         }
     }
+
 }
 

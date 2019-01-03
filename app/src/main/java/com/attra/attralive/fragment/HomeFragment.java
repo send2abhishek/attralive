@@ -61,7 +61,7 @@ public class HomeFragment extends Fragment {
     View ChildView;
     int RecyclerViewItemPosition;
     ViewPager viewPager;
-    int images[] = {R.drawable.blogreadimage, R.drawable.blogreadimage, R.drawable.blogreadimage, R.drawable.blogreadimage};
+    int images[] = {R.drawable.attractionposter, R.drawable.attractionposter, R.drawable.attractionposter, R.drawable.attractionposter};
     SliderAdapter myCustomPagerAdapter;
 
     // imgview.setScaleType(ImageView.ScaleType.FIT_XY);
