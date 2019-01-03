@@ -37,6 +37,7 @@
 
     <!--User Details Update screen-->
     <string name="please_update_your_details">Welcome user,Update Your details</string>
+    <string name="profileDetails">Profile Details</string>
     <string name="user_name">Enter your Name</string>
     <string name="gender">Gender</string>
     <string name="designation">Designation</string>
@@ -122,8 +123,6 @@
     <string name="submit_btn">Submit</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-
-
 
     <string name="hello_blank_fragment">EC-Phase II,Hosur road,"\n"
     560068</string>

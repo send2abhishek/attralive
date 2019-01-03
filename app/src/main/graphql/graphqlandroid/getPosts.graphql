@@ -1,0 +1,10 @@
+query getPosts{
+  getPosts_Q{
+    posts{
+    userId
+    description
+    filePath
+    }
+     status
+  }
+}

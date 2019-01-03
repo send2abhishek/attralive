@@ -30,10 +30,10 @@
                 android:id="@+id/nav_facilities"
                 android:icon="@drawable/ic_layers_black_24dp"
                 android:title="@string/action_facilities" />
-           <!-- <item
+            <item
                 android:id="@+id/nav_settings"
                 android:icon="@drawable/ic_settings_black_24dp"
-                android:title="@string/action_settings" />-->
+                android:title="@string/action_settings" />
         </menu>
     </item>
     <group
