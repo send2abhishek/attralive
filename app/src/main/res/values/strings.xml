@@ -122,15 +122,14 @@
     <string name="submit_btn">Submit</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-<<<<<<< HEAD
 
 
-=======
+
     <string name="hello_blank_fragment">EC-Phase II,Hosur road,"\n"
     560068</string>
     <string name="registrationid">REGISTRATION ID"\n\n"
     ATT3224312</string>
->>>>>>> 7a623b0fdf9d81195f08784a27ae21b1c1a216b6
+
     <!-- Holiday Calender-->
     <string name="sn1">1</string>
     <string name="sn2">2</string>

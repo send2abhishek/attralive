@@ -70,7 +70,7 @@ public class RegistrationActivity extends AppCompatActivity {
         termsCondition = findViewById(R.id.tnms);
         mi_agree = (CheckBox) findViewById(R.id.i_agree);
 
-        fullname.setText(FirebaseInstanceId.getInstance().getToken());
+        /*fullname.setText(FirebaseInstanceId.getInstance().getToken());*/
         //fullname.requestFocus();
         regbutton=findViewById(R.id.crd_regbutton);
         fullnameerror.setTextColor(getResources().getColor(R.color.text_coloring_login));
