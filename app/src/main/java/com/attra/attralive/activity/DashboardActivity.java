@@ -123,7 +123,9 @@ public class DashboardActivity extends AppCompatActivity
         View headerView = navigationView.getHeaderView(0);
         userName = (TextView) headerView.findViewById(R.id.tv_username);
         userEmail = headerView.findViewById(R.id.textView_email);
+<<<<<<< HEAD
         profileNav = headerView.findViewById(R.id.iv_profile);*/
+        profileNav = headerView.findViewById(R.id.iv_profile);
        /* getProfileDetails();*/
 
 
@@ -178,6 +180,9 @@ public class DashboardActivity extends AppCompatActivity
     }*/
 
    /* private void getProfileDetails(){
+=======
+  /*  private void getProfileDetails(){
+>>>>>>> 0f513db98958816ee13081e3fd2f4ed5c9ea4357
 
 
         MyAppolloClient.getMyAppolloClient(myToken).query(
@@ -207,8 +212,11 @@ public class DashboardActivity extends AppCompatActivity
                 }
         );
 
+<<<<<<< HEAD
     }
 */
+
+
 
     private void subscribeToTopic(){
 
@@ -331,11 +339,31 @@ public class DashboardActivity extends AppCompatActivity
 
 
     @Override public boolean onCreateOptionsMenu(final Menu menu) {
+        ImageView mImageLayoutView=null;
+        TextView myTextView,myTextLayoutView;
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.dashboard_toolbar, menu);
-        final View menu_notification_list = menu.findItem(R.id.menu_notification).getActionView();
+        //final View menu_notification_list = menu.findItem(R.id.menu_item).getActionView();
+        final View actionView = menu.findItem(R.id.menu_item).getActionView();
+        if(actionView!=null) {
+            mImageLayoutView = actionView.findViewById(R.id.imageView);
+            myTextLayoutView = actionView.findViewById(R.id.textView);
+        }
+        if(mImageLayoutView!=null) {
+            mImageLayoutView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(DashboardActivity.this, notificationActivity.class);
 
+                    intent.putExtra("sagar", "Sagar commented on your postmmmmmmmmmmmmmmmmmmmmmmmmmm");
+                    intent.putExtra("sachin", "Sachin commented on your post");
+                    intent.putExtra("sangaraj", "Sangaraj commented on your postllllllllllllllllllllllllllll");
+                    startActivity(intent);
+                    ((View) actionView.findViewById(R.id.textView)).setVisibility(View.GONE);
 
+                }
+            });
+        }
         return super.onCreateOptionsMenu(menu);
     }
 

@@ -80,6 +80,9 @@
             android:name=".activity.NewsFeedPostActivity"
             android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
+            android:name=".activity.notificationActivity" />
+
+        <activity
             android:name=".activity.UserDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activity.EventDetailsActivity" />
