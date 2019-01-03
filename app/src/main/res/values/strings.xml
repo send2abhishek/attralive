@@ -122,6 +122,14 @@
     <string name="okbtn">OK</string>
     <string name="submit_btn">Submit</string>
 
+    <string name="helpcontent">
+        1. Employee registers through Attra email id, mobile number and location of the event\n
+        2. Before registration completion, employee has to accept the Terms and conditions\n
+        3. A unique one time randomly generated PIN is sent to the employees Attra email id\n
+        4. The user has to login using the Attra email id and the unique PIN\n
+        5. In case the user forgets the PIN, Forgot PIN link can be accessed and the user will be prompted for entering his/her Attra email id
+    </string>
+    <string name="helpbutton">Help</string>
     <!-- TODO: Remove or change this placeholder text -->
 
     <string name="hello_blank_fragment">EC-Phase II,Hosur road,"\n"

@@ -73,7 +73,7 @@ public class UserDetailsActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences(PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
             myToken = sharedPreferences.getString("authToken", "");
-            Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
+      //      Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
 
         }
 
@@ -115,7 +115,9 @@ public class UserDetailsActivity extends AppCompatActivity {
                     phNo.setError("Enter valid Contact Number");
                     phNo.requestFocus();
                 } else {
-                    MyAppolloClient.getMyAppolloClient(myToken).mutate(
+                    Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
+                    startActivity(intent1);
+                    /*MyAppolloClient.getMyAppolloClient(myToken).mutate(
                             UserDetailsUpdate.builder().userId(userId).userName(userName).gender(gender).bu(buValue).designation(designation).dob(dobValue).empId(employeeId).location(workLoc)
                                     .bu(userBu).mobileNumber(mobile).profileImagePath(imagePath)
                                     .build()).enqueue(
@@ -125,11 +127,11 @@ public class UserDetailsActivity extends AppCompatActivity {
 //                                                String message= response.data().otpValidation_M().otpstatus();
                                     String status = response.data().updateUserDetails_M().status();
                                     final String message = response.data().updateUserDetails_M().message();
-                                    Log.i("res_message", message);
-                                    Log.i("res_status userDetails", status);
+                                    Log.d("res_message", message);
+                                   // Log.d("res_status userDetails", status);
                                     Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
                                     startActivity(intent1);
-                                    /*UserDetailsActivity.this.runOnUiThread(new Runnable() {
+                                    *//*UserDetailsActivity.this.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
                                             if (status.equals("Success")) {
@@ -137,14 +139,14 @@ public class UserDetailsActivity extends AppCompatActivity {
                                                 startActivity(intent1);
                                             }
                                         }
-                                    });*/
+                                    });*//*
                                 }
 
                                 @Override
                                 public void onFailure(@Nonnull ApolloException e) {
                                 }
                             }
-                    );
+                    );*/
                 }
 
 

@@ -18,7 +18,7 @@ public class DisplayUserProfileDetails extends AppCompatActivity {
         username = findViewById(R.id.et_entername);
         designation=findViewById(R.id.et_designation);
         DOB = findViewById(R.id.tv_userDob);
-        gender = findViewById(R.id.gendertype);
+       // gender = findViewById(R.id.gendertype);
         BU = findViewById(R.id.BUType);
         phone = findViewById(R.id.et_mobilenumber);
         email= findViewById(R.id.emailid);

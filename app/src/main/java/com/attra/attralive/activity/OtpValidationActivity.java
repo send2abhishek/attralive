@@ -280,7 +280,7 @@ public class OtpValidationActivity extends AppCompatActivity {
 
                         }else if(status.equals("Failure")){
                             if(message.equals("Invalid token: access token has expired")){
-                                getNewRefreshToken(refreshToken);
+                                /*getNewRefreshToken(refreshToken);*/
                             }
 
                         }
@@ -295,14 +295,13 @@ public class OtpValidationActivity extends AppCompatActivity {
 
     }
 
-
     private void getNewRefreshToken(String refreshToken){
         MyAppolloClient.getMyAppolloClient(Authorization).query(
-                GetRefreshToken.builder().refreshToken(refreshToken).grant_type("refresh_token")
+                graphqlandroid.GetRefreshToken.builder().refreshToken(refreshToken).grant_type("refresh_token")
                         .build()).enqueue(
-                new ApolloCall.Callback<GetRefreshToken.Data>() {
+                new ApolloCall.Callback<graphqlandroid.GetRefreshToken.Data>() {
                     @Override
-                    public void onResponse(@Nonnull Response<GetRefreshToken.Data> response) {
+                    public void onResponse(@Nonnull Response<graphqlandroid.GetRefreshToken.Data> response) {
                         String message = response.data().userLoginAuth_Q().message();
                         String status = response.data().userLoginAuth_Q().status();
                         if(status.equals("success")){
@@ -316,7 +315,7 @@ public class OtpValidationActivity extends AppCompatActivity {
                             authToken="Bearer"+" "+accessToken;
                             Log.i("brarer token",authToken);
 
-                            SharedPreferences  preferences = getApplicationContext().getSharedPreferences(PREFS_AUTH, 0);
+                            SharedPreferences preferences = getApplicationContext().getSharedPreferences(PREFS_AUTH, 0);
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.putString("authToken",authToken);
                             editor.putString("refreshToken",newRefreshToken);
@@ -333,6 +332,8 @@ public class OtpValidationActivity extends AppCompatActivity {
         );
 
     }
+
+
     private TextWatcher CardNum1EntryWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {

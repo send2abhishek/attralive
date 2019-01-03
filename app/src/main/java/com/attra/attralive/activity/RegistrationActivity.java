@@ -41,7 +41,7 @@ public class RegistrationActivity extends AppCompatActivity {
     CardView regbutton;
     LinearLayout linearLayout1,linearLayout2;
     TextInputLayout fullnametil,emailtil,passwodtil,confirmpasswordtil;
-    TextView passworderror,emailerror,fullnameerror,confrmpswderror,attraEmail,termsCondition;
+    TextView passworderror,emailerror,fullnameerror,confrmpswderror,attraEmail,termsCondition,help;
     String token="";
     String emailId,pwd;
     String status,message;
@@ -69,6 +69,8 @@ public class RegistrationActivity extends AppCompatActivity {
         attraEmail=findViewById(R.id.tv_attraemail);
         termsCondition = findViewById(R.id.tnms);
         mi_agree = (CheckBox) findViewById(R.id.i_agree);
+        help = findViewById(R.id.tv_help);
+
 
         /*fullname.setText(FirebaseInstanceId.getInstance().getToken());*/
         //fullname.requestFocus();
@@ -78,6 +80,13 @@ public class RegistrationActivity extends AppCompatActivity {
         linearLayout2.setVisibility(View.VISIBLE);
 
         this.getWindow().setStatusBarColor(Color.TRANSPARENT);
+
+        help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertScrollView();
+            }
+        });
         //   SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
         // 0 - for private mode`
 
@@ -332,5 +341,18 @@ public class RegistrationActivity extends AppCompatActivity {
                         dialog.cancel();
                     }
                 }).show();
+    }
+
+    public void alertScrollView() {
+        View myScrollView = getLayoutInflater().inflate(R.layout.activity_help_for_registration,null,false);
+        new AlertDialog.Builder(RegistrationActivity.this).setView(myScrollView)
+                .setTitle("Help for Registration")
+                .setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        dialog.cancel();
+                    }
+                }).show();
+
     }
 }

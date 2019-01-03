@@ -90,12 +90,23 @@ public class DashboardActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        View headerView = navigationView.getHeaderView(0);
+        profileNav = headerView.findViewById(R.id.iv_profile);
+        profileNav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),DisplayUserProfileDetails.class);
+                startActivity(intent);
+            }
+        });
 
         SharedPreferences sharedPreferences = getSharedPreferences(PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
             myToken = sharedPreferences.getString("authToken", "");
             userId = sharedPreferences.getString("userId", "");
-            Toast.makeText(getApplicationContext(), userId, Toast.LENGTH_LONG).show();
+      //      Toast.makeText(getApplicationContext(), userId, Toast.LENGTH_LONG).show();
             Log.i("token in dashboard",myToken);
             Log.i("user id in dashboard",userId);
 
@@ -106,19 +117,14 @@ public class DashboardActivity extends AppCompatActivity
         View header=navigationView.getHeaderView(0);
         View headerView = navigationView.inflateHeaderView(R.layout.nav_header_dashboard);
         headerView.findViewById(R.id.ll_nav_header);
-        userName = (TextView) headerView.findViewById(R.id.tv_username);
-        userEmail = (TextView) headerView.findViewById(R.id.textView_email);
-       // profileImage = findViewById(R.id.imageView);
-        //       profileImage.setImageResource(R.drawable.attra_logo);
-        userName.setText("My name");
-        userEmail.setText("adhkashd");*/
-
+   */
+/*
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
         userName = (TextView) headerView.findViewById(R.id.tv_username);
         userEmail = headerView.findViewById(R.id.textView_email);
-        profileNav = headerView.findViewById(R.id.iv_profile);
-        getProfileDetails();
+        profileNav = headerView.findViewById(R.id.iv_profile);*/
+       /* getProfileDetails();*/
 
 
 
@@ -171,7 +177,7 @@ public class DashboardActivity extends AppCompatActivity
                 });
     }*/
 
-    private void getProfileDetails(){
+   /* private void getProfileDetails(){
 
 
         MyAppolloClient.getMyAppolloClient(myToken).query(
@@ -202,7 +208,7 @@ public class DashboardActivity extends AppCompatActivity
         );
 
     }
-
+*/
 
     private void subscribeToTopic(){
 
@@ -265,11 +271,12 @@ public class DashboardActivity extends AppCompatActivity
             loadFragment(fragment);
 
         } else if (id == R.id.nav_facilities) {
-
+            fragment = new Gallery();
+            loadFragment(fragment);
           /*  fragment = new Facilities();*/
-
+/*
             Intent intent = new Intent(getApplicationContext(),UserDetailsActivity.class);
-            startActivity(intent);
+            startActivity(intent);*/
 
         }   else if (id == R.id.nav_termsAndCondition) {
             fragment = new AboutUsFragment();
