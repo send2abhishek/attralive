@@ -61,10 +61,11 @@ public class OtpValidationActivity extends AppCompatActivity {
         closeOtp = findViewById(R.id.iv_close_otp);
 
         Intent intent=this.getIntent();
-        if(intent !=null)
+        if(intent !=null) {
             emailId = intent.getStringExtra("emailId");
-            password= intent.getStringExtra("pass");
-//            Log.i("email id",emailId);
+            password = intent.getStringExtra("pass");
+            Log.i("email id",emailId);
+        }
 
 
         validateOTP =  findViewById(R.id.validate);
@@ -262,15 +263,19 @@ public class OtpValidationActivity extends AppCompatActivity {
                         String user = response.data().userLoginAuth_Q().user();
                         String message = response.data().userLoginAuth_Q().message();
                         String userName = response.data().userLoginAuth_Q().name();
+                        String userId = response.data().userLoginAuth_Q().user_id();
                         String status = response.data().userLoginAuth_Q().status();
                         Log.i("access Token",accessToken);
                         authToken="Bearer"+" "+accessToken;
                         Log.i("brarer token",authToken);
-                        if(status.equals("success")){
+                        if(status.equals("Success")){
 
                           SharedPreferences  preferences = getApplicationContext().getSharedPreferences(PREFS_AUTH, 0);
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.putString("authToken",authToken);
+                            editor.putString("refreshToken",refreshToken);
+                            editor.putString("emailId",emailId);
+                            editor.putString("userId",userId);
                             editor.commit();
 
                         }else if(status.equals("Failure")){
@@ -310,17 +315,15 @@ public class OtpValidationActivity extends AppCompatActivity {
                             Log.i("access Token",accessToken);
                             authToken="Bearer"+" "+accessToken;
                             Log.i("brarer token",authToken);
-                            SharedPreferences sp = getSharedPreferences("your_shared_pref_name", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sp.edit();
-                            editor.putString("access_token",accessToken);
+
+                            SharedPreferences  preferences = getApplicationContext().getSharedPreferences(PREFS_AUTH, 0);
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString("authToken",authToken);
                             editor.putString("refreshToken",newRefreshToken);
-                            editor.putString("emailId",emailId);
-                            editor.putString("password",password);
-                            editor.apply();
+                            editor.commit();
+
 
                         }
-
-
                     }
 
                     @Override

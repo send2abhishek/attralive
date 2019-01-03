@@ -2,7 +2,9 @@ package com.attra.attralive.activity;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,14 +24,23 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.apollographql.apollo.ApolloCall;
+import com.apollographql.apollo.api.Response;
+import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
+import com.attra.attralive.Service.MyAppolloClient;
 import com.attra.attralive.fragment.AboutUsFragment;
 import com.attra.attralive.fragment.DigiquizFragment;
+import com.attra.attralive.fragment.Facilities;
+import com.attra.attralive.fragment.Gallery;
 import com.attra.attralive.fragment.HolidayCalender;
 import com.attra.attralive.fragment.HomeFragment;
-import com.attra.attralive.fragment.NotificationListFragment;
+import com.attra.attralive.fragment.LearningD;
 import com.attra.attralive.model.NewsFeed;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -38,11 +49,22 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 
+import javax.annotation.Nonnull;
+
+import graphqlandroid.GetBusinessUnit;
+import graphqlandroid.GetProfileDetails;
+
+import static com.attra.attralive.activity.OtpValidationActivity.PREFS_AUTH;
+
 public class DashboardActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     Fragment fragment = null;
     ArrayList<NewsFeed> notificationArrayList;
     LinearLayoutManager linearLayoutManager;
+    ImageView profileImage,profileNav;
+    TextView userName,userEmail;
+    String userId;
+    String myToken;
 
     private static final String TAG = "DashboardActivity";
     @Override
@@ -69,8 +91,37 @@ public class DashboardActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFS_AUTH, Context.MODE_PRIVATE);
+        if (sharedPreferences.contains("authToken")) {
+            myToken = sharedPreferences.getString("authToken", "");
+            userId = sharedPreferences.getString("userId", "");
+            Toast.makeText(getApplicationContext(), userId, Toast.LENGTH_LONG).show();
+            Log.i("token in dashboard",myToken);
+            Log.i("user id in dashboard",userId);
+
+        }
+/*
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View header=navigationView.getHeaderView(0);
+        View headerView = navigationView.inflateHeaderView(R.layout.nav_header_dashboard);
+        headerView.findViewById(R.id.ll_nav_header);
+        userName = (TextView) headerView.findViewById(R.id.tv_username);
+        userEmail = (TextView) headerView.findViewById(R.id.textView_email);
+       // profileImage = findViewById(R.id.imageView);
+        //       profileImage.setImageResource(R.drawable.attra_logo);
+        userName.setText("My name");
+        userEmail.setText("adhkashd");*/
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        userName = (TextView) headerView.findViewById(R.id.tv_username);
+        userEmail = headerView.findViewById(R.id.textView_email);
+        profileNav = headerView.findViewById(R.id.iv_profile);
+        getProfileDetails();
+
+
+
 
 
 
@@ -120,6 +171,38 @@ public class DashboardActivity extends AppCompatActivity
                 });
     }*/
 
+    private void getProfileDetails(){
+
+
+        MyAppolloClient.getMyAppolloClient(myToken).query(
+                GetProfileDetails.builder().userId("5c2cf5902c5e233c28d03add")
+                        .build()).enqueue(
+                new ApolloCall.Callback<GetProfileDetails.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<GetProfileDetails.Data> response) {
+                        Log.i("res", String.valueOf(response));
+                        String user= response.data().getProfileDetails_Q().name();
+                        String email= response.data().getProfileDetails_Q().email();
+                        String profileImagePath= response.data().getProfileDetails_Q().profileImagePath();
+
+                        DashboardActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                userName.setText(user);
+                                userEmail.setText(email);
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+                    }
+                }
+        );
+
+    }
+
 
     private void subscribeToTopic(){
 
@@ -132,7 +215,7 @@ public class DashboardActivity extends AppCompatActivity
                             msg = getString(R.string.msg_subscribe_failed);
                         }
                         Log.d(TAG, msg);
-                        Toast.makeText(DashboardActivity.this, msg, Toast.LENGTH_SHORT).show();
+                      //  Toast.makeText(DashboardActivity.this, msg, Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -171,25 +254,26 @@ public class DashboardActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_landD) {
+            fragment = new LearningD();
+            loadFragment(fragment);
             // Handle the camera action
         }else if (id == R.id.nav_gallery) {
-            fragment = new AboutUsFragment();
+            fragment = new Gallery();
             loadFragment(fragment);
         } else if (id == R.id.nav_holidayCalender) {
             fragment = new HolidayCalender();
             loadFragment(fragment);
 
         } else if (id == R.id.nav_facilities) {
-            Intent intent = new Intent(getApplicationContext(),OtpValidationActivity.class);
+
+          /*  fragment = new Facilities();*/
+
+            Intent intent = new Intent(getApplicationContext(),UserDetailsActivity.class);
             startActivity(intent);
 
-        }  else if (id == R.id.nav_settings) {
-            fragment = new NotificationListFragment();
+        }   else if (id == R.id.nav_termsAndCondition) {
+            fragment = new AboutUsFragment();
             loadFragment(fragment);
-
-        } else if (id == R.id.nav_termsAndCondition) {
-            Intent intent = new Intent(getApplicationContext(),TermsConditionsActivity.class);
-            startActivity(intent);
 
         }else if (id == R.id.nav_logout) {
             Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
@@ -213,6 +297,8 @@ public class DashboardActivity extends AppCompatActivity
                     loadFragment(fragment);
                     return true;
                 case R.id.navigation_event:
+                    Intent i=new Intent(getApplicationContext(),EventDetailsActivity.class);
+                    startActivity(i);
                     return true;
                 case R.id.navigation_blog:
                     fragment = new DigiquizFragment();

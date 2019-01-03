@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.MainBlogCategoryActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="8dp"
+        android:background="@color/headerBackground">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_topcategory"
+            android:textSize="18sp"
+            android:text="Top Categories"
+            android:paddingTop="10dp"
+            android:textStyle="bold"/>
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"
+            android:id="@+id/rv_topcategories">
+        </android.support.v7.widget.RecyclerView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_allcategory"
+            android:textSize="18sp"
+            android:text="All Categories"
+            android:paddingBottom="12dp"
+            android:paddingTop="12dp"
+            android:textStyle="bold"/>
+    </LinearLayout>
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="12dp"
+        android:id="@+id/rv_allcategories"
+        android:paddingLeft="8dp">
+    </android.support.v7.widget.RecyclerView>
+
+</LinearLayout>
