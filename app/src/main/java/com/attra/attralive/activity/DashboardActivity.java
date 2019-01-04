@@ -45,6 +45,8 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import java.util.ArrayList;
 import javax.annotation.Nonnull;
+
+import graphqlandroid.GetNotificationList;
 import graphqlandroid.GetProfileDetails;
 
 import static com.attra.attralive.activity.OtpValidationActivity.PREFS_AUTH;
@@ -58,7 +60,7 @@ public class DashboardActivity extends AppCompatActivity
     TextView userName,userEmail;
     String userId1;
     String myToken;
-
+int notificationSize=0;
     private static final String TAG = "DashboardActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -313,11 +315,47 @@ public class DashboardActivity extends AppCompatActivity
         TextView myTextView,myTextLayoutView;
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.dashboard_toolbar, menu);
-        //final View menu_notification_list = menu.findItem(R.id.menu_item).getActionView();
         final View actionView = menu.findItem(R.id.menu_item).getActionView();
         if(actionView!=null) {
             mImageLayoutView = actionView.findViewById(R.id.imageView);
             myTextLayoutView = actionView.findViewById(R.id.textView);
+            ((View) actionView.findViewById(R.id.textView)).setVisibility(View.GONE);
+            MyAppolloClient.getMyAppolloClient("Bearer 30b598d194914c37329f88a1aa931daff3a6bf2e").query(
+                    GetNotificationList.builder().userId("5c2e46f9fb15963434c755f4")
+                            .build()).enqueue(
+                    new ApolloCall.Callback<GetNotificationList.Data>() {
+                        @Override
+                        public void onResponse(@Nonnull Response<GetNotificationList.Data> response) {
+                           DashboardActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    if(response.data()!=null &&response.data().getUserNotification_Q()!=null && response.data().getUserNotification_Q().notifications()!=null)
+                                    {
+                                        Log.i("Run method notification", "Run method notification");
+                                        notificationSize = response.data().getUserNotification_Q().notifications().size();
+                                        Log.i("notification-size ", notificationSize+"");
+                                        if(notificationSize>0) {
+                                            ((View) actionView.findViewById(R.id.textView)).setVisibility(View.VISIBLE);
+                                            myTextLayoutView.setText(notificationSize + "");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Log.i("else responsedata", "inside else of  respnse");
+                                        myTextLayoutView.setText("0");
+                                    }
+
+                                }
+                            });
+
+                        }
+                        @Override
+                        public void onFailure(@Nonnull ApolloException e) {
+                            Log.i("Failure", "OnFailure method   "+e.getMessage());
+                        }
+                    }
+            );
         }
         if(mImageLayoutView!=null) {
             mImageLayoutView.setOnClickListener(new View.OnClickListener() {
