@@ -263,6 +263,7 @@ public class OtpValidationActivity extends AppCompatActivity {
                         String user = response.data().userLoginAuth_Q().user();
                         String message = response.data().userLoginAuth_Q().message();
                         String userName = response.data().userLoginAuth_Q().name();
+                        String userId = response.data().userLoginAuth_Q().user_id();
                         String status = response.data().userLoginAuth_Q().status();
                         Log.i("access Token",accessToken);
                         authToken="Bearer"+" "+accessToken;
@@ -272,11 +273,14 @@ public class OtpValidationActivity extends AppCompatActivity {
                           SharedPreferences  preferences = getApplicationContext().getSharedPreferences(PREFS_AUTH, 0);
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.putString("authToken",authToken);
+                            editor.putString("refreshToken",refreshToken);
+                            editor.putString("emailId",emailId);
+                            editor.putString("userId",userId);
                             editor.commit();
 
                         }else if(status.equals("Failure")){
                             if(message.equals("Invalid token: access token has expired")){
-                                getNewRefreshToken(refreshToken);
+                                /*getNewRefreshToken(refreshToken);*/
                             }
 
                         }
@@ -291,14 +295,13 @@ public class OtpValidationActivity extends AppCompatActivity {
 
     }
 
-
     private void getNewRefreshToken(String refreshToken){
         MyAppolloClient.getMyAppolloClient(Authorization).query(
-                GetRefreshToken.builder().refreshToken(refreshToken).grant_type("refresh_token")
+                graphqlandroid.GetRefreshToken.builder().refreshToken(refreshToken).grant_type("refresh_token")
                         .build()).enqueue(
-                new ApolloCall.Callback<GetRefreshToken.Data>() {
+                new ApolloCall.Callback<graphqlandroid.GetRefreshToken.Data>() {
                     @Override
-                    public void onResponse(@Nonnull Response<GetRefreshToken.Data> response) {
+                    public void onResponse(@Nonnull Response<graphqlandroid.GetRefreshToken.Data> response) {
                         String message = response.data().userLoginAuth_Q().message();
                         String status = response.data().userLoginAuth_Q().status();
                         if(status.equals("success")){
@@ -311,13 +314,13 @@ public class OtpValidationActivity extends AppCompatActivity {
                             Log.i("access Token",accessToken);
                             authToken="Bearer"+" "+accessToken;
                             Log.i("brarer token",authToken);
-                            SharedPreferences sp = getSharedPreferences("your_shared_pref_name", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sp.edit();
-                            editor.putString("access_token",accessToken);
+
+                            SharedPreferences preferences = getApplicationContext().getSharedPreferences(PREFS_AUTH, 0);
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString("authToken",authToken);
                             editor.putString("refreshToken",newRefreshToken);
-                            editor.putString("emailId",emailId);
-                            editor.putString("password",password);
-                            editor.apply();
+                            editor.commit();
+
 
                         }
                     }
@@ -329,6 +332,8 @@ public class OtpValidationActivity extends AppCompatActivity {
         );
 
     }
+
+
     private TextWatcher CardNum1EntryWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {

@@ -121,8 +121,6 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
         askPermissions();
         initRetrofitClient();
 
-       // CallPostService();
-
 
     }
 
@@ -334,7 +332,7 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
         try {
             File filesDir = getApplicationContext().getFilesDir();
             File file = new File(filesDir, "image" + ".jpeg");
-            Log.i("multipartImageUpload", "Inside this method");
+            Log.i("multipartImageUpload","Inside this method");
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             mBitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
             byte[] bitmapdata = bos.toByteArray();
@@ -348,13 +346,11 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
 
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
             MultipartBody.Part body = MultipartBody.Part.createFormData("postPicture", file.getName(), reqFile);
-            Log.i("", file.getName());
+            Log.i("",file.getName());
             RequestBody name = RequestBody.create(MediaType.parse("text/plain"), "postPicture");
 
             Call<ResponseBody> req = apiService.postPicture(body, name);
             req.enqueue(new Callback<ResponseBody>() {
-
-
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
@@ -363,7 +359,7 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
 //                        successMsg.setText("Uploaded Successfully!");
 //                        successMsg.setTextColor(Color.BLUE);
 //
-                        //   System.out.println("Msg Body"+   response.message());
+                        System.out.println("Image response "+ response);
 
                         org.json.simple.JSONObject jsonObj = null;
                         try {
@@ -395,10 +391,9 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
                     Toast.makeText(getApplicationContext(), "Successfully updated" + " ", Toast.LENGTH_LONG).show();
                 }
 
-
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Log.i("", "Failure body");
+                    Log.i("","Failure body");
 //                    successMsg.setText("Uploaded Failed!");
 //                    successMsg.setTextColor(Color.RED);
                     Toast.makeText(getApplicationContext(), "Request failed", Toast.LENGTH_LONG).show();

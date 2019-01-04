@@ -18,6 +18,8 @@
     <string name="title_event">Event</string>
     <string name="title_blog">Blog</string>
     <string name="title_forum">Forum</string>
+    <string name="profile">Profile</string>
+    <string name="gallery">Gallery</string>
 
     <!--Dashboard Screen String-->
     <string name="likes">Likes</string>
@@ -36,7 +38,7 @@
     <string name="validate">VALIDATE</string>
 
     <!--User Details Update screen-->
-    <string name="please_update_your_details">Welcome user,Update Your details</string>
+    <string name="please_update_your_details">Welcome user,Update Your Profile</string>
     <string name="profileDetails">Profile Details</string>
     <string name="user_name">Enter your Name</string>
     <string name="gender">Gender</string>
@@ -50,7 +52,7 @@
     <string name="continueBTn">Continue</string>
 
     <!--Forgot password Screen-->
-    <string name="forgot_password">Forgot Password</string>
+    <string name="forgot_password">Forgot Password ?</string>
     <string name="we_just_need">We just need your registered Email Id to send your password reset instructions</string>
     <string name="registered_email_id">Registered Email Id</string>
     <string name="reset_password">Reset Password</string>
@@ -122,8 +124,15 @@
     <string name="okbtn">OK</string>
     <string name="submit_btn">Submit</string>
 
+    <string name="helpcontent">
+        1. Employee registers through Attra email id, mobile number and location of the event\n
+        2. Before registration completion, employee has to accept the Terms and conditions\n
+        3. A unique one time randomly generated PIN is sent to the employees Attra email id\n
+        4. The user has to login using the Attra email id and the unique PIN\n
+        5. In case the user forgets the PIN, Forgot PIN link can be accessed and the user will be prompted for entering his/her Attra email id
+    </string>
+    <string name="helpbutton">Help</string>
     <!-- TODO: Remove or change this placeholder text -->
-
 
     <string name="hello_blank_fragment">EC-Phase II,Hosur road,"\n"
     560068</string>

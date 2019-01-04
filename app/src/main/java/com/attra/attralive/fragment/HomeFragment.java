@@ -92,7 +92,6 @@ public class HomeFragment extends Fragment {
 
         viewPager = view.findViewById(R.id.viewPager);
         ImageView example = view.findViewById(R.id.imageView);
-        iv = view.findViewById(R.id.img_descImage);
 
 //        Picasso.with(getActivity())
 //                .load("https://attralive.s3.ap-south-1.amazonaws.com/NewsFeedsPictures/1546237731525-launcher.jpeg")

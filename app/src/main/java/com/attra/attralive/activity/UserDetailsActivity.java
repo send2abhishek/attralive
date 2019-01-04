@@ -11,17 +11,12 @@ import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.ApolloClient;
 import com.apollographql.apollo.api.Response;
@@ -29,11 +24,6 @@ import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
 import com.attra.attralive.Service.MyAppolloClient;
 import com.google.firebase.iid.FirebaseInstanceId;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -42,7 +32,6 @@ import javax.annotation.Nonnull;
 
 import graphqlandroid.GetBusinessUnit;
 import graphqlandroid.GetLocation;
-import graphqlandroid.OtpValidation;
 import graphqlandroid.SendDeviceToken;
 import graphqlandroid.UserDetailsUpdate;
 
@@ -53,33 +42,16 @@ public class UserDetailsActivity extends AppCompatActivity {
     TextView dob;
       List<String> buList = new ArrayList<String>();
       List<String> locationList = new ArrayList<String>();
-    private RadioGroup radioSexGroup;
-    private RadioButton radioSexButton;
-    Button submitDetails;
-    String emailId, password, authToken;
+
+    String emailId, password;
     EditText empId, phNo, userDesign;
-    String accessToken;
-    static String authheader;
-    String name;
-    String designationValue;
-    String locationValue;
     String buValue;
-    String phoneNumValue;
-    String dobValue;
-    String gender;
-    String token = "";
-    String refreshToken;
-    public static String authHeader = "Basic YXBwbGljYXRpb246c2VjcmV0";
-    private static final String URL = "http://192.168.1.100/graphql/";
     private static ApolloClient apolloClient;
     public static final String PREFS_AUTH = "my_auth";
     public static String Authorization = "Basic YXBwbGljYXRpb246c2VjcmV0";
 
-    private static final String[] userbuList = {"Please select", "Synchrony", "Practice", "APAC", "Corporate"};
-    private static final String[] userlocationList = {"Please select", "Banalore", "Practice", "APAC", "Corporate"};
-
     private SharedPreferences sharedPreferences;
-    String tokrn;
+    String myToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,8 +60,7 @@ public class UserDetailsActivity extends AppCompatActivity {
         userDesign = findViewById(R.id.et_designation);
         bu = findViewById(R.id.sp_selectbu);
         location = findViewById(R.id.sp_userWorkLocation);
-        continueBtn = findViewById(R.id.crd_regbutton);
-        radioSexGroup = (RadioGroup) findViewById(R.id.radioSex);
+        continueBtn = findViewById(R.id.crd_continuebutton);
         dob = findViewById(R.id.tv_userDob);
         Intent intent = getIntent();
         emailId = intent.getStringExtra("emailId");
@@ -98,40 +69,17 @@ public class UserDetailsActivity extends AppCompatActivity {
         empId = findViewById(R.id.et_entername);
         phNo = findViewById(R.id.et_mobilenumber);
 
-        ArrayAdapter<String> locationAdapter = new ArrayAdapter<>(UserDetailsActivity.this,
-                android.R.layout.simple_spinner_item, userlocationList);
-        locationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        location.setAdapter(locationAdapter);
-        location.setSelection(0);
-
-        ArrayAdapter<String> userBuAdapter = new ArrayAdapter<>(UserDetailsActivity.this,
-                android.R.layout.simple_spinner_item, userbuList);
-
-        userBuAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        bu.setAdapter(userBuAdapter);
-        bu.setSelection(0);
-
 
         sharedPreferences = getSharedPreferences(PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
-            tokrn = sharedPreferences.getString("authToken", "");
-            Toast.makeText(getApplicationContext(), tokrn, Toast.LENGTH_LONG).show();
+            myToken = sharedPreferences.getString("authToken", "");
+      //      Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
 
         }
 
-       /* getToken();
-        getNewRefreshToken(refreshToken);
-*//*
-        ArrayAdapter<String>designationAdapter = new ArrayAdapter<String>(UserDetailsActivity.this,
-                android.R.layout.simple_spinner_item,designList);*/
-
-
-      /*  SharedPreferences sp = getSharedPreferences(PREFS_AUTH,Context.MODE_PRIVATE);
-        token = sp.getString(authToken,"");
-        Log.i("token in UserDetails",token);*/
-     /*   getUserBU();
+        getUserBU();
         getUserLocation();
-*/
+        /*sendDeviceToken();*/
         continueBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -167,7 +115,9 @@ public class UserDetailsActivity extends AppCompatActivity {
                     phNo.setError("Enter valid Contact Number");
                     phNo.requestFocus();
                 } else {
-                    MyAppolloClient.getMyAppolloClient("Bearer ae56400f9ab034a2b21366eb86bc0561e1a3739c").mutate(
+                    Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
+                    startActivity(intent1);
+                    /*MyAppolloClient.getMyAppolloClient(myToken).mutate(
                             UserDetailsUpdate.builder().userId(userId).userName(userName).gender(gender).bu(buValue).designation(designation).dob(dobValue).empId(employeeId).location(workLoc)
                                     .bu(userBu).mobileNumber(mobile).profileImagePath(imagePath)
                                     .build()).enqueue(
@@ -175,12 +125,13 @@ public class UserDetailsActivity extends AppCompatActivity {
                                 @Override
                                 public void onResponse(@Nonnull Response<UserDetailsUpdate.Data> response) {
 //                                                String message= response.data().otpValidation_M().otpstatus();
-                                    final String status = response.data().updateUserDetails_M().status();
+                                    String status = response.data().updateUserDetails_M().status();
                                     final String message = response.data().updateUserDetails_M().message();
-                                    Log.i("res_message", message);
-                                    Log.i("res_status userDetails", status);
-
-                                    UserDetailsActivity.this.runOnUiThread(new Runnable() {
+                                    Log.d("res_message", message);
+                                   // Log.d("res_status userDetails", status);
+                                    Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
+                                    startActivity(intent1);
+                                    *//*UserDetailsActivity.this.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
                                             if (status.equals("Success")) {
@@ -188,14 +139,14 @@ public class UserDetailsActivity extends AppCompatActivity {
                                                 startActivity(intent1);
                                             }
                                         }
-                                    });
+                                    });*//*
                                 }
 
                                 @Override
                                 public void onFailure(@Nonnull ApolloException e) {
                                 }
                             }
-                    );
+                    );*/
                 }
 
 
@@ -260,13 +211,8 @@ public class UserDetailsActivity extends AppCompatActivity {
         datePicker.show();
     }
 
-
-   /* private void getUserLocation(){
-        MyAppolloClient.getMyAppolloClient("ae56400f9ab034a2b21366eb86bc0561e1a3739c").query(
-=======
     private void getUserLocation(){
-        MyAppolloClient.getMyAppolloClient(tokrn).query(
->>>>>>> 7a623b0fdf9d81195f08784a27ae21b1c1a216b6
+        MyAppolloClient.getMyAppolloClient(myToken).query(
                 GetLocation.builder()
                         .build()).enqueue(
                 new ApolloCall.Callback<GetLocation.Data>() {
@@ -300,13 +246,13 @@ public class UserDetailsActivity extends AppCompatActivity {
                 }
         );
 
-    }*/
+    }
 
      private void getUserBU(){
 
 
-        Log.i("token in user details",tokrn);
-        MyAppolloClient.getMyAppolloClient(tokrn).query(
+        Log.i("token in user details",myToken);
+        MyAppolloClient.getMyAppolloClient(myToken).query(
                 GetBusinessUnit.builder()
                         .build()).enqueue(
                 new ApolloCall.Callback<GetBusinessUnit.Data>() {
@@ -344,135 +290,4 @@ public class UserDetailsActivity extends AppCompatActivity {
     }
 
 
-/*  public static ApolloClient getToken(){
-      HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-      loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-      OkHttpClient okHttpClient = new OkHttpClient.Builder()
-              .addInterceptor(chain -> {
-                  Request original = chain.request();
-                  Request.Builder builder = original.newBuilder().method(original.method(), original.body());
-                  builder.header("Authorization", "JWT" + " " +  authheader);
-                  Log.d("AUTH_TAG", authheader);
-                  return chain.proceed(builder.build());
-              })
-              .build();
-
-      apolloClient = ApolloClient.builder()
-              .serverUrl(URL)
-              .okHttpClient(okHttpClient)
-              .build();
-
-      return apolloClient;
-
-    }*/
-
-
-    private void sendDeviceToken(){
-
-        String deviceToken = FirebaseInstanceId.getInstance().getToken();
-        MyAppolloClient.getMyAppolloClient(token).mutate(
-                SendDeviceToken.builder().userId(emailId)
-                        .deviceId(deviceToken)
-                        .build()).enqueue(
-                new ApolloCall.Callback<SendDeviceToken.Data>() {
-                    @Override
-                    public void onResponse(@Nonnull Response<SendDeviceToken.Data> response) {
-                        String message= response.data().registerDeviceId_M().message();
-                        final String status = response.data().registerDeviceId_M().status();
-                        Log.i("res_message",message);
-
-                    }
-
-                    @Override
-                    public void onFailure(@Nonnull ApolloException e) {
-                    }
-                }
-        );
-
-    }
-
-   /* public void getToken(){
-
-        MyAppolloClient.getMyAppolloClient(Authorization).query(
-                UserLoginAuth.builder().username(emailId).password(password)
-                        .build()).enqueue(
-                new ApolloCall.Callback<UserLoginAuth.Data>() {
-                    @Override
-                    public void onResponse(@Nonnull Response<UserLoginAuth.Data> response) {
-                        accessToken= response.data().userLoginAuth_Q().accessToken();
-                        String tokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
-                        refreshToken = response.data().userLoginAuth_Q().accessToken();
-                        String refreshTokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
-                        String user = response.data().userLoginAuth_Q().user();
-                        String message = response.data().userLoginAuth_Q().message();
-                        String userName = response.data().userLoginAuth_Q().name();
-                        String status = response.data().userLoginAuth_Q().status();
-                        Log.i("access Token",accessToken);
-                        authToken="Bearer"+" "+accessToken;
-                        Log.i("brarer token",authToken);
-                        if(status.equals("success")){
-
-                            SharedPreferences  preferences = getApplicationContext().getSharedPreferences(PREFS_AUTH, 0);
-                            SharedPreferences.Editor editor = preferences.edit();
-                            editor.putString("authToken",authToken);
-                            editor.commit();
-
-                        }else if(status.equals("Failure")){
-                            if(message.equals("Invalid token: access token has expired")){
-                                getNewRefreshToken(refreshToken);
-                            }
-
-                        }
-
-                    }
-
-                    @Override
-                    public void onFailure(@Nonnull ApolloException e) {
-                    }
-                }
-        );
-
-    }
-
-
-    private void getNewRefreshToken(String refreshToken){
-        MyAppolloClient.getMyAppolloClient(Authorization).query(
-                GetRefreshToken.builder().refreshToken(refreshToken).grant_type("refresh_token")
-                        .build()).enqueue(
-                new ApolloCall.Callback<GetRefreshToken.Data>() {
-                    @Override
-                    public void onResponse(@Nonnull Response<GetRefreshToken.Data> response) {
-                        String message = response.data().userLoginAuth_Q().message();
-                        String status = response.data().userLoginAuth_Q().status();
-                        if(status.equals("success")){
-                            accessToken= response.data().userLoginAuth_Q().accessToken();
-                            String tokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
-                            String newRefreshToken = response.data().userLoginAuth_Q().accessToken();
-                            String refreshTokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
-                            String user = response.data().userLoginAuth_Q().user();
-                            String userName = response.data().userLoginAuth_Q().name();
-                            Log.i("access Token",accessToken);
-                            authToken="Bearer"+" "+accessToken;
-                            Log.i("brarer token",authToken);
-                            SharedPreferences sp = getSharedPreferences("your_shared_pref_name", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sp.edit();
-                            editor.putString("access_token",accessToken);
-                            editor.putString("refreshToken",newRefreshToken);
-                            editor.putString("emailId",emailId);
-                            editor.putString("password",password);
-                            editor.apply();
-
-                        }
-
-
-                    }
-
-                    @Override
-                    public void onFailure(@Nonnull ApolloException e) {
-                    }
-                }
-        );
-
-    }*/
 }
