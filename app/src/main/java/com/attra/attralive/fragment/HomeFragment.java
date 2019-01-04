@@ -77,6 +77,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        getActivity().setTitle(R.string.app_name);
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         postFeed = view.findViewById(R.id.tv_postThought);
         newsFeed = view.findViewById(R.id.rv_newsFeed);

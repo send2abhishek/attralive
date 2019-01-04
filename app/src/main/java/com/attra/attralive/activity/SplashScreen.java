@@ -40,7 +40,7 @@ public class SplashScreen extends AppCompatActivity {
 
         tv_attralive = findViewById(R.id.attralive);
 
-        Log.i("device token",FirebaseInstanceId.getInstance().getToken());
+//        Log.i("device token",FirebaseInstanceId.getInstance().getToken());
 
 
         String text = "<font color=#707070>Attra</font><font color=#f44f4b>LIVE</font>";

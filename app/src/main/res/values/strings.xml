@@ -18,6 +18,8 @@
     <string name="title_event">Event</string>
     <string name="title_blog">Blog</string>
     <string name="title_forum">Forum</string>
+    <string name="profile">Profile</string>
+    <string name="gallery">Gallery</string>
 
     <!--Dashboard Screen String-->
     <string name="likes">Likes</string>
@@ -36,7 +38,7 @@
     <string name="validate">VALIDATE</string>
 
     <!--User Details Update screen-->
-    <string name="please_update_your_details">Welcome user,Update Your details</string>
+    <string name="please_update_your_details">Welcome user,Update Your Profile</string>
     <string name="profileDetails">Profile Details</string>
     <string name="user_name">Enter your Name</string>
     <string name="gender">Gender</string>

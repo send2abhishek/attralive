@@ -79,10 +79,6 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
 
 
     ApiService apiService;
-
-
-
-
     Uri picUri;
     private ArrayList<String> permissionsToRequest;
     private ArrayList<String> permissionsRejected = new ArrayList<>();
@@ -345,9 +341,14 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
             req.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
+                    try {
+                        Log.d("qqqq",response.body().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                     if (response.code() == 200) {
+
 //                        successMsg.setText("Uploaded Successfully!");
 //                        successMsg.setTextColor(Color.BLUE);
 //
@@ -367,7 +368,7 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Log.i("","Failure body");
+                    Log.i("cccc","Failure body");
 //                    successMsg.setText("Uploaded Failed!");
 //                    successMsg.setTextColor(Color.RED);
                     Toast.makeText(getApplicationContext(), "Request failed", Toast.LENGTH_LONG).show();

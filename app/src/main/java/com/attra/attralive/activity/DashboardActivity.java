@@ -24,19 +24,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
-import com.attra.attralive.R;
 import com.attra.attralive.Service.MyAppolloClient;
+import com.attra.attralive.fragment.Profile;
+import com.attra.attralive.R;
 import com.attra.attralive.fragment.AboutUsFragment;
-import com.attra.attralive.fragment.DigiquizFragment;
-import com.attra.attralive.fragment.Facilities;
 import com.attra.attralive.fragment.Gallery;
 import com.attra.attralive.fragment.HolidayCalender;
 import com.attra.attralive.fragment.HomeFragment;
@@ -46,12 +43,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
-
 import java.util.ArrayList;
-
 import javax.annotation.Nonnull;
-
-import graphqlandroid.GetBusinessUnit;
 import graphqlandroid.GetProfileDetails;
 
 import static com.attra.attralive.activity.OtpValidationActivity.PREFS_AUTH;
@@ -63,7 +56,7 @@ public class DashboardActivity extends AppCompatActivity
     LinearLayoutManager linearLayoutManager;
     ImageView profileImage,profileNav;
     TextView userName,userEmail;
-    String userId;
+    String userId1;
     String myToken;
 
     private static final String TAG = "DashboardActivity";
@@ -75,6 +68,7 @@ public class DashboardActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         this.getWindow().setStatusBarColor(Color.TRANSPARENT);
         subscribeToTopic();
+
 
         fragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).addToBackStack("goBack").commit();
@@ -93,46 +87,19 @@ public class DashboardActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.getHeaderView(0);
-        profileNav = headerView.findViewById(R.id.iv_profile);
-        profileNav.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),DisplayUserProfileDetails.class);
-                startActivity(intent);
-            }
-        });
+        userName = headerView.findViewById(R.id.tv_username);
+        userEmail = headerView.findViewById(R.id.tv_email);
 
         SharedPreferences sharedPreferences = getSharedPreferences(PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
             myToken = sharedPreferences.getString("authToken", "");
-            userId = sharedPreferences.getString("userId", "");
+            userId1 = sharedPreferences.getString("userId", "");
       //      Toast.makeText(getApplicationContext(), userId, Toast.LENGTH_LONG).show();
             Log.i("token in dashboard",myToken);
-            Log.i("user id in dashboard",userId);
+            Log.i("user id in dashboard",userId1);
 
         }
-/*
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        View header=navigationView.getHeaderView(0);
-        View headerView = navigationView.inflateHeaderView(R.layout.nav_header_dashboard);
-        headerView.findViewById(R.id.ll_nav_header);
-   */
-/*
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        View headerView = navigationView.getHeaderView(0);
-        userName = (TextView) headerView.findViewById(R.id.tv_username);
-        userEmail = headerView.findViewById(R.id.textView_email);
-<<<<<<< HEAD
-        profileNav = headerView.findViewById(R.id.iv_profile);*/
-        profileNav = headerView.findViewById(R.id.iv_profile);
-       /* getProfileDetails();*/
-
-
-
-
-
-
+        getProfileDetail();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Create channel to show notifications.
             String channelId  = getString(R.string.default_notification_channel_id);
@@ -179,30 +146,42 @@ public class DashboardActivity extends AppCompatActivity
                 });
     }*/
 
-   /* private void getProfileDetails(){
-=======
-  /*  private void getProfileDetails(){
->>>>>>> 0f513db98958816ee13081e3fd2f4ed5c9ea4357
-
+    private void getProfileDetail(){
 
         MyAppolloClient.getMyAppolloClient(myToken).query(
-                GetProfileDetails.builder().userId("5c2cf5902c5e233c28d03add")
+                GetProfileDetails.builder().userId(userId1)
                         .build()).enqueue(
                 new ApolloCall.Callback<GetProfileDetails.Data>() {
                     @Override
                     public void onResponse(@Nonnull Response<GetProfileDetails.Data> response) {
                         Log.i("res", String.valueOf(response));
-                        String user= response.data().getProfileDetails_Q().name();
-                        String email= response.data().getProfileDetails_Q().email();
-                        String profileImagePath= response.data().getProfileDetails_Q().profileImagePath();
+                        String message = response.data().getProfileDetails_Q().message();
+                        String status = response.data().getProfileDetails_Q().status();
+                        Log.i("message in dashboard",message);
+                        Log.i("mstatus in dashboard",status);
+                        if(response.data().getProfileDetails_Q().name()!=null){
+                           /* String message = response.data().getProfileDetails_Q().message();
+                            String status = response.data().getProfileDetails_Q().status();*/
+                            if(status.equals("Success")){
+                                String username = response.data().getProfileDetails_Q().name();
+                                String emaiId = response.data().getProfileDetails_Q().email();
+                              //  String imgPath = response.data().getProfileDetails_Q().profileImagePath();
+                                DashboardActivity.this.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        userName.setText(username);
+                                        userEmail.setText(emaiId);
 
-                        DashboardActivity.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                userName.setText(user);
-                                userEmail.setText(email);
+                                    }
+                                });
                             }
-                        });
+                            else if(status.equals("Failure")){
+
+                            }
+
+                        }
+
+
 
                     }
 
@@ -211,10 +190,7 @@ public class DashboardActivity extends AppCompatActivity
                     }
                 }
         );
-
-<<<<<<< HEAD
     }
-*/
 
 
 
@@ -271,22 +247,17 @@ public class DashboardActivity extends AppCompatActivity
             fragment = new LearningD();
             loadFragment(fragment);
             // Handle the camera action
-        }else if (id == R.id.nav_gallery) {
-            fragment = new Gallery();
-            loadFragment(fragment);
         } else if (id == R.id.nav_holidayCalender) {
             fragment = new HolidayCalender();
             loadFragment(fragment);
 
         } else if (id == R.id.nav_facilities) {
-            fragment = new Gallery();
-            loadFragment(fragment);
-          /*  fragment = new Facilities();*/
-/*
+           /* fragment = new Gallery();
+            loadFragment(fragment);*/
             Intent intent = new Intent(getApplicationContext(),UserDetailsActivity.class);
-            startActivity(intent);*/
+            startActivity(intent);
 
-        }   else if (id == R.id.nav_termsAndCondition) {
+        }   else if (id == R.id.nav_about) {
             fragment = new AboutUsFragment();
             loadFragment(fragment);
 
@@ -315,14 +286,13 @@ public class DashboardActivity extends AppCompatActivity
                     Intent i=new Intent(getApplicationContext(),EventDetailsActivity.class);
                     startActivity(i);
                     return true;
-                case R.id.navigation_blog:
-                    fragment = new DigiquizFragment();
+                case R.id.navigation_gallery:
+                    fragment = new Gallery();
                     loadFragment(fragment);
-
                     return true;
-                case R.id.navigation_forum:
-
-
+                case R.id.navigation_profile:
+                    fragment = new Profile();
+                    loadFragment(fragment);
                     return true;
             }
             return false;

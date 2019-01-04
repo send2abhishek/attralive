@@ -90,7 +90,6 @@
         <activity
             android:name=".activity.ForgotPasswordActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.DisplayUserProfileDetails"></activity>
     </application>
 
 </manifest>
