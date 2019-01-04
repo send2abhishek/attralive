@@ -17,7 +17,6 @@ import com.attra.attralive.R;
 import com.attra.attralive.Service.MyAppolloClient;
 import com.attra.attralive.adapter.NotificationAdapter;
 import com.attra.attralive.model.Notification;
-import com.attra.attralive.model.NotificationDetails;
 import com.attra.attralive.util.SimpleDividerItemDecoration;
 
 import java.util.ArrayList;
