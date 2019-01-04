@@ -51,6 +51,7 @@ public class HomeFragment extends Fragment {
     LinearLayoutManager linearLayoutManager;
     NewsFeed newsFeedList;
     TextView postFeed;
+    ImageView iv;
 
 
     RecyclerView recyclerView;
@@ -61,7 +62,7 @@ public class HomeFragment extends Fragment {
     View ChildView;
     int RecyclerViewItemPosition;
     ViewPager viewPager;
-    int images[] = {R.drawable.attractionposter, R.drawable.attractionposter, R.drawable.attractionposter, R.drawable.attractionposter};
+    String images[] = {"https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546592733408-29a82067b71bd9e3df95e1c0ba5c4daf--fantasy-art-avatar-jake-sully.jpg","https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546592733408-29a82067b71bd9e3df95e1c0ba5c4daf--fantasy-art-avatar-jake-sully.jpg"};
     SliderAdapter myCustomPagerAdapter;
 
     // imgview.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -91,6 +92,7 @@ public class HomeFragment extends Fragment {
 
         viewPager = view.findViewById(R.id.viewPager);
         ImageView example = view.findViewById(R.id.imageView);
+        iv = view.findViewById(R.id.img_descImage);
 
 //        Picasso.with(getActivity())
 //                .load("https://attralive.s3.ap-south-1.amazonaws.com/NewsFeedsPictures/1546237731525-launcher.jpeg")
@@ -139,7 +141,7 @@ public class HomeFragment extends Fragment {
 
     private void prepareNewsfeed() {
 
-       MyAppolloClient.getMyAppolloClient("Bearer 5121b93ce464dc428d57ac3b3dbd262d1414c8fd").query(
+       MyAppolloClient.getMyAppolloClient("Bearer a2fba7c054a979eb63a22186ca142a14e08706f2").query(
                GetPosts.builder().build()).enqueue(
                new ApolloCall.Callback<GetPosts.Data>() {
                    @Override
@@ -155,9 +157,13 @@ public class HomeFragment extends Fragment {
 
                            //   String data = response.data().getPosts_Q().posts().get(i).description();
                                Log.i("",response.data().getPosts_Q().posts().get(i).description());
-                              newsFeedList = new NewsFeed(R.drawable.ic_behance,R.drawable.blogreadimage,"Mohseen Pasha","","",
-                                      response.data().getPosts_Q().posts().get(i).description(),"","");
-                              Log.i("",response.data().getPosts_Q().posts().get(i).description());
+                              newsFeedList = new NewsFeed("",response.data().getPosts_Q().posts().get(i).filePath(),"","",
+                              "",response.data().getPosts_Q().posts().get(i).description(),"","");
+                             // Log.i("",response.data().getPosts_Q().posts().get(i).description());
+                               Log.i("",response.data().getPosts_Q().posts().get(i).filePath());
+                               Picasso.with(getActivity())
+                                 .load(response.data().getPosts_Q().posts().get(i).filePath())
+                                 .into(iv);
                               newsFeedArrayList.add(newsFeedList);
 
                            }
