@@ -106,53 +106,7 @@
 
         </LinearLayout>
     </LinearLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/layoutStyle"
-        android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:textColor="#949c97"
-
-                android:textStyle="bold"
-                android:text="@string/gender"
-                style="@style/InputTextStyle"
-                android:id="@+id/tv_gender"/>
-        <RadioGroup
-            android:layout_toRightOf="@+id/tv_gender"
-            android:id="@+id/radioSex"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="5dp"
-            android:paddingLeft="9dp"
-            >
-            <RadioButton
-                android:id="@+id/radioMale"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="@string/radio_male"
-                android:checked="true"
-                android:textColor="#32b0e4"
-                android:buttonTint="#32b0e4"/>
-
-            <RadioButton
-                android:id="@+id/radioFemale"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="@string/radio_female"
-                android:textColor="#32b0e4"
-                android:buttonTint="#32b0e4"/>
-
-        </RadioGroup>
-    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -187,33 +141,7 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="#8f9290" />
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
 
-        style="@style/layoutStyle">
-        <TextView
-            android:paddingTop="10dp"
-            android:id="@+id/tv_userDob"
-            android:layout_width="wrap_content"
-            android:gravity="center_vertical"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_contact_mail_black_24dp"
-            android:hint="@string/work_location"
-            android:drawablePadding="18dp"
-            android:textColor="#949c97"
-            android:textSize="14sp"
-            style="@style/InputTextStyle"
-            android:text="@string/dob"/>
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_date_range_black_24dp"
-            android:onClick="showDatePickerDialog"
-            android:layout_alignParentEnd="true"
-            android:backgroundTint="@color/white"/>
-    </RelativeLayout>
     <View
 
         android:layout_width="match_parent"

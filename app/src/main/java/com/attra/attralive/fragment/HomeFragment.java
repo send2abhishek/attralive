@@ -52,7 +52,6 @@ public class HomeFragment extends Fragment {
     NewsFeed newsFeedList;
     TextView postFeed;
 
-
     RecyclerView recyclerView;
     ArrayList<String> Number;
     RecyclerView.LayoutManager RecyclerViewLayoutManager;
