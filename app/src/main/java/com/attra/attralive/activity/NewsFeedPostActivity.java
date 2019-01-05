@@ -62,6 +62,7 @@ import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -79,10 +80,7 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
 
 
     ApiService apiService;
-
-
-
-
+    OkHttpClient client;
     Uri picUri;
     private ArrayList<String> permissionsToRequest;
     private ArrayList<String> permissionsRejected = new ArrayList<>();
@@ -132,7 +130,7 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void initRetrofitClient() {
-        OkHttpClient client = new OkHttpClient.Builder().build();
+client         = new OkHttpClient.Builder().build();
 
         apiService = new Retrofit.Builder().baseUrl("http://10.200.44.20:4001").client(client).build().create(ApiService.class);
     }
@@ -345,13 +343,13 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
             req.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
+                    System.out.println("Image response"+ response);
 
                     if (response.code() == 200) {
 //                        successMsg.setText("Uploaded Successfully!");
 //                        successMsg.setTextColor(Color.BLUE);
 //
-                        System.out.println("Image response "+ response);
+                        System.out.println("Image response"+ response);
 
 //                        try {
 //                            JSONObject jsonObj = new JSONObject(String.valueOf(response));

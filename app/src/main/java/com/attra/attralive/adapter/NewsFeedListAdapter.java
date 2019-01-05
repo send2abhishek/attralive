@@ -1,5 +1,6 @@
 package com.attra.attralive.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
 import android.support.v7.widget.PopupMenu;
@@ -14,16 +15,18 @@ import android.widget.TextView;
 
 import com.attra.attralive.R;
 import com.attra.attralive.model.NewsFeed;
+import com.attra.attralive.model.NewsFeedNew;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapter.MyViewHolder>
 {
     Context mcontext;
-    ArrayList<NewsFeed> newsFeeds;
+    ArrayList<NewsFeedNew> newsFeeds;
 
-    NewsFeed newsFeed;
-    public NewsFeedListAdapter(Context context, ArrayList<NewsFeed> notificationArrayList) {
+    NewsFeedNew newsFeed;
+    public NewsFeedListAdapter(Context context, ArrayList<NewsFeedNew> notificationArrayList) {
         mcontext = context;
         newsFeeds = notificationArrayList;
     }
@@ -38,14 +41,19 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         newsFeed = newsFeeds.get(position);
-        holder.userName.setText(newsFeed.getUserName());
+        /*holder.userName.setText(newsFeed.getUserName());
         holder.userImage.setImageResource(newsFeed.getImageId());
         holder.title.setText(newsFeed.getTitle());
         holder.time.setText(newsFeed.getFeedTime());
         holder.description.setText(newsFeed.getFeedDescription());
         holder.noOfLikes.setText(newsFeed.getNoOfLikes());
         holder.noofComments.setText(newsFeed.getNoOfCommenst());
-        holder.descriptionImage.setImageResource(newsFeed.getNewsFeedImage());
+        holder.descriptionImage.setImageResource(newsFeed.getNewsFeedImage());*/
+        holder.userName.setText(newsFeed.getUserid());
+        holder.description.setText(newsFeed.getDescription());
+        Picasso.with(mcontext)
+               .load("https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png")
+               .into(holder.userImage);
 
         holder.optionmenu.setOnClickListener(new View.OnClickListener() {
             @Override

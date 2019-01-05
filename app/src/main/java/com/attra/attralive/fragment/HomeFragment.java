@@ -1,5 +1,7 @@
 package com.attra.attralive.fragment;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
@@ -27,10 +29,13 @@ import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
 import com.attra.attralive.Service.MyAppolloClient;
 import com.attra.attralive.activity.NewsFeedPostActivity;
+import com.attra.attralive.activity.OtpValidationActivity;
 import com.attra.attralive.adapter.NewsFeedListAdapter;
 import com.attra.attralive.adapter.SliderAdapter;
 import com.attra.attralive.adapter.WidgetAdapter;
 import com.attra.attralive.model.NewsFeed;
+import com.attra.attralive.model.NewsFeedNew;
+import com.attra.attralive.util.GetNewRefreshToken;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -46,10 +51,10 @@ import graphqlandroid.GetPosts;
  */
 public class HomeFragment extends Fragment {
     RecyclerView newsFeed;
-    ArrayList<NewsFeed> newsFeedArrayList;
+    ArrayList<NewsFeedNew> newsFeedArrayList;
     NewsFeedListAdapter newsFeedListAdapter;
     LinearLayoutManager linearLayoutManager;
-    NewsFeed newsFeedList;
+    NewsFeedNew newsFeedList;
     TextView postFeed;
 
 
@@ -59,7 +64,9 @@ public class HomeFragment extends Fragment {
     WidgetAdapter RecyclerViewHorizontalAdapter;
     LinearLayoutManager HorizontalLayout;
     View ChildView;
+    String refreshToken,myToken,accesstoken;
     int RecyclerViewItemPosition;
+    SharedPreferences sharedPreferences;
     ViewPager viewPager;
     int images[] = {R.drawable.attractionposter, R.drawable.attractionposter, R.drawable.attractionposter, R.drawable.attractionposter};
     SliderAdapter myCustomPagerAdapter;
@@ -80,10 +87,24 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         postFeed = view.findViewById(R.id.tv_postThought);
         newsFeed = view.findViewById(R.id.rv_newsFeed);
-        newsFeedArrayList = new ArrayList<NewsFeed>();
+        newsFeedArrayList = new ArrayList<NewsFeedNew>();
         Number = new ArrayList<>();
         linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        prepareNewsfeed();
+        sharedPreferences = getActivity().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
+        if (sharedPreferences.contains("authToken")) {
+            myToken = sharedPreferences.getString("authToken", "");
+            //callservice(myToken);
+            Toast.makeText(getActivity(), myToken, Toast.LENGTH_LONG).show();
+
+        }
+        if (sharedPreferences.contains("refreshToken")) {
+            refreshToken = sharedPreferences.getString("refreshToken", "");
+            Toast.makeText(getActivity(), refreshToken, Toast.LENGTH_LONG).show();
+            //callservice(myToken);
+            //Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
+
+        }
+        prepareNewsfeed("Bearer 5121b93ce464dc428d57ac3b3dbd262d1414c8fd");
         newsFeedListAdapter = new NewsFeedListAdapter(getActivity(), newsFeedArrayList);
         newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
         newsFeed.setLayoutManager(linearLayoutManager);
@@ -137,30 +158,43 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private void prepareNewsfeed() {
+    private void prepareNewsfeed(String myToken) {
 
-       MyAppolloClient.getMyAppolloClient("Bearer 5121b93ce464dc428d57ac3b3dbd262d1414c8fd").query(
+       MyAppolloClient.getMyAppolloClient(myToken).query(
                GetPosts.builder().build()).enqueue(
                new ApolloCall.Callback<GetPosts.Data>() {
                    @Override
                    public void onResponse(@Nonnull Response<GetPosts.Data> response) {
                        String status = response.data().getPosts_Q().status();
-
+                       String message=response.data().getPosts_Q().message();
+                       Log.d("mesa",message);
                        if(status.equals("Success"))
                        {
                            Log.i("","inside success");
 
                            for(int i =0;i<response.data().getPosts_Q().posts().size();i++)
                            {
-
                            //   String data = response.data().getPosts_Q().posts().get(i).description();
                                Log.i("",response.data().getPosts_Q().posts().get(i).description());
-                              newsFeedList = new NewsFeed(R.drawable.ic_behance,R.drawable.blogreadimage,"Mohseen Pasha","","",
-                                      response.data().getPosts_Q().posts().get(i).description(),"","");
+                              newsFeedList = new NewsFeedNew(response.data().getPosts_Q().posts().get(i).userId(),
+                                      response.data().getPosts_Q().posts().get(i).description(),response.data().getPosts_Q().posts().get(i).filePath());
                               Log.i("",response.data().getPosts_Q().posts().get(i).description());
                               newsFeedArrayList.add(newsFeedList);
 
                            }
+                       }
+                       else
+                           if (message.equals("Invalid token: access token is invalid")) {
+                               Log.d("www",message);
+                               GetNewRefreshToken.getRefreshtoken(refreshToken, getActivity());
+                               sharedPreferences = getActivity().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
+                               if (sharedPreferences.contains("authToken")) {
+                                    accesstoken = sharedPreferences.getString("authToken", "");
+                                   //callservice(myToken);
+                                   //Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
+                               }
+                               prepareNewsfeed(accesstoken);
+
                        }
                    }
 

@@ -330,7 +330,8 @@ public class DashboardActivity extends AppCompatActivity
         menuInflater.inflate(R.menu.dashboard_toolbar, menu);
         //final View menu_notification_list = menu.findItem(R.id.menu_item).getActionView();
         final View actionView = menu.findItem(R.id.menu_item).getActionView();
-        if(actionView!=null) {
+        if(actionView!=null)
+        {
             mImageLayoutView = actionView.findViewById(R.id.imageView);
             myTextLayoutView = actionView.findViewById(R.id.textView);
         }

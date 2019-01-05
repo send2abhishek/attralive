@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,10 +44,11 @@ public class UserDetailsActivity extends AppCompatActivity {
     TextView dob;
       List<String> buList = new ArrayList<String>();
       List<String> locationList = new ArrayList<String>();
-
+    private RadioGroup radioGroup;
+    private RadioButton radioButton;
     String emailId, password;
     EditText empId, phNo, userDesign;
-    String buValue;
+    String buValue,userName,userId;
     private static ApolloClient apolloClient;
     public static final String PREFS_AUTH = "my_auth";
     public static String Authorization = "Basic YXBwbGljYXRpb246c2VjcmV0";
@@ -65,7 +68,8 @@ public class UserDetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         emailId = intent.getStringExtra("emailId");
         password = intent.getStringExtra("password");
-
+        userName=intent.getStringExtra("username");
+        userId=intent.getStringExtra("userId");
         empId = findViewById(R.id.et_entername);
         phNo = findViewById(R.id.et_mobilenumber);
 
@@ -85,8 +89,6 @@ public class UserDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String userName = "Awnish";
-                String userId = "asd";
                 String designation = userDesign.getText().toString();
                 String dobValue = dob.getText().toString();
                 String workLoc = location.getSelectedItem().toString();
@@ -94,7 +96,9 @@ public class UserDetailsActivity extends AppCompatActivity {
                 String mobile = phNo.getText().toString();
                 String employeeId = empId.getText().toString();
                 String imagePath = "wqeqeqweqe";
-                String gender = "Male";
+                int sid=radioGroup.getCheckedRadioButtonId();
+                radioButton=findViewById(sid);
+                String gender = radioButton.getText().toString();
 
                 if (employeeId.trim().equals("")) {
                     empId.setError("Employee Id is required");
