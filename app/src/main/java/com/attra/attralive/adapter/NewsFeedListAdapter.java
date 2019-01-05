@@ -15,7 +15,10 @@ import android.widget.TextView;
 
 import com.attra.attralive.R;
 import com.attra.attralive.model.NewsFeed;
+
 import com.attra.attralive.model.NewsFeedNew;
+
+
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -60,6 +63,12 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
 
        // holder.descriptionImage.setImageResource(newsFeed.getNewsFeedImage());
 
+
+
+
+       Picasso.with(mcontext)
+                .load(newsFeed.getNewsFeedImage())
+                .into(holder.descriptionImage);
 
         holder.optionmenu.setOnClickListener(new View.OnClickListener() {
             @Override
