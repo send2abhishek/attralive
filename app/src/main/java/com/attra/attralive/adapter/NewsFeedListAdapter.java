@@ -39,13 +39,13 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
     public void onBindViewHolder(MyViewHolder holder, int position) {
         newsFeed = newsFeeds.get(position);
         holder.userName.setText(newsFeed.getUserName());
-        holder.userImage.setImageResource(newsFeed.getImageId());
+       // holder.userImage.setImageResource(newsFeed.getImageId());
         holder.title.setText(newsFeed.getTitle());
         holder.time.setText(newsFeed.getFeedTime());
         holder.description.setText(newsFeed.getFeedDescription());
         holder.noOfLikes.setText(newsFeed.getNoOfLikes());
         holder.noofComments.setText(newsFeed.getNoOfCommenst());
-        holder.descriptionImage.setImageResource(newsFeed.getNewsFeedImage());
+       // holder.descriptionImage.setImageResource(newsFeed.getNewsFeedImage());
 
         holder.optionmenu.setOnClickListener(new View.OnClickListener() {
             @Override

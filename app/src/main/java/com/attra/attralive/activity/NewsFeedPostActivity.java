@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.DialogInterface;
+import android.content.Entity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -21,6 +22,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -35,11 +37,14 @@ import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
 import com.attra.attralive.Service.ApiService;
 import com.attra.attralive.Service.MyAppolloClient;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.squareup.moshi.Json;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
@@ -54,6 +59,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 
@@ -79,6 +85,10 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
 
 
     ApiService apiService;
+
+
+
+
     Uri picUri;
     private ArrayList<String> permissionsToRequest;
     private ArrayList<String> permissionsRejected = new ArrayList<>();
@@ -87,8 +97,9 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
     private final static int IMAGE_RESULT = 200;
     ImageView fabCamera, capturedImage;
     Bitmap mBitmap;
-    TextView successMsg;
+    TextView successMsg, Description;
     Button post;
+    String status, message, path;
 
 
     @Override
@@ -99,6 +110,7 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.activity_news_feed_post);
 
 
+        Description = findViewById(R.id.descText);
        // capturedImage = findViewById(R.id.capturedImage);
         fabCamera = findViewById(R.id.openCameraOptions);
         post = findViewById(R.id.btn_postnewsFeed);
@@ -341,34 +353,47 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
             req.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    try {
-                        Log.d("qqqq",response.body().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+
 
                     if (response.code() == 200) {
-
 //                        successMsg.setText("Uploaded Successfully!");
 //                        successMsg.setTextColor(Color.BLUE);
 //
                         System.out.println("Image response "+ response);
 
-//                        try {
-//                            JSONObject jsonObj = new JSONObject(String.valueOf(response));
-//                            String some = jsonObj.getString("msg");
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
+                        org.json.simple.JSONObject jsonObj = null;
+                        try {
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            String data = response.body().string();
+                            System.out.println(data);
+
+                            Map jsonJavaRootObject = new Gson().fromJson(data, Map.class);
+                            //System.out.println(jsonJavaRootObject.get("status"));
+                            status = jsonJavaRootObject.get("status").toString();
+                            message = jsonJavaRootObject.get("messge").toString();
+                            path = jsonJavaRootObject.get("path").toString();
+                            System.out.println(status + message + path);
+                            CallPostService();
+
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
 
                     }
 
-                    Toast.makeText(getApplicationContext(), "Successfully posted" + " ", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Successfully updated" + " ", Toast.LENGTH_LONG).show();
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Log.i("cccc","Failure body");
+                    Log.i("","Failure body");
 //                    successMsg.setText("Uploaded Failed!");
 //                    successMsg.setTextColor(Color.RED);
                     Toast.makeText(getApplicationContext(), "Request failed", Toast.LENGTH_LONG).show();
@@ -383,17 +408,22 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
             e.printStackTrace();
         }
 
-        MyAppolloClient.getMyAppolloClient("Bearer 283a8b4c689a5fe2233aee35ea793f3887a25c07").mutate(
-                PostThought.builder().userId("mohseen.pasha@attra.com.au").description("Example").filePath("dummy").build()).enqueue(
+    }
+        public void CallPostService()
+        {
+
+        MyAppolloClient.getMyAppolloClient("Bearer a2fba7c054a979eb63a22186ca142a14e08706f2").mutate(
+                PostThought.builder().userId("5c2c997ab8f2dc4308ee3e88").description(Description.toString()).filePath(path).build()).enqueue(
                 new ApolloCall.Callback<PostThought.Data>() {
                     @Override
                     public void onResponse(@Nonnull com.apollographql.apollo.api.Response<PostThought.Data> response) {
-
+                        Log.i("","inside callpostmethod");
                         String status = response.data().addPost_M().userId();
+                        Log.i("aaaaa",status);
                         NewsFeedPostActivity.this.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(NewsFeedPostActivity.this, "Succesfully Posted", Toast.LENGTH_LONG).show();
+                                Toast.makeText(NewsFeedPostActivity.this, "Successfully Posted", Toast.LENGTH_LONG).show();
 
                             }
                         });
@@ -405,6 +435,7 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
                     }
                 }
         );
+
         finish();
     }
 

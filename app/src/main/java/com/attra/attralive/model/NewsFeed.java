@@ -1,23 +1,25 @@
 package com.attra.attralive.model;
 
+import android.widget.ImageView;
+
 public class NewsFeed {
 
-    int imageId,newsFeedImage;
+    String imageId,newsFeedImage;
     String userName,title,feedTime,feedDescription,noOfLikes,noOfCommenst;
 
-    public int getImageId() {
+    public String getImageId() {
         return imageId;
     }
 
-    public void setImageId(int imageId) {
+    public void setImageId(String imageId) {
         this.imageId = imageId;
     }
 
-    public int getNewsFeedImage() {
+    public String getNewsFeedImage() {
         return newsFeedImage;
     }
 
-    public void setNewsFeedImage(int newsFeedImage) {
+    public void setNewsFeedImage(String newsFeedImage) {
         this.newsFeedImage = newsFeedImage;
     }
 
@@ -70,8 +72,19 @@ public class NewsFeed {
     }
 
 
-    public NewsFeed(int imageId, int newsFeedImage, String userName, String title, String feedTime, String feedDescription, String noOfLikes, String noOfCommenst) {
-        this.imageId = imageId;
+//    public NewsFeed(int imageId, int newsFeedImage, String userName, String title, String feedTime, String feedDescription, String noOfLikes, String noOfCommenst) {
+//        this.imageId = imageId;
+//        this.newsFeedImage = newsFeedImage;
+//        this.userName = userName;
+//        this.title = title;
+//        this.feedTime = feedTime;
+//        this.feedDescription = feedDescription;
+//        this.noOfLikes = noOfLikes;
+//        this.noOfCommenst = noOfCommenst;
+//    }
+
+    public NewsFeed(String image, String newsFeedImage, String userName, String title, String feedTime, String feedDescription, String noOfLikes, String noOfCommenst) {
+        this.imageId = image;
         this.newsFeedImage = newsFeedImage;
         this.userName = userName;
         this.title = title;
@@ -80,6 +93,7 @@ public class NewsFeed {
         this.noOfLikes = noOfLikes;
         this.noOfCommenst = noOfCommenst;
     }
+
 
 
 
