@@ -23,10 +23,10 @@ import java.util.ArrayList;
 public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapter.MyViewHolder>
 {
     Context mcontext;
-    ArrayList<NewsFeedNew> newsFeeds;
+    ArrayList<NewsFeed>newsFeeds;
 
-    NewsFeedNew newsFeed;
-    public NewsFeedListAdapter(Context context, ArrayList<NewsFeedNew> notificationArrayList) {
+    NewsFeed newsFeed;
+    public NewsFeedListAdapter(Context context, ArrayList<NewsFeed> notificationArrayList) {
         mcontext = context;
         newsFeeds = notificationArrayList;
     }
@@ -41,19 +41,25 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         newsFeed = newsFeeds.get(position);
-        /*holder.userName.setText(newsFeed.getUserName());
-        holder.userImage.setImageResource(newsFeed.getImageId());
+
+
+       holder.userName.setText(newsFeed.getUserName());
+      // holder.userImage.setImageResource(newsFeed.getImageId());
+
         holder.title.setText(newsFeed.getTitle());
         holder.time.setText(newsFeed.getFeedTime());
         holder.description.setText(newsFeed.getFeedDescription());
         holder.noOfLikes.setText(newsFeed.getNoOfLikes());
         holder.noofComments.setText(newsFeed.getNoOfCommenst());
-        holder.descriptionImage.setImageResource(newsFeed.getNewsFeedImage());*/
-        holder.userName.setText(newsFeed.getUserid());
-        holder.description.setText(newsFeed.getDescription());
+
+        //holder.descriptionImage.setImageResource(newsFeed.getNewsFeedImage());*/
+
         Picasso.with(mcontext)
-               .load("https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png")
-               .into(holder.userImage);
+               .load(newsFeed.getNewsFeedImage())
+               .into(holder.descriptionImage);
+
+       // holder.descriptionImage.setImageResource(newsFeed.getNewsFeedImage());
+
 
         holder.optionmenu.setOnClickListener(new View.OnClickListener() {
             @Override

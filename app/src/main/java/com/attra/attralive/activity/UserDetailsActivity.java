@@ -1,11 +1,8 @@
 package com.attra.attralive.activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -18,43 +15,38 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.ApolloClient;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
 import com.attra.attralive.Service.MyAppolloClient;
-import com.google.firebase.iid.FirebaseInstanceId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
 import javax.annotation.Nonnull;
-
 import graphqlandroid.GetBusinessUnit;
 import graphqlandroid.GetLocation;
-import graphqlandroid.SendDeviceToken;
-import graphqlandroid.UserDetailsUpdate;
-
 
 public class UserDetailsActivity extends AppCompatActivity {
     Spinner bu, location;
     CardView continueBtn;
+
     TextView dob;
       List<String> buList = new ArrayList<String>();
       List<String> locationList = new ArrayList<String>();
     private RadioGroup radioGroup;
     private RadioButton radioButton;
+
+
+
     String emailId, password;
     EditText empId, phNo, userDesign;
     String buValue,userName,userId;
     private static ApolloClient apolloClient;
     public static final String PREFS_AUTH = "my_auth";
     public static String Authorization = "Basic YXBwbGljYXRpb246c2VjcmV0";
-
-    private SharedPreferences sharedPreferences;
-    String myToken;
+    private SharedPreferences sharedPreferences;String myToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +56,6 @@ public class UserDetailsActivity extends AppCompatActivity {
         bu = findViewById(R.id.sp_selectbu);
         location = findViewById(R.id.sp_userWorkLocation);
         continueBtn = findViewById(R.id.crd_continuebutton);
-        dob = findViewById(R.id.tv_userDob);
         Intent intent = getIntent();
         emailId = intent.getStringExtra("emailId");
         password = intent.getStringExtra("password");
@@ -77,7 +68,7 @@ public class UserDetailsActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences(PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
             myToken = sharedPreferences.getString("authToken", "");
-            Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
+      //      Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
 
         }
 
@@ -90,15 +81,16 @@ public class UserDetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 String designation = userDesign.getText().toString();
-                String dobValue = dob.getText().toString();
                 String workLoc = location.getSelectedItem().toString();
                 String userBu = bu.getSelectedItem().toString();
                 String mobile = phNo.getText().toString();
                 String employeeId = empId.getText().toString();
                 String imagePath = "wqeqeqweqe";
+
                 int sid=radioGroup.getCheckedRadioButtonId();
                 radioButton=findViewById(sid);
                 String gender = radioButton.getText().toString();
+
 
                 if (employeeId.trim().equals("")) {
                     empId.setError("Employee Id is required");
@@ -109,17 +101,16 @@ public class UserDetailsActivity extends AppCompatActivity {
                 } else if (workLoc.trim().equals("")) {
                     ((TextView) location.getSelectedView()).setError("Select Location");
                     ((TextView) location.getSelectedView()).requestFocus();
-                } else if (dobValue.trim().equals("")) {
-                    dob.setError("Dob is required");
-                    dob.requestFocus();
-                } else if (userBu.trim().equals("")) {
+                }  else if (userBu.trim().equals("")) {
                     ((TextView) bu.getSelectedView()).setError("Select BU");
                     ((TextView) bu.getSelectedView()).requestFocus();
                 } else if (mobile.length() < 10) {
                     phNo.setError("Enter valid Contact Number");
                     phNo.requestFocus();
                 } else {
-                    MyAppolloClient.getMyAppolloClient(myToken).mutate(
+                    Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
+                    startActivity(intent1);
+                    /*MyAppolloClient.getMyAppolloClient(myToken).mutate(
                             UserDetailsUpdate.builder().userId(userId).userName(userName).gender(gender).bu(buValue).designation(designation).dob(dobValue).empId(employeeId).location(workLoc)
                                     .bu(userBu).mobileNumber(mobile).profileImagePath(imagePath)
                                     .build()).enqueue(
@@ -129,11 +120,11 @@ public class UserDetailsActivity extends AppCompatActivity {
 //                                                String message= response.data().otpValidation_M().otpstatus();
                                     String status = response.data().updateUserDetails_M().status();
                                     final String message = response.data().updateUserDetails_M().message();
-                                    Log.i("res_message", message);
-                                    Log.i("res_status userDetails", status);
+                                    Log.d("res_message", message);
+                                   // Log.d("res_status userDetails", status);
                                     Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
                                     startActivity(intent1);
-                                    /*UserDetailsActivity.this.runOnUiThread(new Runnable() {
+                                    *//*UserDetailsActivity.this.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
                                             if (status.equals("Success")) {
@@ -141,14 +132,14 @@ public class UserDetailsActivity extends AppCompatActivity {
                                                 startActivity(intent1);
                                             }
                                         }
-                                    });*/
+                                    });*//*
                                 }
 
                                 @Override
                                 public void onFailure(@Nonnull ApolloException e) {
                                 }
                             }
-                    );
+                    );*/
                 }
 
 
@@ -194,24 +185,6 @@ public class UserDetailsActivity extends AppCompatActivity {
 
     }
 
-    public void showDatePickerDialog(View v) {
-        /*DialogFragment newFragment = new DatePickerFragment();
-        newFragment.show(getSupportFragmentManager(), "datePicker");
-        */
-        final Calendar calendar = Calendar.getInstance();
-        int yy = calendar.get(Calendar.YEAR);
-        int mm = calendar.get(Calendar.MONTH);
-        int dd = calendar.get(Calendar.DAY_OF_MONTH);
-        DatePickerDialog datePicker = new DatePickerDialog(UserDetailsActivity.this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                String date = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
-                dob.setText(date);
-                // tfDate.setText(date);
-            }
-        }, yy, mm, dd);
-        datePicker.show();
-    }
 
     private void getUserLocation(){
         MyAppolloClient.getMyAppolloClient(myToken).query(

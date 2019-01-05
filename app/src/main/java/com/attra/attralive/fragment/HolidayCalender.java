@@ -28,6 +28,7 @@ public class HolidayCalender extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragmen
+        getActivity().setTitle(R.string.holiday_calender);
         View view= inflater.inflate(R.layout.fragment_holiday_calender, container, false);
         calenderLocation = view.findViewById(R.id.sp_calenderLocation);
         ArrayAdapter<String> locationAdapter = new ArrayAdapter<>(getActivity(),

@@ -24,19 +24,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
-import com.attra.attralive.R;
 import com.attra.attralive.Service.MyAppolloClient;
+import com.attra.attralive.fragment.Profile;
+import com.attra.attralive.R;
 import com.attra.attralive.fragment.AboutUsFragment;
-import com.attra.attralive.fragment.DigiquizFragment;
-import com.attra.attralive.fragment.Facilities;
 import com.attra.attralive.fragment.Gallery;
 import com.attra.attralive.fragment.HolidayCalender;
 import com.attra.attralive.fragment.HomeFragment;
@@ -46,12 +43,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
-
 import java.util.ArrayList;
-
 import javax.annotation.Nonnull;
 
-import graphqlandroid.GetBusinessUnit;
+import graphqlandroid.GetNotificationList;
 import graphqlandroid.GetProfileDetails;
 
 import static com.attra.attralive.activity.OtpValidationActivity.PREFS_AUTH;
@@ -63,9 +58,9 @@ public class DashboardActivity extends AppCompatActivity
     LinearLayoutManager linearLayoutManager;
     ImageView profileImage,profileNav;
     TextView userName,userEmail;
-    String userId;
+    String userId1;
     String myToken;
-
+int notificationSize=0;
     private static final String TAG = "DashboardActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +70,7 @@ public class DashboardActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         this.getWindow().setStatusBarColor(Color.TRANSPARENT);
         subscribeToTopic();
+
 
         fragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).addToBackStack("goBack").commit();
@@ -90,41 +86,22 @@ public class DashboardActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        View headerView = navigationView.getHeaderView(0);
+        userName = headerView.findViewById(R.id.tv_username);
+        userEmail = headerView.findViewById(R.id.tv_email);
 
         SharedPreferences sharedPreferences = getSharedPreferences(PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
             myToken = sharedPreferences.getString("authToken", "");
-            userId = sharedPreferences.getString("userId", "");
-            Toast.makeText(getApplicationContext(), userId, Toast.LENGTH_LONG).show();
+            userId1 = sharedPreferences.getString("userId", "");
+      //      Toast.makeText(getApplicationContext(), userId, Toast.LENGTH_LONG).show();
             Log.i("token in dashboard",myToken);
-            Log.i("user id in dashboard",userId);
+            Log.i("user id in dashboard",userId1);
 
         }
-/*
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        View header=navigationView.getHeaderView(0);
-        View headerView = navigationView.inflateHeaderView(R.layout.nav_header_dashboard);
-        headerView.findViewById(R.id.ll_nav_header);
-        userName = (TextView) headerView.findViewById(R.id.tv_username);
-        userEmail = (TextView) headerView.findViewById(R.id.textView_email);
-       // profileImage = findViewById(R.id.imageView);
-        //       profileImage.setImageResource(R.drawable.attra_logo);
-        userName.setText("My name");
-        userEmail.setText("adhkashd");*/
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        View headerView = navigationView.getHeaderView(0);
-        userName = (TextView) headerView.findViewById(R.id.tv_username);
-        userEmail = headerView.findViewById(R.id.textView_email);
-        profileNav = headerView.findViewById(R.id.iv_profile);
-       /* getProfileDetails();*/
-
-
-
-
-
-
+        getProfileDetail();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Create channel to show notifications.
             String channelId  = getString(R.string.default_notification_channel_id);
@@ -171,27 +148,42 @@ public class DashboardActivity extends AppCompatActivity
                 });
     }*/
 
-  /*  private void getProfileDetails(){
-
+    private void getProfileDetail(){
 
         MyAppolloClient.getMyAppolloClient(myToken).query(
-                GetProfileDetails.builder().userId("5c2cf5902c5e233c28d03add")
+                GetProfileDetails.builder().userId(userId1)
                         .build()).enqueue(
                 new ApolloCall.Callback<GetProfileDetails.Data>() {
                     @Override
                     public void onResponse(@Nonnull Response<GetProfileDetails.Data> response) {
                         Log.i("res", String.valueOf(response));
-                        String user= response.data().getProfileDetails_Q().name();
-                        String email= response.data().getProfileDetails_Q().email();
-                        String profileImagePath= response.data().getProfileDetails_Q().profileImagePath();
+                        String message = response.data().getProfileDetails_Q().message();
+                        String status = response.data().getProfileDetails_Q().status();
+                        Log.i("message in dashboard",message);
+                        Log.i("mstatus in dashboard",status);
+                        if(response.data().getProfileDetails_Q().name()!=null){
+                           /* String message = response.data().getProfileDetails_Q().message();
+                            String status = response.data().getProfileDetails_Q().status();*/
+                            if(status.equals("Success")){
+                                String username = response.data().getProfileDetails_Q().name();
+                                String emaiId = response.data().getProfileDetails_Q().email();
+                              //  String imgPath = response.data().getProfileDetails_Q().profileImagePath();
+                                DashboardActivity.this.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        userName.setText(username);
+                                        userEmail.setText(emaiId);
 
-                        DashboardActivity.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                userName.setText(user);
-                                userEmail.setText(email);
+                                    }
+                                });
                             }
-                        });
+                            else if(status.equals("Failure")){
+
+                            }
+
+                        }
+
+
 
                     }
 
@@ -200,8 +192,8 @@ public class DashboardActivity extends AppCompatActivity
                     }
                 }
         );
+    }
 
-    }*/
 
 
     private void subscribeToTopic(){
@@ -257,21 +249,17 @@ public class DashboardActivity extends AppCompatActivity
             fragment = new LearningD();
             loadFragment(fragment);
             // Handle the camera action
-        }else if (id == R.id.nav_gallery) {
-            fragment = new Gallery();
-            loadFragment(fragment);
         } else if (id == R.id.nav_holidayCalender) {
             fragment = new HolidayCalender();
             loadFragment(fragment);
 
         } else if (id == R.id.nav_facilities) {
-
-          /*  fragment = new Facilities();*/
-
+           /* fragment = new Gallery();
+            loadFragment(fragment);*/
             Intent intent = new Intent(getApplicationContext(),UserDetailsActivity.class);
             startActivity(intent);
 
-        }   else if (id == R.id.nav_termsAndCondition) {
+        }   else if (id == R.id.nav_about) {
             fragment = new AboutUsFragment();
             loadFragment(fragment);
 
@@ -300,14 +288,13 @@ public class DashboardActivity extends AppCompatActivity
                     Intent i=new Intent(getApplicationContext(),EventDetailsActivity.class);
                     startActivity(i);
                     return true;
-                case R.id.navigation_blog:
-                    fragment = new DigiquizFragment();
+                case R.id.navigation_gallery:
+                    fragment = new Gallery();
                     loadFragment(fragment);
-
                     return true;
-                case R.id.navigation_forum:
-
-
+                case R.id.navigation_profile:
+                    fragment = new Profile();
+                    loadFragment(fragment);
                     return true;
             }
             return false;
@@ -328,12 +315,48 @@ public class DashboardActivity extends AppCompatActivity
         TextView myTextView,myTextLayoutView;
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.dashboard_toolbar, menu);
-        //final View menu_notification_list = menu.findItem(R.id.menu_item).getActionView();
         final View actionView = menu.findItem(R.id.menu_item).getActionView();
         if(actionView!=null)
         {
             mImageLayoutView = actionView.findViewById(R.id.imageView);
             myTextLayoutView = actionView.findViewById(R.id.textView);
+            ((View) actionView.findViewById(R.id.textView)).setVisibility(View.GONE);
+            MyAppolloClient.getMyAppolloClient("Bearer 30b598d194914c37329f88a1aa931daff3a6bf2e").query(
+                    GetNotificationList.builder().userId("5c2e46f9fb15963434c755f4")
+                            .build()).enqueue(
+                    new ApolloCall.Callback<GetNotificationList.Data>() {
+                        @Override
+                        public void onResponse(@Nonnull Response<GetNotificationList.Data> response) {
+                           DashboardActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    if(response.data()!=null &&response.data().getUserNotification_Q()!=null && response.data().getUserNotification_Q().notifications()!=null)
+                                    {
+                                        Log.i("Run method notification", "Run method notification");
+                                        notificationSize = response.data().getUserNotification_Q().notifications().size();
+                                        Log.i("notification-size ", notificationSize+"");
+                                        if(notificationSize>0) {
+                                            ((View) actionView.findViewById(R.id.textView)).setVisibility(View.VISIBLE);
+                                            myTextLayoutView.setText(notificationSize + "");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Log.i("else responsedata", "inside else of  respnse");
+                                        myTextLayoutView.setText("0");
+                                    }
+
+                                }
+                            });
+
+                        }
+                        @Override
+                        public void onFailure(@Nonnull ApolloException e) {
+                            Log.i("Failure", "OnFailure method   "+e.getMessage());
+                        }
+                    }
+            );
         }
         if(mImageLayoutView!=null) {
             mImageLayoutView.setOnClickListener(new View.OnClickListener() {

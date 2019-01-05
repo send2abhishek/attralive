@@ -51,12 +51,12 @@ import graphqlandroid.GetPosts;
  */
 public class HomeFragment extends Fragment {
     RecyclerView newsFeed;
-    ArrayList<NewsFeedNew> newsFeedArrayList;
+    ArrayList<NewsFeed> newsFeedArrayList;
     NewsFeedListAdapter newsFeedListAdapter;
     LinearLayoutManager linearLayoutManager;
-    NewsFeedNew newsFeedList;
+    NewsFeed newsFeedList;
     TextView postFeed;
-
+    ImageView iv;
 
     RecyclerView recyclerView;
     ArrayList<String> Number;
@@ -68,7 +68,7 @@ public class HomeFragment extends Fragment {
     int RecyclerViewItemPosition;
     SharedPreferences sharedPreferences;
     ViewPager viewPager;
-    int images[] = {R.drawable.attractionposter, R.drawable.attractionposter, R.drawable.attractionposter, R.drawable.attractionposter};
+    String images[] = {"https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546592733408-29a82067b71bd9e3df95e1c0ba5c4daf--fantasy-art-avatar-jake-sully.jpg","https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546592733408-29a82067b71bd9e3df95e1c0ba5c4daf--fantasy-art-avatar-jake-sully.jpg"};
     SliderAdapter myCustomPagerAdapter;
 
     // imgview.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -87,7 +87,7 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         postFeed = view.findViewById(R.id.tv_postThought);
         newsFeed = view.findViewById(R.id.rv_newsFeed);
-        newsFeedArrayList = new ArrayList<NewsFeedNew>();
+        newsFeedArrayList = new ArrayList<NewsFeed>();
         Number = new ArrayList<>();
         linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         sharedPreferences = getActivity().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
@@ -160,7 +160,8 @@ public class HomeFragment extends Fragment {
 
     private void prepareNewsfeed(String myToken) {
 
-       MyAppolloClient.getMyAppolloClient(myToken).query(
+       MyAppolloClient.getMyAppolloClient("Bearer a2fba7c054a979eb63a22186ca142a14e08706f2").query(
+
                GetPosts.builder().build()).enqueue(
                new ApolloCall.Callback<GetPosts.Data>() {
                    @Override
@@ -176,9 +177,17 @@ public class HomeFragment extends Fragment {
                            {
                            //   String data = response.data().getPosts_Q().posts().get(i).description();
                                Log.i("",response.data().getPosts_Q().posts().get(i).description());
-                              newsFeedList = new NewsFeedNew(response.data().getPosts_Q().posts().get(i).userId(),
+
+                             /* newsFeedList = new NewsFeedNew(response.data().getPosts_Q().posts().get(i).userId(),
                                       response.data().getPosts_Q().posts().get(i).description(),response.data().getPosts_Q().posts().get(i).filePath());
                               Log.i("",response.data().getPosts_Q().posts().get(i).description());
+*/
+                              newsFeedList = new NewsFeed("",response.data().getPosts_Q().posts().get(i).filePath(),"","",
+                              "",response.data().getPosts_Q().posts().get(i).description(),"","");
+                             // Log.i("",response.data().getPosts_Q().posts().get(i).description());
+                               Log.i("",response.data().getPosts_Q().posts().get(i).filePath());
+
+
                               newsFeedArrayList.add(newsFeedList);
 
                            }
