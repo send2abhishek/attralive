@@ -15,10 +15,11 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.ApolloClient;
 import com.apollographql.apollo.api.Response;
@@ -37,8 +38,14 @@ import graphqlandroid.UserDetailsUpdate;
 public class UserDetailsActivity extends AppCompatActivity {
     Spinner bu, location;
     CardView continueBtn;
-    List<String> buList = new ArrayList<String>();
-    List<String> locationList = new ArrayList<String>();
+
+    TextView dob;
+      List<String> buList = new ArrayList<String>();
+      List<String> locationList = new ArrayList<String>();
+    private RadioGroup radioGroup;
+    private RadioButton radioButton;
+
+
 
     ApiService apiService;
     Uri picUri;
@@ -55,13 +62,15 @@ public class UserDetailsActivity extends AppCompatActivity {
 
     String emailId, password;
     EditText empId, phNo, userDesign;
-    String buValue;
+    String buValue,userName,userId;
     private static ApolloClient apolloClient;
     public static final String PREFS_AUTH = "my_auth";
     public static String Authorization = "Basic YXBwbGljYXRpb246c2VjcmV0";
 
+
     private SharedPreferences sharedPreferences;
-    String myToken,userId,userName;
+    String myToken;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +83,12 @@ public class UserDetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         emailId = intent.getStringExtra("emailId");
         password = intent.getStringExtra("password");
+
         empId = findViewById(R.id.et_empId);
+
+        userName=intent.getStringExtra("username");
+        userId=intent.getStringExtra("userId");
+        //empId = findViewById(R.id.et_entername);
         phNo = findViewById(R.id.et_mobilenumber);
         uploadImage = findViewById(R.id.im_profileimage);
 
@@ -82,10 +96,15 @@ public class UserDetailsActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences(PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
             myToken = sharedPreferences.getString("authToken", "");
+
             userId = sharedPreferences.getString("userId","");
             userName = sharedPreferences.getString("userName","");
             Log.i("user id in userDtail",userId);
             Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
+
+            String username = sharedPreferences.getString("userName","");
+      //      Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
+
         }
 
         getUserBU();
@@ -111,6 +130,11 @@ public class UserDetailsActivity extends AppCompatActivity {
                 String mobile = phNo.getText().toString();
                 String employeeId = empId.getText().toString();
                 String imagePath = "wqeqeqweqe";
+
+                int sid=radioGroup.getCheckedRadioButtonId();
+                radioButton=findViewById(sid);
+                String gender = radioButton.getText().toString();
+
 
                 if (employeeId.trim().equals("")) {
                     empId.setError("Employee Id is required");

@@ -5,9 +5,11 @@ package com.attra.attralive.activity;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Entity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
@@ -19,14 +21,17 @@ import android.os.Build;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.EventLogTags;
 import android.util.JsonReader;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +42,11 @@ import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
 import com.attra.attralive.Service.ApiService;
 import com.attra.attralive.Service.MyAppolloClient;
+import com.attra.attralive.fragment.HomeFragment;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.squareup.moshi.Json;
+
 
 
 import java.io.BufferedReader;
@@ -50,6 +60,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -60,6 +71,7 @@ import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -76,6 +88,15 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 public class NewsFeedPostActivity extends AppCompatActivity implements View.OnClickListener {
 
     ApiService apiService;
+
+
+    OkHttpClient client;
+
+
+
+    Fragment fragment = null;
+
+
     Uri picUri;
     private ArrayList<String> permissionsToRequest;
     private ArrayList<String> permissionsRejected = new ArrayList<>();
@@ -84,9 +105,12 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
     private final static int IMAGE_RESULT = 200;
     ImageView fabCamera, capturedImage;
     Bitmap mBitmap;
-    TextView successMsg, Description;
+    TextView successMsg;
+    EditText postDescription;
     Button post;
-    String status, message, path;
+    String status, message, path, description,myToken,username,userId;
+    public static final String PREFS_AUTH ="my_auth";
+    private SharedPreferences sharedPreferences;
 
 
     @Override
@@ -97,7 +121,19 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.activity_news_feed_post);
 
 
-        Description = findViewById(R.id.descText);
+        sharedPreferences = getSharedPreferences(PREFS_AUTH, Context.MODE_PRIVATE);
+        if (sharedPreferences.contains("authToken")) {
+            myToken = sharedPreferences.getString("authToken", "");
+            username = sharedPreferences.getString("userName","");
+            userId = sharedPreferences.getString("userId","");
+
+
+
+        }
+
+        postDescription = findViewById(R.id.descText);
+
+
        // capturedImage = findViewById(R.id.capturedImage);
         fabCamera = findViewById(R.id.openCameraOptions);
         post = findViewById(R.id.btn_postnewsFeed);
@@ -127,7 +163,7 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void initRetrofitClient() {
-        OkHttpClient client = new OkHttpClient.Builder().build();
+client         = new OkHttpClient.Builder().build();
 
         apiService = new Retrofit.Builder().baseUrl("http://10.200.44.20:4001").client(client).build().create(ApiService.class);
     }
@@ -317,6 +353,8 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
     private void multipartImageUpload() {
 
         try {
+            description = postDescription.getText().toString();
+
             File filesDir = getApplicationContext().getFilesDir();
             File file = new File(filesDir, "image" + ".jpeg");
             Log.i("multipartImageUpload","Inside this method");
@@ -332,21 +370,31 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
 
 
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
-            MultipartBody.Part body = MultipartBody.Part.createFormData("postPicture", file.getName(), reqFile);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("imageFile", file.getName(), reqFile);
+           // MultipartBody.Part body = MultipartBody.Part.createFormData("postPicture", file.getName(), reqFile);
             Log.i("",file.getName());
-            RequestBody name = RequestBody.create(MediaType.parse("text/plain"), "postPicture");
 
-            Call<ResponseBody> req = apiService.postPicture(body, name);
+
+            RequestBody userId = createPartFromString("12345");
+            RequestBody type = createPartFromString("postPicture");
+           // RequestBody name = RequestBody.create(MediaType.parse("text/plain"), "postPicture");
+
+            HashMap<String, RequestBody> map = new HashMap<>();
+            map.put("userId", userId);
+            map.put("type", type);
+
+            Call<ResponseBody> req = apiService.postImage(map, body);
+
             req.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
+                    System.out.println("Image response"+ response);
 
                     if (response.code() == 200) {
 //                        successMsg.setText("Uploaded Successfully!");
 //                        successMsg.setTextColor(Color.BLUE);
 //
-                        System.out.println("Image response "+ response);
+                        System.out.println("Image response"+ response);
 
 
                         try {
@@ -356,10 +404,14 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
                             Map jsonJavaRootObject = new Gson().fromJson(data, Map.class);
                             //System.out.println(jsonJavaRootObject.get("status"));
                             status = jsonJavaRootObject.get("status").toString();
-                            message = jsonJavaRootObject.get("messge").toString();
+                            message = jsonJavaRootObject.get("message").toString();
                             path = jsonJavaRootObject.get("path").toString();
 
                            // CallPostService();
+
+                            System.out.println(status+" " + message+" " + path);
+                            CallPostService();
+
 
 
                         } catch (IOException e) {
@@ -390,17 +442,28 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
         }
 
     }
-       /* public void CallPostService()
+
+
+
+    private RequestBody createPartFromString(String data) {
+        return RequestBody.create(MultipartBody.FORM,data);
+    }
+        public void CallPostService()
+
         {
 
-        MyAppolloClient.getMyAppolloClient("Bearer a2fba7c054a979eb63a22186ca142a14e08706f2").mutate(
-                PostThought.builder().userId("5c2c997ab8f2dc4308ee3e88").description(Description.toString()).filePath(path).build()).enqueue(
+
+        MyAppolloClient.getMyAppolloClient(myToken).mutate(
+                PostThought.builder().userId(userId).description(description).filePath(path).build()).enqueue(
                 new ApolloCall.Callback<PostThought.Data>() {
                     @Override
                     public void onResponse(@Nonnull com.apollographql.apollo.api.Response<PostThought.Data> response) {
                         Log.i("","inside callpostmethod");
+                        Log.i("",description);
                         String status = response.data().addPost_M().userId();
-                        Log.i("aaaaa",status);
+                        String message = response.data().addPost_M().userId();
+
+                       // String status = response.data().addPost_M().userId();
                         NewsFeedPostActivity.this.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -417,8 +480,15 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
                 }
         );
 
+
         finish();
-    } */
+    }
+
+
+
+
+
+
 
     @Override
     public void onClick(View view) {

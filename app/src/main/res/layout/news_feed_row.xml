@@ -93,6 +93,17 @@
                 android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
                 />
+
+            <!--<VideoView-->
+            <!--        android:layout_width="match_parent"-->
+            <!--        android:layout_height="wrap_content"-->
+            <!--        android:layout_gravity="center"-->
+            <!--        android:padding="5dp"-->
+            <!--        android:id="@+id/VideoView"-->
+            <!--        android:visibility="visible"/>-->
+
+
+
         </LinearLayout>
 
         <LinearLayout

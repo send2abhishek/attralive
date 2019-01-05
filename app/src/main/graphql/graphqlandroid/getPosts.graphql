@@ -6,5 +6,6 @@ query getPosts{
     filePath
     }
      status
+     message
   }
 }
