@@ -276,6 +276,7 @@ public class OtpValidationActivity extends AppCompatActivity {
                             editor.putString("refreshToken",refreshToken);
                             editor.putString("emailId",emailId);
                             editor.putString("userId",userId);
+                            editor.putString("userName",userName);
                             editor.commit();
 
                         }else if(status.equals("Failure")){

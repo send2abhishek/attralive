@@ -52,7 +52,7 @@
         </service>
 
         <activity
-            android:name=".activity.SplashScreen"
+            android:name=".activity.LoginActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -65,7 +65,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.LoginActivity"
+            android:name=".activity.SplashScreen"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activity.TermsConditionsActivity" />
@@ -88,8 +88,10 @@
         <activity
             android:name=".activity.ForgotPasswordActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.ResetPassword" />
-        <activity android:name=".activity.PasswordRecover"></activity>
+        <activity android:name=".activity.ResetPassword"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".activity.PasswordRecover"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

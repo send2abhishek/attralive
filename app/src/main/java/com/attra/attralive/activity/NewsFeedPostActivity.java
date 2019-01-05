@@ -37,15 +37,7 @@ import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
 import com.attra.attralive.Service.ApiService;
 import com.attra.attralive.Service.MyAppolloClient;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.squareup.moshi.Json;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -75,7 +67,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.http.HTTP;
-
+import com.google.gson.Gson;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -83,12 +75,7 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class NewsFeedPostActivity extends AppCompatActivity implements View.OnClickListener {
 
-
     ApiService apiService;
-
-
-
-
     Uri picUri;
     private ArrayList<String> permissionsToRequest;
     private ArrayList<String> permissionsRejected = new ArrayList<>();
@@ -361,12 +348,6 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
 //
                         System.out.println("Image response "+ response);
 
-                        org.json.simple.JSONObject jsonObj = null;
-                        try {
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
 
                         try {
                             String data = response.body().string();
@@ -377,8 +358,8 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
                             status = jsonJavaRootObject.get("status").toString();
                             message = jsonJavaRootObject.get("messge").toString();
                             path = jsonJavaRootObject.get("path").toString();
-                            System.out.println(status + message + path);
-                            CallPostService();
+
+                           // CallPostService();
 
 
                         } catch (IOException e) {
@@ -409,7 +390,7 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
         }
 
     }
-        public void CallPostService()
+       /* public void CallPostService()
         {
 
         MyAppolloClient.getMyAppolloClient("Bearer a2fba7c054a979eb63a22186ca142a14e08706f2").mutate(
@@ -437,7 +418,7 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
         );
 
         finish();
-    }
+    } */
 
     @Override
     public void onClick(View view) {

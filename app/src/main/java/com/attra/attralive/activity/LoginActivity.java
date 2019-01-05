@@ -170,9 +170,8 @@ String status,message;
             Intent i=new Intent(LoginActivity.this,DashboardActivity.class);
             startActivity(i);
             passwordtil.setError(null);
-            /*
-            MyAppolloClient.getMyAppolloClient("").query(UserLoginAuth.builder().username(username.getText().toString()+attraemail.getText().toString().trim()).
-                    password(password.getText().toString()).build()).enqueue(new ApolloCall.Callback<UserLoginAuth.Data>() {
+            MyAppolloClient.getMyAppolloClient("").query(UserLoginAuth.builder().username(username+attraemail.getText().toString().trim()).
+                    password(password).build()).enqueue(new ApolloCall.Callback<UserLoginAuth.Data>() {
                 @Override
                 public void onResponse(@Nonnull Response<UserLoginAuth.Data> response) {
                     status = response.data().userLoginAuth_Q().status().toString();
@@ -195,7 +194,7 @@ String status,message;
                 public void onFailure(@Nonnull ApolloException e) {
 
                 }
-            });*/
+            });
         }
 
 

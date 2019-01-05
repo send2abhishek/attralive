@@ -5,6 +5,12 @@ getProfileDetails_Q(userId:$userId){
 name,
 status,
 email,
-message
+message,
+profileImagePath,
+designation,
+location,
+mobileNumber,
+bu,
+roles
 }
 }
