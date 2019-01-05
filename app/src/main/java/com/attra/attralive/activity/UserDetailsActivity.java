@@ -73,6 +73,7 @@ public class UserDetailsActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences(PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
             myToken = sharedPreferences.getString("authToken", "");
+            String username = sharedPreferences.getString("userName","");
       //      Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
 
         }

@@ -1,5 +1,6 @@
 package com.attra.attralive.activity;
 
+import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -58,10 +59,12 @@ public class DashboardActivity extends AppCompatActivity
     LinearLayoutManager linearLayoutManager;
     ImageView profileImage,profileNav;
     TextView userName,userEmail;
-    String userId1;
+    String userId1,username;
     String myToken;
 int notificationSize=0;
     private static final String TAG = "DashboardActivity";
+
+    private SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,16 +95,18 @@ int notificationSize=0;
         userName = headerView.findViewById(R.id.tv_username);
         userEmail = headerView.findViewById(R.id.tv_email);
 
-        SharedPreferences sharedPreferences = getSharedPreferences(PREFS_AUTH, Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
             myToken = sharedPreferences.getString("authToken", "");
             userId1 = sharedPreferences.getString("userId", "");
+            username = sharedPreferences.getString("userName","");
+
       //      Toast.makeText(getApplicationContext(), userId, Toast.LENGTH_LONG).show();
             Log.i("token in dashboard",myToken);
             Log.i("user id in dashboard",userId1);
 
         }
-        getProfileDetail();
+        //getProfileDetail();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Create channel to show notifications.
             String channelId  = getString(R.string.default_notification_channel_id);
@@ -301,7 +306,7 @@ int notificationSize=0;
         }
     };
 
-    private void loadFragment(Fragment fragment) {
+    public void loadFragment(Fragment fragment) {
         // load fragment
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_container, fragment);
@@ -320,8 +325,8 @@ int notificationSize=0;
             mImageLayoutView = actionView.findViewById(R.id.imageView);
             myTextLayoutView = actionView.findViewById(R.id.textView);
             ((View) actionView.findViewById(R.id.textView)).setVisibility(View.GONE);
-            MyAppolloClient.getMyAppolloClient("Bearer 30b598d194914c37329f88a1aa931daff3a6bf2e").query(
-                    GetNotificationList.builder().userId("5c2e46f9fb15963434c755f4")
+            MyAppolloClient.getMyAppolloClient(myToken).query(
+                    GetNotificationList.builder().userId(userId1)
                             .build()).enqueue(
                     new ApolloCall.Callback<GetNotificationList.Data>() {
                         @Override
