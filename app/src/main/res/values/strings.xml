@@ -20,6 +20,12 @@
     <string name="title_forum">Forum</string>
     <string name="profile">Profile</string>
     <string name="gallery">Gallery</string>
+    <string name="holiday_calender">Holiday Calender</string>
+    <string name="facilities">Facilities</string>
+    <string name="resetpassword">Reset Password</string>
+    <string name="enter_current_password">Enter Current Password</string>
+    <string name="new_password">New Password</string>
+
 
     <!--Dashboard Screen String-->
     <string name="likes">Likes</string>

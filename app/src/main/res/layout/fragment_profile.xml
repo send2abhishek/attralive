@@ -109,28 +109,7 @@
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="#8f9290" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
 
-
-            style="@style/layoutStyle">
-            <TextView
-                android:paddingTop="10dp"
-                android:id="@+id/tv_userDob"
-                android:layout_width="wrap_content"
-                android:gravity="center_vertical"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_contact_mail_black_24dp"
-                android:drawablePadding="18dp"
-                android:textColor="#949c97"
-                android:textSize="14sp"
-                style="@style/InputTextStyle"
-                android:text="10/01/1994"/>
-
-
-        </LinearLayout>
         <View
 
             android:layout_width="match_parent"

@@ -1,11 +1,8 @@
 package com.attra.attralive.activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -16,32 +13,24 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.ApolloClient;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
 import com.attra.attralive.Service.MyAppolloClient;
-import com.google.firebase.iid.FirebaseInstanceId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
 import javax.annotation.Nonnull;
-
 import graphqlandroid.GetBusinessUnit;
 import graphqlandroid.GetLocation;
-import graphqlandroid.SendDeviceToken;
-import graphqlandroid.UserDetailsUpdate;
-
 
 public class UserDetailsActivity extends AppCompatActivity {
     Spinner bu, location;
     CardView continueBtn;
-    TextView dob;
-      List<String> buList = new ArrayList<String>();
-      List<String> locationList = new ArrayList<String>();
+    List<String> buList = new ArrayList<String>();
+    List<String> locationList = new ArrayList<String>();
 
     String emailId, password;
     EditText empId, phNo, userDesign;
@@ -61,7 +50,6 @@ public class UserDetailsActivity extends AppCompatActivity {
         bu = findViewById(R.id.sp_selectbu);
         location = findViewById(R.id.sp_userWorkLocation);
         continueBtn = findViewById(R.id.crd_continuebutton);
-        dob = findViewById(R.id.tv_userDob);
         Intent intent = getIntent();
         emailId = intent.getStringExtra("emailId");
         password = intent.getStringExtra("password");
@@ -89,13 +77,11 @@ public class UserDetailsActivity extends AppCompatActivity {
                 String userName = "Awnish";
                 String userId = "asd";
                 String designation = userDesign.getText().toString();
-                String dobValue = dob.getText().toString();
                 String workLoc = location.getSelectedItem().toString();
                 String userBu = bu.getSelectedItem().toString();
                 String mobile = phNo.getText().toString();
                 String employeeId = empId.getText().toString();
                 String imagePath = "wqeqeqweqe";
-                String gender = "Male";
 
                 if (employeeId.trim().equals("")) {
                     empId.setError("Employee Id is required");
@@ -106,10 +92,7 @@ public class UserDetailsActivity extends AppCompatActivity {
                 } else if (workLoc.trim().equals("")) {
                     ((TextView) location.getSelectedView()).setError("Select Location");
                     ((TextView) location.getSelectedView()).requestFocus();
-                } else if (dobValue.trim().equals("")) {
-                    dob.setError("Dob is required");
-                    dob.requestFocus();
-                } else if (userBu.trim().equals("")) {
+                }  else if (userBu.trim().equals("")) {
                     ((TextView) bu.getSelectedView()).setError("Select BU");
                     ((TextView) bu.getSelectedView()).requestFocus();
                 } else if (mobile.length() < 10) {
@@ -193,24 +176,6 @@ public class UserDetailsActivity extends AppCompatActivity {
 
     }
 
-    public void showDatePickerDialog(View v) {
-        /*DialogFragment newFragment = new DatePickerFragment();
-        newFragment.show(getSupportFragmentManager(), "datePicker");
-        */
-        final Calendar calendar = Calendar.getInstance();
-        int yy = calendar.get(Calendar.YEAR);
-        int mm = calendar.get(Calendar.MONTH);
-        int dd = calendar.get(Calendar.DAY_OF_MONTH);
-        DatePickerDialog datePicker = new DatePickerDialog(UserDetailsActivity.this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                String date = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
-                dob.setText(date);
-                // tfDate.setText(date);
-            }
-        }, yy, mm, dd);
-        datePicker.show();
-    }
 
     private void getUserLocation(){
         MyAppolloClient.getMyAppolloClient(myToken).query(

@@ -61,7 +61,6 @@ public class HomeFragment extends Fragment {
     ImageView descImage;
 
 
-
     RecyclerView recyclerView;
     ArrayList<String> Number;
     RecyclerView.LayoutManager RecyclerViewLayoutManager;

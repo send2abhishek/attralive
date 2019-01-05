@@ -30,8 +30,6 @@ public class Profile extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         username = view.findViewById(R.id.et_entername);
         designation=view.findViewById(R.id.et_designation);
-        DOB = view.findViewById(R.id.tv_userDob);
-        // gender = findViewById(R.id.gendertype);
         BU = view.findViewById(R.id.BUType);
         phone = view.findViewById(R.id.et_mobilenumber);
         email= view.findViewById(R.id.emailid);

@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.attra.attralive.R;
 
@@ -13,7 +14,7 @@ import com.attra.attralive.R;
  * A simple {@link Fragment} subclass.
  */
 public class Gallery extends Fragment {
-
+    ImageView selectedImage;
 
     public Gallery() {
         // Required empty public constructor
@@ -24,7 +25,10 @@ public class Gallery extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_gallery, container, false);
+        getActivity().setTitle(R.string.gallery);
+        View view = inflater.inflate(R.layout.fragment_gallery, container, false);
+
+        return view;
     }
 
 }
