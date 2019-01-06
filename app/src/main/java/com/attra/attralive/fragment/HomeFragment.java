@@ -134,23 +134,20 @@ public class HomeFragment extends Fragment {
             //Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
 
         }
-        prepareNewsfeed("Bearer 5121b93ce464dc428d57ac3b3dbd262d1414c8fd");
-        newsFeedListAdapter = new NewsFeedListAdapter(getActivity(), newsFeedArrayList);
-        newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
-        newsFeed.setLayoutManager(linearLayoutManager);
-        newsFeed.setAdapter(newsFeedListAdapter);
+
+
 
 
        // prepareNewsfeed();
         GetEventWidgetsFromService();
-        System.out.println("Outside method "+images[0]);
-        prepareNewsfeed();
+
+        prepareNewsfeed(myToken);
 
         System.out.println("After prepareNewsfeed");
-//        newsFeedListAdapter = new NewsFeedListAdapter(getActivity(), newsFeedArrayList);
-//        newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
-//        newsFeed.setLayoutManager(linearLayoutManager);
-//        newsFeed.setAdapter(newsFeedListAdapter);
+        newsFeedListAdapter = new NewsFeedListAdapter(getActivity(), newsFeedArrayList);
+        newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
+        newsFeed.setLayoutManager(linearLayoutManager);
+        newsFeed.setAdapter(newsFeedListAdapter);
 
 
         viewPager = view.findViewById(R.id.viewPager);
@@ -254,7 +251,7 @@ public class HomeFragment extends Fragment {
 
 
     }
-    private void prepareNewsfeed() {
+
     private void prepareNewsfeed(String myToken) {
 
 
@@ -373,7 +370,7 @@ public class HomeFragment extends Fragment {
 
     }
 
-    public void autoScroll() {
+    public void autoScroll(){
         final Handler handler = new Handler();
         final Runnable Update = () -> {
             if (currentPage == images.length) {
