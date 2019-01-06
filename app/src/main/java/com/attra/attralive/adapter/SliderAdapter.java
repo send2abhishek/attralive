@@ -83,15 +83,15 @@ public class SliderAdapter extends PagerAdapter {
                 .load(images[position])
                 .into(imageView);*/
        // imageView.setImageResource(images[position]);
-        if(images[position].contains("mp3")) {
-            callvideo(images[position]);
-        }
-        else
-        {
+//        if(images[position].contains("mp3")) {
+//            callvideo(images[position]);
+//        }
+//        else
+//        {
             Picasso.with(context)
                     .load(images[position])
                     .into(imageView);
-        }
+       // }
         container.addView(itemView);
 
         //listening to image click

@@ -44,6 +44,7 @@ import java.util.TimerTask;
 
 import javax.annotation.Nonnull;
 
+import graphqlandroid.GetEventWidgets;
 import graphqlandroid.GetPosts;
 
 import static com.attra.attralive.activity.OtpValidationActivity.PREFS_AUTH;
@@ -70,7 +71,7 @@ public class HomeFragment extends Fragment {
     int RecyclerViewItemPosition;
    // "https://developers.google.com/training/images/tacoma_narrows.mp4","https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png"
     ViewPager viewPager;
-    String images[] = {"https://developers.google.com/training/images/tacoma_narrows.mp4","https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png"};
+    String[] images= new String[1];
     SliderAdapter myCustomPagerAdapter;
 
     // imgview.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -111,7 +112,10 @@ public class HomeFragment extends Fragment {
         Number = new ArrayList<>();
         linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 
+        GetEventWidgetsFromService();
+        System.out.println("Outside method "+images[0]);
         prepareNewsfeed();
+
         System.out.println("After prepareNewsfeed");
 //        newsFeedListAdapter = new NewsFeedListAdapter(getActivity(), newsFeedArrayList);
 //        newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
@@ -125,8 +129,7 @@ public class HomeFragment extends Fragment {
 //                .load("https://attralive.s3.ap-south-1.amazonaws.com/NewsFeedsPictures/1546237731525-launcher.jpeg")
 //                .into(example);
 
-        myCustomPagerAdapter = new SliderAdapter(getActivity(), images);
-        viewPager.setAdapter(myCustomPagerAdapter);
+
 
         ImageView imageView = view.findViewById(R.id.imageView);
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.blogreadimage);
@@ -167,6 +170,58 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    private void GetEventWidgetsFromService()
+    {
+        System.out.println("Inside GetEvent method");
+
+        MyAppolloClient.getMyAppolloClient(myToken).query(
+               GetEventWidgets.builder().status("A").build()).enqueue(
+               new ApolloCall.Callback<GetEventWidgets.Data>() {
+                   @Override
+                   public void onResponse(@Nonnull Response<GetEventWidgets.Data> response) {
+                            Log.i("Inside getevent ","inside response method");
+                       String eventWidgetPath = "";
+                       //System.out.println("gg"+response.data().getEventWidget_Q().status());
+                      // System.out.println("WW "+response.data().getEventWidget_Q().widget().get(0).event_widget_path());
+                       //images[0] = eventWidgetPath;
+                      // System.out.println("This is image"+images[0]);
+                       if(response.data().getEventWidget_Q().status().equals("Success"))
+
+                       {
+                           for(int i =0;i<response.data().getEventWidget_Q().widget().size();i++)
+                           {
+
+                               String eventId = response.data().getEventWidget_Q().widget().get(0).event_id();
+                               eventWidgetPath = response.data().getEventWidget_Q().widget().get(0).event_widget_path();
+
+                               images[i] = eventWidgetPath;
+
+                          }
+
+                       }
+                       getActivity().runOnUiThread(new Runnable() {
+                           @Override
+                           public void run() {
+                               myCustomPagerAdapter = new SliderAdapter(getActivity(), images);
+                               viewPager.setAdapter(myCustomPagerAdapter);
+
+                           }
+                       });
+
+
+
+
+                   }
+
+                   @Override
+                   public void onFailure(@Nonnull ApolloException e) {
+
+                   }
+               }
+       );
+
+
+    }
     private void prepareNewsfeed() {
 
 

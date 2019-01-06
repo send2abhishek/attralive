@@ -102,12 +102,16 @@
                 android:layout_width="1dp"
                 android:layout_height="30dp"
                 android:background="@color/postThoughtsLineColor" />
-            <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/img_video"
-                android:layout_width="18dp"
-                android:layout_weight="1"
-                android:layout_height="35dp"
-                android:src="@drawable/iconvideoline"/>
+            <SurfaceView android:id="@+id/CameraView"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content">
+
+            </SurfaceView>
+                <!--android:id="@+id/img_video"-->
+                <!--android:layout_width="18dp"-->
+                <!--android:layout_weight="1"-->
+                <!--android:layout_height="35dp"-->
+                <!--android:src="@drawable/iconvideoline"/>-->
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
