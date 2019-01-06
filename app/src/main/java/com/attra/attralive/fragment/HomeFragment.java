@@ -150,6 +150,18 @@ public class HomeFragment extends Fragment {
         newsFeed.setAdapter(newsFeedListAdapter);
 
 
+       // prepareNewsfeed();
+        GetEventWidgetsFromService();
+        System.out.println("Outside method "+images[0]);
+       // prepareNewsfeed();
+
+        System.out.println("After prepareNewsfeed");
+//        newsFeedListAdapter = new NewsFeedListAdapter(getActivity(), newsFeedArrayList);
+//        newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
+//        newsFeed.setLayoutManager(linearLayoutManager);
+//        newsFeed.setAdapter(newsFeedListAdapter);
+
+
         viewPager = view.findViewById(R.id.viewPager);
 
 

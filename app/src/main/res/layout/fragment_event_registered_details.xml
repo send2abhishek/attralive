@@ -10,7 +10,9 @@
     >
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:id="@+id/ll_qrcode">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
@@ -25,7 +27,7 @@
                 android:paddingRight="34dp"
                 android:paddingTop="38dp"
                 android:layout_marginTop="0dp"
-                android:paddingBottom="67dp"
+                android:paddingBottom="37dp"
                 android:background="@drawable/blue_rectangle"
                 android:gravity="center"
                 android:text="@string/registrationid"
@@ -43,7 +45,8 @@
                 android:src="@drawable/qrcode"
                 android:layout_toRightOf="@+id/tv_regid"
                 android:background="@drawable/grey_rectangle"
-                android:layout_alignParentEnd="true"/>
+                android:layout_alignParentEnd="true"
+                android:id="@+id/im_qrcode"/>
 
         </RelativeLayout>
 
@@ -72,7 +75,8 @@
             android:drawablePadding="10dp"
             android:drawableLeft="@drawable/ic_place_red_24dp"
             android:text="@string/hello_blank_fragment"
-            android:paddingRight="17dp"/>
+            android:paddingRight="17dp"
+            android:id="@+id/tv_eventvenue"/>
 
 
     <TextView
@@ -84,7 +88,8 @@
         android:drawablePadding="10dp"
         android:drawableLeft="@drawable/ic_date_range_blue_24dp"
         android:text="26 JAN,2019"
-        android:paddingRight="17dp"/>
+        android:paddingRight="17dp"
+        android:id="@+id/tv_eventdate"/>
     <TextView
         android:layout_marginLeft="44dp"
         android:paddingTop="17dp"
@@ -95,7 +100,76 @@
         android:drawableLeft="@drawable/ic_restore_black_24dp"
         android:text="WED-05:00PM"
         android:paddingRight="17dp"
-        android:paddingBottom="17dp"/>
+        android:paddingBottom="17dp"
+        android:id="@+id/tv_eventtime"
+        />
     </LinearLayout>
 </android.support.v7.widget.CardView>
+    <!--<android.support.v7.widget.CardView
+        android:id="@+id/crd_regbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:elevation="10dp"
+        android:layout_marginTop="12dp"
+        android:padding="10dp"
+        app:cardCornerRadius="24dp"
+
+        android:layout_marginRight="17dp"
+        >
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/color_gradient_login_btn"
+            android:layout_gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:lineHeight="22sp"
+                android:lineSpacingExtra="0.9sp"
+                android:text="Register"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:textColor="#fff"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>-->
+    <android.support.v7.widget.CardView
+        android:layout_width="140dp"
+        android:layout_height="39.9dp"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/crd_regevent"
+
+        app:cardCornerRadius="24dp"
+        android:elevation="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="110dp"
+        android:layout_marginLeft="110dp"
+       >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/color_gradient_login_btn"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/register"
+                android:textColor="#fff"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="112dp"
+                android:layout_marginRight="112dp"
+                android:lineHeight="22sp"
+                android:textSize="18sp"
+                android:lineSpacingExtra="0.9sp"
+                android:textStyle="bold"/>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
 </LinearLayout>

@@ -1,6 +1,6 @@
 mutation GetUserDetails($user:String!,
 $otp:Int!){
-otpValidation_M(email:$email,
+otpValidation_M(email:$user,
 OTP:$otp){
 otpstatus
 }

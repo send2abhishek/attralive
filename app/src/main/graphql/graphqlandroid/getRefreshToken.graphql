@@ -2,7 +2,7 @@ query getRefreshToken(
 $refreshToken: String!
 $grant_type: String!)
 {
-  userLoginAuth_Q(refreshToken:$refreshToken,grant_type:$grant_type)
+  getRefreshToken_Q(refreshToken:$refreshToken,grant_type:$grant_type)
   {
     accessToken
      accessTokenExpiresAt
