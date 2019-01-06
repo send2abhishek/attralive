@@ -77,7 +77,8 @@
     <string name="fcm_message">FCM Message</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-
+//Event screen
+    <string name="register">REGISTER</string>
     //Login Screen
     <string name="welcome">Hi! Welcome to</string>
     <string name="attra">Attra</string>

@@ -1,0 +1,25 @@
+query getEventDetails($status:String!)
+{
+  getEventDetails_Q(status:$status)
+  {
+    event_title
+    venue
+    event_image_path
+    Description
+    Question
+    FAQs
+    {
+      Question
+      Answer
+    }
+    Schedule
+    {
+      start_date
+			end_date
+      end_time
+      start_time
+   }
+    status
+   	message
+  }
+}

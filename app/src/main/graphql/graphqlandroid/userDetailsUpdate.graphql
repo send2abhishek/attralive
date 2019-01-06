@@ -1,6 +1,6 @@
 mutation userDetailsUpdate(
 $userId:String!,
-$userName:String!,
+$name:String!,
 $dob:String!,
 $empId:String!,
 $designation:String!,
@@ -9,7 +9,7 @@ $location:String!,
 $bu:String!,
 $mobileNumber:String!,
 $profileImagePath:String!){
-updateUserDetails_M(userId:$userId,username:$userName,dob:$dob,empId:$empId,designation:$designation,gender:$gender,location:$location,bu:$bu,mobileNumber:$mobileNumber,profileImagePath:$profileImagePath){
+updateUserDetails_M(userId:$userId,name:$name,empId:$empId,designation:$designation,gender:$gender,location:$location,bu:$bu,mobileNumber:$mobileNumber,profileImagePath:$profileImagePath){
 status
 message
 
