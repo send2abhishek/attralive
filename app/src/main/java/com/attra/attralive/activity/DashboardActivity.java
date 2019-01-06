@@ -44,6 +44,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import javax.annotation.Nonnull;
 
@@ -61,7 +63,7 @@ public class DashboardActivity extends AppCompatActivity
     TextView userName,userEmail;
     String userId1,username;
     String myToken;
-int notificationSize=0;
+    int notificationSize=0;
     private static final String TAG = "DashboardActivity";
 
     private SharedPreferences sharedPreferences;
@@ -94,6 +96,7 @@ int notificationSize=0;
         View headerView = navigationView.getHeaderView(0);
         userName = headerView.findViewById(R.id.tv_username);
         userEmail = headerView.findViewById(R.id.tv_email);
+        profileImage = headerView.findViewById(R.id.civ_profilePic);
 
         sharedPreferences = getSharedPreferences(PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
@@ -172,12 +175,14 @@ int notificationSize=0;
                             if(status.equals("Success")){
                                 String username = response.data().getProfileDetails_Q().name();
                                 String emaiId = response.data().getProfileDetails_Q().email();
-                              //  String imgPath = response.data().getProfileDetails_Q().profileImagePath();
+                                String imgPath = response.data().getProfileDetails_Q().profileImagePath();
+                                Log.i("profile image path",imgPath);
                                 DashboardActivity.this.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
                                         userName.setText(username);
                                         userEmail.setText(emaiId);
+                                        Picasso.with(getApplicationContext()).load(imgPath).fit().into(profileImage);
 
                                     }
                                 });
@@ -187,8 +192,6 @@ int notificationSize=0;
                             }
 
                         }
-
-
 
                     }
 
@@ -321,7 +324,8 @@ int notificationSize=0;
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.dashboard_toolbar, menu);
         final View actionView = menu.findItem(R.id.menu_item).getActionView();
-        if(actionView!=null) {
+        if(actionView!=null)
+        {
             mImageLayoutView = actionView.findViewById(R.id.imageView);
             myTextLayoutView = actionView.findViewById(R.id.textView);
             ((View) actionView.findViewById(R.id.textView)).setVisibility(View.GONE);

@@ -56,6 +56,7 @@
     <string name="radio_male">Male</string>
     <string name="radio_female">Female</string>
     <string name="continueBTn">Continue</string>
+    <string name="emp_Id">Emp Id</string>
 
     <!--Forgot password Screen-->
     <string name="forgot_password">Forgot Password ?</string>
@@ -91,6 +92,8 @@
     <string name="emptyusername_text">Username cannot be empty</string>
     <string name="usernameerror_text">Email should be in correct format</string>
     <string name="passworderror_text">Password can not be empty</string>
+    <string name="save">Save</string>
+
     //Registration Screen
     <string name="signup_text">SIGN UP!</string>
     <string name="fullname_text">FULL NAME</string>

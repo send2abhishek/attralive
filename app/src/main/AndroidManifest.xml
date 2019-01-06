@@ -54,7 +54,8 @@
 
 
         <activity
-            android:name=".activity.SplashScreen"
+
+            android:name=".activity.LoginActivity"
             android:screenOrientation="portrait">
 
             <intent-filter>
@@ -65,20 +66,14 @@
         </activity>
 
 
-    <activity android:name=".activity.DashboardActivity"
-        android:screenOrientation="portrait"
-        android:theme="@style/AppTheme.NoActionBar"/>
-<activity
-    android:name=".activity.NewsFeedPostActivity"
-    android:windowSoftInputMode="stateVisible|adjustPan"/>
-
-
-
         <activity
-            android:name=".activity.LoginActivity"
+            android:name=".activity.DashboardActivity"
 
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+
+
+
         <activity android:name=".activity.TermsConditionsActivity" />
         <activity
             android:name=".activity.OtpValidationActivity"
@@ -100,11 +95,14 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activity.EventDetailsActivity" />
         <activity android:name=".activity.EventRegistrationDetailsActivity" />
+        <activity android:name=".activity.HelpForRegistration" />
         <activity
             android:name=".activity.ForgotPasswordActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.ResetPassword" />
-        <activity android:name=".activity.PasswordRecover"></activity>
+        <activity android:name=".activity.ResetPassword"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".activity.PasswordRecover"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -6,12 +6,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.attra.attralive.R;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
-LinearLayout backtologinbtn;
+    LinearLayout backtologinbtn;
+    Button resetPassword;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,6 +22,7 @@ LinearLayout backtologinbtn;
         if(actionBar!=null)
         actionBar.hide();
         backtologinbtn=findViewById(R.id.back_to_login_layout);
+        resetPassword = findViewById(R.id.btn_resetPassword);
         this.getWindow().setStatusBarColor(Color.TRANSPARENT);
         backtologinbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -28,5 +31,17 @@ LinearLayout backtologinbtn;
                 startActivity(intent);
             }
         });
+
+        resetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),PasswordRecover.class);
+                startActivity(intent);
+            }
+        });
     }
+
+
+
+
 }

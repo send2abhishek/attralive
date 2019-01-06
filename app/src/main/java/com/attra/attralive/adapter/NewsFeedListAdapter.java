@@ -1,5 +1,6 @@
 package com.attra.attralive.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
 import android.support.v7.widget.PopupMenu;
@@ -14,6 +15,10 @@ import android.widget.TextView;
 
 import com.attra.attralive.R;
 import com.attra.attralive.model.NewsFeed;
+
+import com.attra.attralive.model.NewsFeedNew;
+
+
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -21,7 +26,7 @@ import java.util.ArrayList;
 public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapter.MyViewHolder>
 {
     Context mcontext;
-    ArrayList<NewsFeed> newsFeeds;
+    ArrayList<NewsFeed>newsFeeds;
 
     NewsFeed newsFeed;
     public NewsFeedListAdapter(Context context, ArrayList<NewsFeed> notificationArrayList) {
@@ -39,17 +44,32 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         newsFeed = newsFeeds.get(position);
-        holder.userName.setText(newsFeed.getUserName());
-       // holder.userImage.setImageResource(newsFeed.getImageId());
+
+
+       holder.userName.setText(newsFeed.getUserName());
+      // holder.userImage.setImageResource(newsFeed.getImageId());
+
         holder.title.setText(newsFeed.getTitle());
         holder.time.setText(newsFeed.getFeedTime());
         holder.description.setText(newsFeed.getFeedDescription());
         holder.noOfLikes.setText(newsFeed.getNoOfLikes());
         holder.noofComments.setText(newsFeed.getNoOfCommenst());
+
+        //holder.descriptionImage.setImageResource(newsFeed.getNewsFeedImage());*/
+
+        Picasso.with(mcontext)
+               .load(newsFeed.getNewsFeedImage())
+               .into(holder.descriptionImage);
+
        // holder.descriptionImage.setImageResource(newsFeed.getNewsFeedImage());
+
+
+
+
        Picasso.with(mcontext)
                 .load(newsFeed.getNewsFeedImage())
                 .into(holder.descriptionImage);
+
         holder.optionmenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

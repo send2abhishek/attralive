@@ -32,10 +32,13 @@ import com.attra.attralive.R;
 import com.attra.attralive.Service.MyAppolloClient;
 import com.attra.attralive.activity.DashboardActivity;
 import com.attra.attralive.activity.NewsFeedPostActivity;
+import com.attra.attralive.activity.OtpValidationActivity;
 import com.attra.attralive.adapter.NewsFeedListAdapter;
 import com.attra.attralive.adapter.SliderAdapter;
 import com.attra.attralive.adapter.WidgetAdapter;
 import com.attra.attralive.model.NewsFeed;
+import com.attra.attralive.model.NewsFeedNew;
+import com.attra.attralive.util.GetNewRefreshToken;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -68,8 +71,13 @@ public class HomeFragment extends Fragment {
     WidgetAdapter RecyclerViewHorizontalAdapter;
     LinearLayoutManager HorizontalLayout;
     View ChildView;
+    String refreshToken,myToken,accesstoken;
     int RecyclerViewItemPosition;
+
+    SharedPreferences sharedPreferences;
+
    // "https://developers.google.com/training/images/tacoma_narrows.mp4","https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png"
+
     ViewPager viewPager;
     String[] images= new String[1];
     SliderAdapter myCustomPagerAdapter;
@@ -78,8 +86,8 @@ public class HomeFragment extends Fragment {
 
     private static int currentPage = 0;
 
-    private SharedPreferences sharedPreferences;
-    String myToken,userId1,username;
+   // private SharedPreferences sharedPreferences;
+    String userId1,username;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -112,6 +120,28 @@ public class HomeFragment extends Fragment {
         Number = new ArrayList<>();
         linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 
+        sharedPreferences = getActivity().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
+        if (sharedPreferences.contains("authToken")) {
+            myToken = sharedPreferences.getString("authToken", "");
+            //callservice(myToken);
+            Toast.makeText(getActivity(), myToken, Toast.LENGTH_LONG).show();
+
+        }
+        if (sharedPreferences.contains("refreshToken")) {
+            refreshToken = sharedPreferences.getString("refreshToken", "");
+            Toast.makeText(getActivity(), refreshToken, Toast.LENGTH_LONG).show();
+            //callservice(myToken);
+            //Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
+
+        }
+        prepareNewsfeed("Bearer 5121b93ce464dc428d57ac3b3dbd262d1414c8fd");
+        newsFeedListAdapter = new NewsFeedListAdapter(getActivity(), newsFeedArrayList);
+        newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
+        newsFeed.setLayoutManager(linearLayoutManager);
+        newsFeed.setAdapter(newsFeedListAdapter);
+
+
+       // prepareNewsfeed();
         GetEventWidgetsFromService();
         System.out.println("Outside method "+images[0]);
         prepareNewsfeed();
@@ -122,6 +152,7 @@ public class HomeFragment extends Fragment {
 //        newsFeed.setLayoutManager(linearLayoutManager);
 //        newsFeed.setAdapter(newsFeedListAdapter);
 
+
         viewPager = view.findViewById(R.id.viewPager);
 
 
@@ -129,7 +160,8 @@ public class HomeFragment extends Fragment {
 //                .load("https://attralive.s3.ap-south-1.amazonaws.com/NewsFeedsPictures/1546237731525-launcher.jpeg")
 //                .into(example);
 
-
+        myCustomPagerAdapter = new SliderAdapter(getActivity(), images);
+        viewPager.setAdapter(myCustomPagerAdapter);
 
         ImageView imageView = view.findViewById(R.id.imageView);
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.blogreadimage);
@@ -223,16 +255,23 @@ public class HomeFragment extends Fragment {
 
     }
     private void prepareNewsfeed() {
+    private void prepareNewsfeed(String myToken) {
 
 
-        System.out.println("Inside PrepareNewsFeed after clicking home icon");
-       MyAppolloClient.getMyAppolloClient(myToken).query(
+       MyAppolloClient.getMyAppolloClient("Bearer a2fba7c054a979eb63a22186ca142a14e08706f2").query(
+
+
+
+
+
+
                GetPosts.builder().build()).enqueue(
                new ApolloCall.Callback<GetPosts.Data>() {
                    @Override
                    public void onResponse(@Nonnull Response<GetPosts.Data> response) {
                        String status = response.data().getPosts_Q().status();
-
+                       String message=response.data().getPosts_Q().message();
+                       Log.d("mesa",message);
                        if(status.equals("Success"))
                        {
                            Log.i("","inside success");
@@ -240,14 +279,28 @@ public class HomeFragment extends Fragment {
                            for(int i =0;i<response.data().getPosts_Q().posts().size();i++)
                            {
 
+                           //   String data = response.data().getPosts_Q().posts().get(i).description();
+
+
+
 
                                Log.i("",response.data().getPosts_Q().posts().get(i).description());
+
+                             /* newsFeedList = new NewsFeedNew(response.data().getPosts_Q().posts().get(i).userId(),
+                                      response.data().getPosts_Q().posts().get(i).description(),response.data().getPosts_Q().posts().get(i).filePath());
+                              Log.i("",response.data().getPosts_Q().posts().get(i).description());
+*/
                               newsFeedList = new NewsFeed("",response.data().getPosts_Q().posts().get(i).filePath(),"","",
                               "",response.data().getPosts_Q().posts().get(i).description(),"","");
                              // Log.i("",response.data().getPosts_Q().posts().get(i).description());
+                               Log.i("",response.data().getPosts_Q().posts().get(i).filePath());
+
+
+
                               /* Log.i("",response.data().getPosts_Q().posts().get(i).filePath());
                                */
                              //  SetDescPic();
+
                               newsFeedArrayList.add(newsFeedList);
 
                               getActivity().runOnUiThread(new Runnable() {
@@ -264,6 +317,19 @@ public class HomeFragment extends Fragment {
 
 
                            }
+                       }
+                       else
+                           if (message.equals("Invalid token: access token is invalid")) {
+                               Log.d("www",message);
+                               GetNewRefreshToken.getRefreshtoken(refreshToken, getActivity());
+                               sharedPreferences = getActivity().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
+                               if (sharedPreferences.contains("authToken")) {
+                                    accesstoken = sharedPreferences.getString("authToken", "");
+                                   //callservice(myToken);
+                                   //Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
+                               }
+                               prepareNewsfeed(accesstoken);
+
                        }
                    }
 
