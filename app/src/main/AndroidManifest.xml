@@ -2,10 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.attra.attralive">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -54,8 +55,13 @@
 
         <activity
 
+
             android:screenOrientation="portrait"
-            android:name=".activity.UserDetailsActivity">
+            android:name=".activity.SplashScreen">
+
+
+
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 <action android:name="android.intent.action.VIEW"></action>
@@ -72,6 +78,7 @@
 
 
 
+
 <activity
     android:name=".activity.NewsFeedPostActivity"
     android:windowSoftInputMode="stateVisible|adjustPan"/>
@@ -84,6 +91,7 @@
 
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity android:name=".activity.TermsConditionsActivity" />
         <activity
             android:name=".activity.OtpValidationActivity"
@@ -104,13 +112,15 @@
             android:name=".activity.EventRegistrationDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activity.EventDetailsActivity" />
-        <activity android:name=".activity.SplashScreen" />
+        <activity android:name=".activity.UserDetailsActivity" />
         <activity android:name=".activity.HelpForRegistration" />
         <activity
             android:name=".activity.ForgotPasswordActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.ResetPassword" />
-        <activity android:name=".activity.PasswordRecover"></activity>
+        <activity android:name=".activity.ResetPassword"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".activity.PasswordRecover"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

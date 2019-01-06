@@ -35,6 +35,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 
 import com.apollographql.apollo.ApolloCall;
@@ -47,11 +48,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.squareup.moshi.Json;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.w3c.dom.Text;
+
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -83,7 +80,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.http.HTTP;
-
+import com.google.gson.Gson;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -91,16 +88,14 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class NewsFeedPostActivity extends AppCompatActivity implements View.OnClickListener {
 
-
     ApiService apiService;
+
 
     OkHttpClient client;
 
 
 
     Fragment fragment = null;
-
-
 
 
     Uri picUri;
@@ -117,6 +112,8 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
     String status, message, path, description,myToken,username,userId;
     public static final String PREFS_AUTH ="my_auth";
     private SharedPreferences sharedPreferences;
+    VideoView videoView;
+
 
 
     @Override
@@ -174,6 +171,16 @@ client         = new OkHttpClient.Builder().build();
         apiService = new Retrofit.Builder().baseUrl("http://10.200.44.20:4001").client(client).build().create(ApiService.class);
     }
 
+    public Intent CallGetVideoMethod()
+    {
+        videoView = findViewById(R.id.img_video);
+         int VIDEO_CAPTURE = 101;
+
+        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        startActivityForResult(intent, VIDEO_CAPTURE);
+
+        return intent;
+    }
 
     public Intent getPickImageChooserIntent() {
 
@@ -359,7 +366,7 @@ client         = new OkHttpClient.Builder().build();
     private void multipartImageUpload() {
 
         try {
-            description = postDescription.getText().toString();
+
 
             File filesDir = getApplicationContext().getFilesDir();
             File file = new File(filesDir, "image" + ".jpeg");
@@ -402,12 +409,6 @@ client         = new OkHttpClient.Builder().build();
 //
                         System.out.println("Image response"+ response);
 
-                        org.json.simple.JSONObject jsonObj = null;
-                        try {
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
 
                         try {
                             String data = response.body().string();
@@ -419,8 +420,11 @@ client         = new OkHttpClient.Builder().build();
                             message = jsonJavaRootObject.get("message").toString();
                             path = jsonJavaRootObject.get("path").toString();
 
+                           // CallPostService();
+
                             System.out.println(status+" " + message+" " + path);
                             CallPostService();
+
 
 
                         } catch (IOException e) {
@@ -452,11 +456,15 @@ client         = new OkHttpClient.Builder().build();
 
     }
 
+
+
     private RequestBody createPartFromString(String data) {
         return RequestBody.create(MultipartBody.FORM,data);
     }
         public void CallPostService()
+
         {
+
 
 
         MyAppolloClient.getMyAppolloClient(myToken).mutate(
@@ -487,13 +495,14 @@ client         = new OkHttpClient.Builder().build();
         );
 
 
-            Intent i = new Intent(getApplicationContext(),DashboardActivity.class);
-            startActivity(i);
-
-
-
-
+        finish();
     }
+
+
+
+
+
+
 
     @Override
     public void onClick(View view) {
@@ -502,12 +511,25 @@ client         = new OkHttpClient.Builder().build();
                 startActivityForResult(getPickImageChooserIntent(), IMAGE_RESULT);
                 break;
 
+            case R.id.img_video:
+
+                CallGetVideoMethod();
+
+
             case R.id.btn_postnewsFeed:
+                if(postDescription.getText().toString().isEmpty())
+                {
+                    postDescription.setError("Description cannot be emopty");
+                    postDescription.requestFocus();
+                }
+                else
+                {
+                    description = postDescription.getText().toString();
+                }
                 if (mBitmap != null)
                     multipartImageUpload();
                 else {
-                    Toast.makeText(getApplicationContext(), "Bitmap is null. Try again", Toast.LENGTH_SHORT).show();
-
+                    CallPostService();
                 }
                 break;
 

@@ -297,6 +297,7 @@ private void callservice(String token)
                             editor.putString("refreshToken",refreshToken);
                             editor.putString("emailId",emailId);
                             editor.putString("userId",userId);
+                            editor.putString("userName",userName);
                             editor.commit();
 
                         }else if(status.equals("Failure")){
