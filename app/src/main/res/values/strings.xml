@@ -191,6 +191,7 @@
     <string name="Diwali">Diwali</string>
     <string name="Kannada_Rajyotsava">Kannada Rajyotsava</string>
     <string name="Christmas">Christmas</string>
+    <string name="title_activity_event_location">Map</string>
 
 
 </resources>

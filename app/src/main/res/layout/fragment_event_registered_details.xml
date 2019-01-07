@@ -64,6 +64,7 @@
         >
 
         <TextView
+            android:id="@+id/tv_locationMap"
             android:layout_marginLeft="44dp"
             android:paddingTop="17dp"
             android:layout_width="wrap_content"

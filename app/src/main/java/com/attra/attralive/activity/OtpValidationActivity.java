@@ -27,13 +27,9 @@ import com.attra.attralive.Service.MyAppolloClient;
 import com.attra.attralive.util.GetNewRefreshToken;
 import com.attra.attralive.util.NetworkUtil;
 import com.google.firebase.iid.FirebaseInstanceId;
-
 import javax.annotation.Nonnull;
-
-import graphqlandroid.GetRefreshToken;
 import graphqlandroid.OtpValidation;
 import graphqlandroid.ResendOtp;
-
 import graphqlandroid.SendDeviceToken;
 import graphqlandroid.UserLoginAuth;
 
@@ -41,7 +37,6 @@ import graphqlandroid.UserLoginAuth;
 public class OtpValidationActivity extends AppCompatActivity {
     TextView validateOTP;
     EditText motpNumber1, motpNumber2, motpNumber3, motpNumber4;
-    ProgressDialog prgDialog;
     TextView resendOtp;
     ImageView closeOtp;
     NetworkUtil networkUtil= null;
@@ -58,7 +53,6 @@ public class OtpValidationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_otp_validation);
-        Window window = this.getWindow();
         this.getWindow().setStatusBarColor(Color.TRANSPARENT);
 
         closeOtp = findViewById(R.id.iv_close_otp);
@@ -78,11 +72,11 @@ public class OtpValidationActivity extends AppCompatActivity {
         motpNumber4 = (EditText) findViewById(R.id.otp_num4);
         resendOtp = findViewById(R.id.tv_resendOtp);
 
-
         motpNumber1.addTextChangedListener(CardNum1EntryWatcher);
         motpNumber2.addTextChangedListener(CardNum2EntryWatcher);
         motpNumber3.addTextChangedListener(CardNum3EntryWatcher);
         motpNumber4.addTextChangedListener(CardNum4EntryWatcher);
+        motpNumber1.requestFocus();
 
         networkUtil = new NetworkUtil();
 
@@ -169,9 +163,8 @@ public class OtpValidationActivity extends AppCompatActivity {
                         Handler handler = new Handler();
                         handler.postDelayed(new Runnable() {
                             public void run() {
-
+                                callservice();
                                 loading.dismiss();
-                             callservice(token);
                             }
                         }, 4000);
                     }
@@ -181,7 +174,7 @@ public class OtpValidationActivity extends AppCompatActivity {
         });
 
     }
-private void callservice(String token)
+private void callservice()
 {
     MyAppolloClient.getMyAppolloClient(token).mutate(
             OtpValidation.builder().email(emailId)
@@ -190,10 +183,10 @@ private void callservice(String token)
             new ApolloCall.Callback<OtpValidation.Data>() {
                 @Override
                 public void onResponse(@Nonnull Response<OtpValidation.Data> response) {
-//
+
                     String message= response.data().otpValidation_M().message();
                     final String otpStatus = response.data().otpValidation_M().otpstatus();
-//                                                Log.i("res_message",message);
+                                                Log.i("res_message",message);
                     OtpValidationActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -212,7 +205,7 @@ private void callservice(String token)
                                     sharedPreferences = getSharedPreferences(PREFS_AUTH, Context.MODE_PRIVATE);
                                     if (sharedPreferences.contains("authToken")) {
                                         String myToken = sharedPreferences.getString("authToken", "");
-                                        callservice(myToken);
+                                        callservice();
                                         Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
 
                                     }
@@ -322,54 +315,6 @@ private void callservice(String token)
         );
 
     }
-
-
-
-   /* private void getNewRefreshToken(String refreshToken){
-=======
-    private void getNewRefreshToken(String refreshToken){
->>>>>>> 065035b957801df06ca29a3aebdc69cded8703b3
-        MyAppolloClient.getMyAppolloClient(Authorization).query(
-                graphqlandroid.GetRefreshToken.builder().refreshToken(refreshToken).grant_type("refresh_token")
-                        .build()).enqueue(
-                new ApolloCall.Callback<graphqlandroid.GetRefreshToken.Data>() {
-                    @Override
-                    public void onResponse(@Nonnull Response<graphqlandroid.GetRefreshToken.Data> response) {
-                        String message = response.data().userLoginAuth_Q().message();
-                        String status = response.data().userLoginAuth_Q().status();
-                        if(status.equals("success")){
-                            accessToken= response.data().userLoginAuth_Q().accessToken();
-                            String tokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
-                            String newRefreshToken = response.data().userLoginAuth_Q().accessToken();
-                            String refreshTokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
-                            String user = response.data().userLoginAuth_Q().user();
-                            String userName = response.data().userLoginAuth_Q().name();
-                            Log.i("access Token",accessToken);
-                            authToken="Bearer"+" "+accessToken;
-                            Log.i("brarer token",authToken);
-
-                            SharedPreferences preferences = getApplicationContext().getSharedPreferences(PREFS_AUTH, 0);
-                            SharedPreferences.Editor editor = preferences.edit();
-                            editor.putString("authToken",authToken);
-                            editor.putString("refreshToken",newRefreshToken);
-                            editor.commit();
-
-
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@Nonnull ApolloException e) {
-                    }
-                }
-        );
-
-
-    }*/
-
-
-
-
 
     private TextWatcher CardNum1EntryWatcher = new TextWatcher() {
         @Override
