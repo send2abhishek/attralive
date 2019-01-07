@@ -28,6 +28,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
+
+
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
@@ -77,6 +80,8 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
     String status, message, path, description,myToken,username,userId;
     public static final String PREFS_AUTH ="my_auth";
     private SharedPreferences sharedPreferences;
+    VideoView videoView;
+
 
 
     @Override
@@ -127,6 +132,16 @@ client         = new OkHttpClient.Builder().build();
         apiService = new Retrofit.Builder().baseUrl("http://10.200.44.20:4001").client(client).build().create(ApiService.class);
     }
 
+    public Intent CallGetVideoMethod()
+    {
+        videoView = findViewById(R.id.img_video);
+         int VIDEO_CAPTURE = 101;
+
+        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        startActivityForResult(intent, VIDEO_CAPTURE);
+
+        return intent;
+    }
 
     public Intent getPickImageChooserIntent() {
 
@@ -312,7 +327,7 @@ client         = new OkHttpClient.Builder().build();
     private void multipartImageUpload() {
 
         try {
-            description = postDescription.getText().toString();
+
 
             File filesDir = getApplicationContext().getFilesDir();
             File file = new File(filesDir, "image" + ".jpeg");
@@ -412,6 +427,7 @@ client         = new OkHttpClient.Builder().build();
         {
 
 
+
         MyAppolloClient.getMyAppolloClient(myToken).mutate(
                 PostThought.builder().userId(userId).description(description).filePath(path).build()).enqueue(
                 new ApolloCall.Callback<PostThought.Data>() {
@@ -451,12 +467,25 @@ client         = new OkHttpClient.Builder().build();
                 startActivityForResult(getPickImageChooserIntent(), IMAGE_RESULT);
                 break;
 
+            case R.id.img_video:
+
+                CallGetVideoMethod();
+
+
             case R.id.btn_postnewsFeed:
+                if(postDescription.getText().toString().isEmpty())
+                {
+                    postDescription.setError("Description cannot be emopty");
+                    postDescription.requestFocus();
+                }
+                else
+                {
+                    description = postDescription.getText().toString();
+                }
                 if (mBitmap != null)
                     multipartImageUpload();
                 else {
-                    Toast.makeText(getApplicationContext(), "Bitmap is null. Try again", Toast.LENGTH_SHORT).show();
-
+                    CallPostService();
                 }
                 break;
 
