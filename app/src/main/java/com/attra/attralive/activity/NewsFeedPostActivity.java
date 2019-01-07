@@ -1,7 +1,4 @@
 package com.attra.attralive.activity;
-
-
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ComponentName;
@@ -15,18 +12,14 @@ import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Parcelable;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.EventLogTags;
-import android.util.JsonReader;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -43,45 +36,27 @@ import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
 import com.attra.attralive.Service.ApiService;
 import com.attra.attralive.Service.MyAppolloClient;
-import com.attra.attralive.fragment.HomeFragment;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.squareup.moshi.Json;
-
-
-
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Nonnull;
-
 import graphqlandroid.PostThought;
-import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.http.HTTP;
-import com.google.gson.Gson;
-
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -89,15 +64,8 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 public class NewsFeedPostActivity extends AppCompatActivity implements View.OnClickListener {
 
     ApiService apiService;
-
-
     OkHttpClient client;
-
-
-
     Fragment fragment = null;
-
-
     Uri picUri;
     private ArrayList<String> permissionsToRequest;
     private ArrayList<String> permissionsRejected = new ArrayList<>();
@@ -129,24 +97,17 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
             myToken = sharedPreferences.getString("authToken", "");
             username = sharedPreferences.getString("userName","");
             userId = sharedPreferences.getString("userId","");
-
-
-
         }
 
         postDescription = findViewById(R.id.descText);
-
-
        // capturedImage = findViewById(R.id.capturedImage);
         fabCamera = findViewById(R.id.openCameraOptions);
         post = findViewById(R.id.btn_postnewsFeed);
         fabCamera.setOnClickListener(this);
         post.setOnClickListener(this);
 
-
         askPermissions();
         initRetrofitClient();
-
 
     }
 
@@ -494,11 +455,6 @@ client         = new OkHttpClient.Builder().build();
 
         finish();
     }
-
-
-
-
-
 
 
     @Override

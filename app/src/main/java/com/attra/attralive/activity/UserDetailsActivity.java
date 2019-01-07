@@ -82,8 +82,8 @@ public class UserDetailsActivity extends AppCompatActivity {
     CardView continueBtn;
 
     TextView dob;
-      List<String> buList = new ArrayList<String>();
-      List<String> locationList = new ArrayList<String>();
+    List<String> buList = new ArrayList<String>();
+    List<String> locationList = new ArrayList<String>();
     private RadioGroup radioGroup;
     private RadioButton radioButton;
 
@@ -141,14 +141,14 @@ public class UserDetailsActivity extends AppCompatActivity {
         bu = findViewById(R.id.sp_selectbu);
         location = findViewById(R.id.sp_userWorkLocation);
         continueBtn = findViewById(R.id.crd_continuebutton);
-       // Intent intent = getIntent();
-       // emailId = intent.getStringExtra("emailId");
-       // password = intent.getStringExtra("password");
+        // Intent intent = getIntent();
+        // emailId = intent.getStringExtra("emailId");
+        // password = intent.getStringExtra("password");
 
         empId = findViewById(R.id.et_empId);
 
-       // userName=intent.getStringExtra("username");
-       // userId=intent.getStringExtra("userId");
+        // userName=intent.getStringExtra("username");
+        // userId=intent.getStringExtra("userId");
         //empId = findViewById(R.id.et_entername);
         phNo = findViewById(R.id.et_mobilenumber);
 
@@ -168,11 +168,11 @@ public class UserDetailsActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
 
             String username = sharedPreferences.getString("userName","");
-      //      Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
+            //      Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
 
         }
 
-       getUserBU();
+        getUserBU();
         getUserLocation();
         /*sendDeviceToken();*/
 
@@ -183,7 +183,7 @@ public class UserDetailsActivity extends AppCompatActivity {
 //        fabCamera = findViewById(R.id.openCameraOptions);
 //        post = findViewById(R.id.btn_postnewsFeed);
         //fabCamera.setOnClickListener(this);
-       // post.setOnClickListener(this);
+        // post.setOnClickListener(this);
 
 
         askPermissions();
@@ -193,7 +193,7 @@ public class UserDetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //uploadProfileImage();
                 startActivityForResult(getPickImageChooserIntent(), IMAGE_RESULT);
-              // multipartImageUpload();
+                // multipartImageUpload();
 
 
 
@@ -207,11 +207,11 @@ public class UserDetailsActivity extends AppCompatActivity {
 
                 String userName = "Awnish";
                 //String userId = "asd";
-                 designation = userDesign.getText().toString();
-                 workLoc = location.getSelectedItem().toString();
-                 userBu = bu.getSelectedItem().toString();
-                 mobile = phNo.getText().toString();
-                 employeeId = empId.getText().toString();
+                designation = userDesign.getText().toString();
+                workLoc = location.getSelectedItem().toString();
+                userBu = bu.getSelectedItem().toString();
+                mobile = phNo.getText().toString();
+                employeeId = empId.getText().toString();
                 String imagePath = "wqeqeqweqe";
 
                 /*int sid=radioGroup.getCheckedRadioButtonId();
@@ -235,15 +235,15 @@ public class UserDetailsActivity extends AppCompatActivity {
                     phNo.setError("Enter valid Contact Number");
                     phNo.requestFocus();
                 } else {
-if(mBitmap!=null)
-multipartImageUpload();
-else
-{
-    path="https://dsd8ltrb0t82s.cloudfront.net/ProfilePictures/1546848719271-image.jpeg";
-    CallSubmitDataService();
-}
-                   // Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
-                   // startActivity(intent1);
+                    if(mBitmap!=null)
+                        multipartImageUpload();
+                    else
+                    {
+                        path="https://dsd8ltrb0t82s.cloudfront.net/ProfilePictures/1546848719271-image.jpeg";
+                        CallSubmitDataService();
+                    }
+                    // Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
+                    // startActivity(intent1);
 
                 }
 
@@ -301,11 +301,11 @@ else
                         Log.i("res", String.valueOf(response));
                         if(response.data().getLocations_Q().locations()!=null)
                         {
-                        for(int loopVar= 0; loopVar<response.data().getLocations_Q().locations().size(); loopVar++) {
-                            String locationData = response.data().getLocations_Q().locations().get(loopVar);
-                            locationList.add(locationData);
-                            Log.i("location", locationData);
-                        }
+                            for(int loopVar= 0; loopVar<response.data().getLocations_Q().locations().size(); loopVar++) {
+                                String locationData = response.data().getLocations_Q().locations().get(loopVar);
+                                locationList.add(locationData);
+                                Log.i("location", locationData);
+                            }
                         }
 
                         UserDetailsActivity.this.runOnUiThread(new Runnable() {
@@ -329,7 +329,7 @@ else
 
     }
 
-     private void getUserBU(){
+    private void getUserBU(){
 
 
         //Log.i("token in user details",myToken);
@@ -541,7 +541,7 @@ else
 
             RequestBody userId = createPartFromString("5c31e8f07db2e805e077c037");
             RequestBody type = createPartFromString("profilePicture");
-             RequestBody name = RequestBody.create(MediaType.parse("text/plain"), "profilePicture");
+            RequestBody name = RequestBody.create(MediaType.parse("text/plain"), "profilePicture");
             HashMap<String, RequestBody> map = new HashMap<>();
             map.put("userId", userId);
             map.put("type", type);
@@ -568,7 +568,7 @@ else
                             String data = response.body().string();
                             System.out.println(data);
 
-                           Map jsonJavaRootObject = new Gson().fromJson(data, Map.class);
+                            Map jsonJavaRootObject = new Gson().fromJson(data, Map.class);
                             //System.out.println(jsonJavaRootObject.get("status"));
                             status = jsonJavaRootObject.get("status").toString();
                             message = jsonJavaRootObject.get("message").toString();

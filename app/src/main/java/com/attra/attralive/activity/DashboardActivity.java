@@ -109,7 +109,7 @@ public class DashboardActivity extends AppCompatActivity
             Log.i("user id in dashboard",userId1);
 
         }
-        //getProfileDetail();
+        getProfileDetail();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Create channel to show notifications.
             String channelId  = getString(R.string.default_notification_channel_id);
@@ -127,8 +127,6 @@ public class DashboardActivity extends AppCompatActivity
                 Log.d(TAG, "Key: " + key + " Value: " + value);
             }
         }
-        // [END handle_data_extras]
-
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.d(TAG, "Refreshed token: " + refreshedToken);
         // TODO: Implement this method to send any registration to your app's servers.
@@ -299,6 +297,7 @@ public class DashboardActivity extends AppCompatActivity
                 case R.id.navigation_gallery:
                     fragment = new Gallery();
                     loadFragment(fragment);
+
                     return true;
                 case R.id.navigation_profile:
                     fragment = new Profile();

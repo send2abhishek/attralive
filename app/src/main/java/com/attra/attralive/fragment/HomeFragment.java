@@ -63,30 +63,16 @@ public class HomeFragment extends Fragment {
     NewsFeed newsFeedList;
     TextView postFeed;
     ImageView descImage;
-
-
-    RecyclerView recyclerView;
     ArrayList<String> Number;
-    RecyclerView.LayoutManager RecyclerViewLayoutManager;
-    WidgetAdapter RecyclerViewHorizontalAdapter;
-    LinearLayoutManager HorizontalLayout;
-    View ChildView;
     String refreshToken,myToken,accesstoken;
-    int RecyclerViewItemPosition;
 
     SharedPreferences sharedPreferences;
 
-   // "https://developers.google.com/training/images/tacoma_narrows.mp4","https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png"
-
     ViewPager viewPager;
-    String[] images= new String[1];
+    String images[] = {"https://developers.google.com/training/images/tacoma_narrows.mp4","https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png"};
     SliderAdapter myCustomPagerAdapter;
 
-    // imgview.setScaleType(ImageView.ScaleType.FIT_XY);
-
     private static int currentPage = 0;
-
-   // private SharedPreferences sharedPreferences;
     String userId1,username;
 
     public HomeFragment() {
@@ -134,31 +120,15 @@ public class HomeFragment extends Fragment {
             //Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
 
         }
-        prepareNewsfeed("Bearer 5121b93ce464dc428d57ac3b3dbd262d1414c8fd");
+//        prepareNewsfeed();
         newsFeedListAdapter = new NewsFeedListAdapter(getActivity(), newsFeedArrayList);
         newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
         newsFeed.setLayoutManager(linearLayoutManager);
         newsFeed.setAdapter(newsFeedListAdapter);
 
-
-       // prepareNewsfeed();
-        GetEventWidgetsFromService();
-        System.out.println("Outside method "+images[0]);
-       // prepareNewsfeed();
-
         System.out.println("After prepareNewsfeed");
-//        newsFeedListAdapter = new NewsFeedListAdapter(getActivity(), newsFeedArrayList);
-//        newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
-//        newsFeed.setLayoutManager(linearLayoutManager);
-//        newsFeed.setAdapter(newsFeedListAdapter);
-
 
         viewPager = view.findViewById(R.id.viewPager);
-
-
-//        Picasso.with(getActivity())
-//                .load("https://attralive.s3.ap-south-1.amazonaws.com/NewsFeedsPictures/1546237731525-launcher.jpeg")
-//                .into(example);
 
         myCustomPagerAdapter = new SliderAdapter(getActivity(), images);
         viewPager.setAdapter(myCustomPagerAdapter);
@@ -168,10 +138,6 @@ public class HomeFragment extends Fragment {
 
 
         autoScroll();
-
-
-        // Adding on item click listener to RecyclerView.
-
 
         postFeed.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -260,11 +226,6 @@ public class HomeFragment extends Fragment {
 
        MyAppolloClient.getMyAppolloClient("Bearer ae108cc309a817e3a05d8b7215c2e6242461eb78").query(
 
-
-
-
-
-
                GetPosts.builder().build()).enqueue(
                new ApolloCall.Callback<GetPosts.Data>() {
                    @Override
@@ -278,28 +239,12 @@ public class HomeFragment extends Fragment {
 
                            for(int i =0;i<response.data().getPosts_Q().posts().size();i++)
                            {
-
-                           //   String data = response.data().getPosts_Q().posts().get(i).description();
-
-
-
-
                                Log.i("",response.data().getPosts_Q().posts().get(i).description());
 
-                             /* newsFeedList = new NewsFeedNew(response.data().getPosts_Q().posts().get(i).userId(),
-                                      response.data().getPosts_Q().posts().get(i).description(),response.data().getPosts_Q().posts().get(i).filePath());
-                              Log.i("",response.data().getPosts_Q().posts().get(i).description());
-*/
                               newsFeedList = new NewsFeed("",response.data().getPosts_Q().posts().get(i).filePath(),"","",
                               "",response.data().getPosts_Q().posts().get(i).description(),"","");
                              // Log.i("",response.data().getPosts_Q().posts().get(i).description());
                                Log.i("",response.data().getPosts_Q().posts().get(i).filePath());
-
-
-
-                              /* Log.i("",response.data().getPosts_Q().posts().get(i).filePath());
-                               */
-                             //  SetDescPic();
 
                               newsFeedArrayList.add(newsFeedList);
 
@@ -313,9 +258,6 @@ public class HomeFragment extends Fragment {
                                       newsFeed.setAdapter(newsFeedListAdapter);
                                   }
                               });
-
-
-
                            }
                        }
                        else
@@ -328,7 +270,7 @@ public class HomeFragment extends Fragment {
                                    //callservice(myToken);
                                    //Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
                                }
-                               prepareNewsfeed(accesstoken);
+//                               prepareNewsfeed();
 
                        }
                    }
