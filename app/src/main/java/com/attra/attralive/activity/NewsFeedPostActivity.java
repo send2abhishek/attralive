@@ -461,12 +461,9 @@ client         = new OkHttpClient.Builder().build();
     private RequestBody createPartFromString(String data) {
         return RequestBody.create(MultipartBody.FORM,data);
     }
+
         public void CallPostService()
-
         {
-
-
-
         MyAppolloClient.getMyAppolloClient(myToken).mutate(
                 PostThought.builder().userId(userId).description(description).filePath(path).build()).enqueue(
                 new ApolloCall.Callback<PostThought.Data>() {

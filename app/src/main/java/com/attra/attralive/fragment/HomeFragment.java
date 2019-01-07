@@ -258,7 +258,7 @@ public class HomeFragment extends Fragment {
     private void prepareNewsfeed(String myToken) {
 
 
-       MyAppolloClient.getMyAppolloClient("Bearer a2fba7c054a979eb63a22186ca142a14e08706f2").query(
+       MyAppolloClient.getMyAppolloClient("Bearer ae108cc309a817e3a05d8b7215c2e6242461eb78").query(
 
 
 

@@ -110,14 +110,14 @@ public class UserDetailsActivity extends AppCompatActivity {
     String status, message, path, description,myToken,username,userId;
     CardView uploadimage;
 
-    ImageView fabCamera, capturedImage,uploadImage;
+    ImageView fabCamera, capturedImage,upload;
     Bitmap mBitmap;
     TextView successMsg, Description;
     Button post;
 
 
 
-    String emailId, password;
+    String emailId, password,userBu,designation,workLoc,mobile,employeeId;
     EditText empId, phNo, userDesign;
     String buValue,userName;
     private static ApolloClient apolloClient;
@@ -141,20 +141,20 @@ public class UserDetailsActivity extends AppCompatActivity {
         bu = findViewById(R.id.sp_selectbu);
         location = findViewById(R.id.sp_userWorkLocation);
         continueBtn = findViewById(R.id.crd_continuebutton);
-        Intent intent = getIntent();
-        emailId = intent.getStringExtra("emailId");
-        password = intent.getStringExtra("password");
+       // Intent intent = getIntent();
+       // emailId = intent.getStringExtra("emailId");
+       // password = intent.getStringExtra("password");
 
         empId = findViewById(R.id.et_empId);
 
-        userName=intent.getStringExtra("username");
-        userId=intent.getStringExtra("userId");
+       // userName=intent.getStringExtra("username");
+       // userId=intent.getStringExtra("userId");
         //empId = findViewById(R.id.et_entername);
         phNo = findViewById(R.id.et_mobilenumber);
 
         uploadimage=findViewById(R.id.crd_upload);
 
-        uploadImage = findViewById(R.id.im_profileimage);
+        upload = findViewById(R.id.im_profileimage);
 
 
 
@@ -172,7 +172,7 @@ public class UserDetailsActivity extends AppCompatActivity {
 
         }
 
-        getUserBU();
+       getUserBU();
         getUserLocation();
         /*sendDeviceToken();*/
 
@@ -193,7 +193,7 @@ public class UserDetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //uploadProfileImage();
                 startActivityForResult(getPickImageChooserIntent(), IMAGE_RESULT);
-               multipartImageUpload();
+              // multipartImageUpload();
 
 
 
@@ -207,16 +207,16 @@ public class UserDetailsActivity extends AppCompatActivity {
 
                 String userName = "Awnish";
                 //String userId = "asd";
-                String designation = userDesign.getText().toString();
-                String workLoc = location.getSelectedItem().toString();
-                String userBu = bu.getSelectedItem().toString();
-                String mobile = phNo.getText().toString();
-                String employeeId = empId.getText().toString();
+                 designation = userDesign.getText().toString();
+                 workLoc = location.getSelectedItem().toString();
+                 userBu = bu.getSelectedItem().toString();
+                 mobile = phNo.getText().toString();
+                 employeeId = empId.getText().toString();
                 String imagePath = "wqeqeqweqe";
 
-                int sid=radioGroup.getCheckedRadioButtonId();
+                /*int sid=radioGroup.getCheckedRadioButtonId();
                 radioButton=findViewById(sid);
-                String gender = radioButton.getText().toString();
+                String gender = radioButton.getText().toString();*/
 
 
                 if (employeeId.trim().equals("")) {
@@ -235,41 +235,16 @@ public class UserDetailsActivity extends AppCompatActivity {
                     phNo.setError("Enter valid Contact Number");
                     phNo.requestFocus();
                 } else {
+if(mBitmap!=null)
+multipartImageUpload();
+else
+{
+    path="https://dsd8ltrb0t82s.cloudfront.net/ProfilePictures/1546848719271-image.jpeg";
+    CallSubmitDataService();
+}
+                   // Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
+                   // startActivity(intent1);
 
-/*
-                    Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
-                    startActivity(intent1);*/
-                    MyAppolloClient.getMyAppolloClient(myToken).mutate(
-                            UserDetailsUpdate.builder().userId(userId).name(userName).gender("M").designation(designation).empId(employeeId).location(workLoc)
-                                    .bu(userBu).mobileNumber(mobile).profileImagePath("jjjjj")
-                                    .build()).enqueue(
-                            new ApolloCall.Callback<UserDetailsUpdate.Data>() {
-                                @Override
-                                public void onResponse(@Nonnull Response<UserDetailsUpdate.Data> response) {
-//                                                String message= response.data().otpValidation_M().otpstatus();
-                                    System.out.println("res_message in User"+ response);
-                                    String status = response.data().updateUserDetails_M().status();
-                                    final String message = response.data().updateUserDetails_M().message();
-                                    Log.d("res_message in User",message);
-                                   // Log.d("res_status userDetails", status);
-                                    if(status.equals("Success")){
-                                        Log.d("res_message in User", message);
-                                        Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
-                                        startActivity(intent1);
-                                    } else if(status.equals("Failure")){
-                                       // if(message.equals("")){
-                                            Log.d("res_message in User ", message);
-
-                                       // }
-                                    }
-
-                                }
-
-                                @Override
-                                public void onFailure(@Nonnull ApolloException e) {
-                                }
-                            }
-                    );
                 }
 
 
@@ -317,7 +292,7 @@ public class UserDetailsActivity extends AppCompatActivity {
 
 
     private void getUserLocation(){
-        MyAppolloClient.getMyAppolloClient(myToken).query(
+        MyAppolloClient.getMyAppolloClient("Bearer ae108cc309a817e3a05d8b7215c2e6242461eb78").query(
                 GetLocation.builder()
                         .build()).enqueue(
                 new ApolloCall.Callback<GetLocation.Data>() {
@@ -357,8 +332,8 @@ public class UserDetailsActivity extends AppCompatActivity {
      private void getUserBU(){
 
 
-        Log.i("token in user details",myToken);
-        MyAppolloClient.getMyAppolloClient(myToken).query(
+        //Log.i("token in user details",myToken);
+        MyAppolloClient.getMyAppolloClient("Bearer ae108cc309a817e3a05d8b7215c2e6242461eb78").query(
                 GetBusinessUnit.builder()
                         .build()).enqueue(
                 new ApolloCall.Callback<GetBusinessUnit.Data>() {
@@ -433,7 +408,7 @@ public class UserDetailsActivity extends AppCompatActivity {
     private void initRetrofitClient() {
         client         = new OkHttpClient.Builder().build();
 
-        apiService = new Retrofit.Builder().baseUrl("http://10.200.44.20:4001").client(client).build().create(ApiService.class);
+        apiService = new Retrofit.Builder().baseUrl("http://10.200.44.25:4001").client(client).build().create(ApiService.class);
     }
     public Intent getPickImageChooserIntent() {
 
@@ -492,15 +467,18 @@ public class UserDetailsActivity extends AppCompatActivity {
 
         if (resultCode == Activity.RESULT_OK) {
 
-            capturedImage = findViewById(R.id.capturedImage);
+            //capturedImage = findViewById(R.id.im_profileimage);
 
             if (requestCode == IMAGE_RESULT) {
 
 
                 String filePath = getImageFilePath(data);
+                System.out.println("file path"+filePath);
                 if (filePath != null) {
                     mBitmap = BitmapFactory.decodeFile(filePath);
-                    capturedImage.setImageBitmap(mBitmap);
+                    upload.setImageDrawable(null);
+                    upload.setImageBitmap(mBitmap);
+
                 }
             }
 
@@ -549,7 +527,6 @@ public class UserDetailsActivity extends AppCompatActivity {
             mBitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
             byte[] bitmapdata = bos.toByteArray();
 
-
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(bitmapdata);
             fos.flush();
@@ -562,9 +539,9 @@ public class UserDetailsActivity extends AppCompatActivity {
             Log.i("",file.getName());
 
 
-            RequestBody userId = createPartFromString("12345");
+            RequestBody userId = createPartFromString("5c31e8f07db2e805e077c037");
             RequestBody type = createPartFromString("profilePicture");
-            // RequestBody name = RequestBody.create(MediaType.parse("text/plain"), "postPicture");
+             RequestBody name = RequestBody.create(MediaType.parse("text/plain"), "profilePicture");
             HashMap<String, RequestBody> map = new HashMap<>();
             map.put("userId", userId);
             map.put("type", type);
@@ -580,25 +557,25 @@ public class UserDetailsActivity extends AppCompatActivity {
 //
                         System.out.println("Image response"+ response);
 
-                        org.json.simple.JSONObject jsonObj = null;
+                        /*org.json.simple.JSONObject jsonObj = null;
                         try {
 
                         } catch (Exception e) {
                             e.printStackTrace();
-                        }
+                        }*/
 
                         try {
                             String data = response.body().string();
                             System.out.println(data);
 
-                            Map jsonJavaRootObject = new Gson().fromJson(data, Map.class);
+                           Map jsonJavaRootObject = new Gson().fromJson(data, Map.class);
                             //System.out.println(jsonJavaRootObject.get("status"));
                             status = jsonJavaRootObject.get("status").toString();
                             message = jsonJavaRootObject.get("message").toString();
                             path = jsonJavaRootObject.get("path").toString();
 
                             System.out.println(status+" " + message+" " + path);
-                            //CallPostService();
+                            CallSubmitDataService();
 
 
                         } catch (IOException e) {
@@ -632,9 +609,39 @@ public class UserDetailsActivity extends AppCompatActivity {
     private RequestBody createPartFromString(String data) {
         return RequestBody.create(MultipartBody.FORM,data);
     }
-    private void uploadProfileImage()
+    private void CallSubmitDataService()
     {
+        MyAppolloClient.getMyAppolloClient("Bearer ae108cc309a817e3a05d8b7215c2e6242461eb78").mutate(
+                UserDetailsUpdate.builder().userId("5c31e8f07db2e805e077c037").name(userName).gender("F").designation(designation).empId(employeeId).location(workLoc)
+                        .bu(userBu).mobileNumber(mobile).profileImagePath(path)
+                        .build()).enqueue(
+                new ApolloCall.Callback<UserDetailsUpdate.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<UserDetailsUpdate.Data> response) {
+//                                                String message= response.data().otpValidation_M().otpstatus();
+                        System.out.println("res_message in User"+ response);
+                        String status = response.data().updateUserDetails_M().status();
+                        final String message = response.data().updateUserDetails_M().message();
+                        Log.d("res_message in User",message);
+                        // Log.d("res_status userDetails", status);
+                        if(status.equals("Success")){
+                            Log.d("res_message in User", message);
+                            Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
+                            startActivity(intent1);
+                        } else if(status.equals("Failure")){
+                            // if(message.equals("")){
+                            Log.d("res_message in User ", message);
 
+                            // }
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+                    }
+                }
+        );
     }
 
 

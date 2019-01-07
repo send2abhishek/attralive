@@ -36,8 +36,6 @@ TextView attraemail,forgotpswd,registerHere;
 TextInputLayout passwordtil,usernametil;
 CheckBox saveLoginCheckBox;
 String status,message;
-
-
     private SharedPreferences loginPreferences;
     private SharedPreferences.Editor loginPrefsEditor;
     private Boolean saveLogin;
@@ -57,7 +55,6 @@ String status,message;
         forgotpswd=findViewById(R.id.tv_forgotpassword);
         saveLoginCheckBox = findViewById(R.id.chk_remmebrme);
         registerHere = findViewById(R.id.tv_registerHere);
-
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         loginPrefsEditor = loginPreferences.edit();
         saveLogin = loginPreferences.getBoolean("saveLogin", false);
@@ -167,10 +164,10 @@ String status,message;
                 loginPrefsEditor.commit();
             }
 
-            Intent i=new Intent(LoginActivity.this,DashboardActivity.class);
-            startActivity(i);
+            /*Intent i=new Intent(LoginActivity.this,DashboardActivity.class);
+            startActivity(i);*/
             passwordtil.setError(null);
-            MyAppolloClient.getMyAppolloClient("").query(UserLoginAuth.builder().username(username+attraemail.getText().toString().trim()).
+            MyAppolloClient.getMyAppolloClient("Bearer ae108cc309a817e3a05d8b7215c2e6242461eb78").query(UserLoginAuth.builder().username(username+attraemail.getText().toString().trim()).
                     password(password).build()).enqueue(new ApolloCall.Callback<UserLoginAuth.Data>() {
                 @Override
                 public void onResponse(@Nonnull Response<UserLoginAuth.Data> response) {
