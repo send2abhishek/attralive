@@ -58,11 +58,11 @@ public class EventRegistrationDetailsActivity extends AppCompatActivity {
     }
 /*private void getEventDetails()
 {
-    MyAppolloClient.getMyAppolloClient("Bearer 90f57fce635b44bf4a58733f69f9d24da5f3e6e2").
+    MyAppolloClient.getMyAppolloClient("Bearer 850085dbbf7f2448476d143a36acf6b7a2f983a4").
             query(GetEventDetails.builder().status("A").build()).enqueue(new ApolloCall.Callback<GetEventDetails.Data>() {
         @Override
         public void onResponse(@Nonnull Response<GetEventDetails.Data> response) {
-            eventpath=response.data().getEventDetails_Q().event_image_path();
+          //  eventpath=response.data().getEventDetails_Q().event_image_path();
             EventRegistrationDetailsActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

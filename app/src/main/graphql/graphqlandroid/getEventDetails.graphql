@@ -1,0 +1,37 @@
+query getEventDetails($status:String!, $location:String!)
+{
+  getEventDetails_Q(status:$status,Location:$location)
+  {
+    eventD
+        {
+          id
+          event_title
+          venue
+          Location
+          event_image_path
+          Description
+          Question
+          FAQs
+          {
+            Question
+            Answer
+          }
+          Schedule{
+            start_date
+            end_date
+            start_time
+            end_time
+          }
+          registeredUsers
+          {
+            userId
+            emailId
+            registrationId
+            QRCodeLink
+          }
+          status
+          message
+
+        }
+  }
+}

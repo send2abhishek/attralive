@@ -74,6 +74,5 @@ public class SplashScreen extends AppCompatActivity {
         TextView tv1= findViewById(R.id.attralive);
         tv1.clearAnimation();
         tv1.startAnimation(a);
-
     }
 }

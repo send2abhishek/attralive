@@ -1,5 +1,7 @@
 query getPosts{
   getPosts_Q{
+       status
+       message
     posts{
     userId
     postId
@@ -11,8 +13,8 @@ query getPosts{
     commentsCount
     description
     filePath
+    profileImagePath
     }
-     status
-     message
+
   }
 }

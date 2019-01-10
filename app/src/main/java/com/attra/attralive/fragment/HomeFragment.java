@@ -68,10 +68,18 @@ public class HomeFragment extends Fragment {
     SharedPreferences sharedPreferences;
 
     ViewPager viewPager;
+
     String images[] = {"https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png","https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png","https://dsd8ltrb0t82s.cloudfront.net/EventsQRCodes/Att_5c2353c4daea021e34431842.png"};
+
+    //String[] images= new String[1];
+    //String images[] = {"https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png","https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png"};
     SliderAdapter myCustomPagerAdapter;
 
+    // imgview.setScaleType(ImageView.ScaleType.FIT_XY);
+
     private static int currentPage = 0;
+
+   // private SharedPreferences sharedPreferences;
     String userId1,username;
 
     public HomeFragment() {
@@ -107,23 +115,59 @@ public class HomeFragment extends Fragment {
         linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 
         prepareNewsfeed();
+        sharedPreferences = getActivity().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
+        if (sharedPreferences.contains("authToken")) {
+            myToken = sharedPreferences.getString("authToken", "");
+            //callservice(myToken);
+            Toast.makeText(getActivity(), myToken, Toast.LENGTH_LONG).show();
+
+        }
+        if (sharedPreferences.contains("refreshToken")) {
+            refreshToken = sharedPreferences.getString("refreshToken", "");
+            Toast.makeText(getActivity(), refreshToken, Toast.LENGTH_LONG).show();
+            //callservice(myToken);
+            //Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
+
+        }
+
+
+
+
+       // prepareNewsfeed();
+        GetEventWidgetsFromService();
+
+        prepareNewsfeed(myToken);
+
+        System.out.println("After prepareNewsfeed");
         newsFeedListAdapter = new NewsFeedListAdapter(getActivity(), newsFeedArrayList);
         newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
         newsFeed.setLayoutManager(linearLayoutManager);
         newsFeed.setAdapter(newsFeedListAdapter);
 
+
+       // prepareNewsfeed();
+        GetEventWidgetsFromService();
+        System.out.println("Outside method "+images[0]);
+       // prepareNewsfeed();
+
         System.out.println("After prepareNewsfeed");
+//        newsFeedListAdapter = new NewsFeedListAdapter(getActivity(), newsFeedArrayList);
+//        newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
+//        newsFeed.setLayoutManager(linearLayoutManager);
+//        newsFeed.setAdapter(newsFeedListAdapter);
+
 
         viewPager = view.findViewById(R.id.viewPager);
 
         myCustomPagerAdapter = new SliderAdapter(getActivity(), images);
         viewPager.setAdapter(myCustomPagerAdapter);
+        autoScroll();
 
         ImageView imageView = view.findViewById(R.id.imageView);
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.blogreadimage);
 
 
-        autoScroll();
+
 
         postFeed.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,9 +198,63 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private void prepareNewsfeed() {
-       MyAppolloClient.getMyAppolloClient(myToken).query(
+    private void GetEventWidgetsFromService()
+    {
+        System.out.println("Inside GetEvent method");
 
+        MyAppolloClient.getMyAppolloClient(myToken).query(
+               GetEventWidgets.builder().status("A").build()).enqueue(
+               new ApolloCall.Callback<GetEventWidgets.Data>() {
+                   @Override
+                   public void onResponse(@Nonnull Response<GetEventWidgets.Data> response) {
+                            Log.i("Inside getevent ","inside response method");
+                       String eventWidgetPath = "";
+                       //System.out.println("gg"+response.data().getEventWidget_Q().status());
+                      // System.out.println("WW "+response.data().getEventWidget_Q().widget().get(0).event_widget_path());
+                       //images[0] = eventWidgetPath;
+                      // System.out.println("This is image"+images[0]);
+                       if(response.data().getEventWidget_Q().status().equals("Success"))
+
+                       {
+                           for(int i =0;i<response.data().getEventWidget_Q().widget().size();i++)
+                           {
+
+                               String eventId = response.data().getEventWidget_Q().widget().get(i).event_id();
+                               eventWidgetPath = response.data().getEventWidget_Q().widget().get(i).event_widget_path();
+                               Log.i("Widget",eventWidgetPath);
+                               images[i] = eventWidgetPath;
+
+                          }
+
+                       }
+                       getActivity().runOnUiThread(new Runnable() {
+                           @Override
+                           public void run() {
+                               myCustomPagerAdapter = new SliderAdapter(getActivity(), images);
+                               viewPager.setAdapter(myCustomPagerAdapter);
+
+                           }
+                       });
+
+
+
+
+                   }
+
+                   @Override
+                   public void onFailure(@Nonnull ApolloException e) {
+
+                   }
+               }
+       );
+
+
+    }
+
+    private void prepareNewsfeed(String myToken) {
+
+
+       MyAppolloClient.getMyAppolloClient(myToken).query(
                GetPosts.builder().build()).enqueue(
                new ApolloCall.Callback<GetPosts.Data>() {
                    @Override
@@ -170,12 +268,31 @@ public class HomeFragment extends Fragment {
 
                            for(int i =0;i<response.data().getPosts_Q().posts().size();i++)
                            {
-                               Log.i("",response.data().getPosts_Q().posts().get(i).description());
+                               Log.i("Here",response.data().getPosts_Q().posts().get(i).userId()+
+                                       response.data().getPosts_Q().posts().get(i).postId()
+                                       +response.data().getPosts_Q().posts().get(i).profileImagePath()+
+                                       response.data().getPosts_Q().posts().get(i).filePath()+
+                                       response.data().getPosts_Q().posts().get(i).name()+
+                                       response.data().getPosts_Q().posts().get(i).location()+
+                                       response.data().getPosts_Q().posts().get(i).timeago()+
+                                       response.data().getPosts_Q().posts().get(i).description()+
+                                       response.data().getPosts_Q().posts().get(i).likesCount()+
+                                       response.data().getPosts_Q().posts().get(i).commentsCount());
 
-                              newsFeedList = new NewsFeed("",response.data().getPosts_Q().posts().get(i).filePath(),"","",
-                              "",response.data().getPosts_Q().posts().get(i).description(),"","");
-                             // Log.i("",response.data().getPosts_Q().posts().get(i).description());
-                               Log.i("",response.data().getPosts_Q().posts().get(i).filePath());
+                              newsFeedList = new NewsFeed(
+                                      response.data().getPosts_Q().posts().get(i).userId(),
+                                      response.data().getPosts_Q().posts().get(i).postId(),
+                                      response.data().getPosts_Q().posts().get(i).profileImagePath(),
+                                      response.data().getPosts_Q().posts().get(i).filePath(),
+                                      response.data().getPosts_Q().posts().get(i).name(),
+                                      response.data().getPosts_Q().posts().get(i).location(),
+                                      response.data().getPosts_Q().posts().get(i).timeago(),
+                                      response.data().getPosts_Q().posts().get(i).description(),
+                                      response.data().getPosts_Q().posts().get(i).likesCount(),
+                                      response.data().getPosts_Q().posts().get(i).commentsCount());
+
+
+
 
                               newsFeedArrayList.add(newsFeedList);
 
@@ -184,7 +301,10 @@ public class HomeFragment extends Fragment {
                                   public void run() {
 
                                       newsFeedListAdapter = new NewsFeedListAdapter(getActivity(), newsFeedArrayList);
+
                                     //  newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
+
+                                     // newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
                                       newsFeed.setLayoutManager(linearLayoutManager);
                                       newsFeed.setAdapter(newsFeedListAdapter);
                                   }
@@ -201,7 +321,7 @@ public class HomeFragment extends Fragment {
                                    //callservice(myToken);
                                    //Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
                                }
-                               prepareNewsfeed();
+                               prepareNewsfeed(accesstoken);
 
                        }
                    }
@@ -246,7 +366,7 @@ public class HomeFragment extends Fragment {
 
     }
 
-    public void autoScroll() {
+    public void autoScroll(){
         final Handler handler = new Handler();
         final Runnable Update = () -> {
             if (currentPage == images.length) {
