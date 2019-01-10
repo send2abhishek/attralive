@@ -90,11 +90,9 @@ public class UserDetailsActivity extends AppCompatActivity {
       List<String> locationList = new ArrayList<String>();
 
     Fragment fragment = null;
-
-    ApiService apiService;
-
     OkHttpClient client;
 
+    ApiService apiService;
     Uri picUri;
     private ArrayList<String> permissionsToRequest;
     private ArrayList<String> permissionsRejected = new ArrayList<>();
@@ -357,8 +355,6 @@ public class UserDetailsActivity extends AppCompatActivity {
 
     private void getUserBU(){
 
-
-        //Log.i("token in user details",myToken);
         MyAppolloClient.getMyAppolloClient(myToken).query(
                 GetBusinessUnit.builder()
                         .build()).enqueue(

@@ -247,8 +247,8 @@ public class DashboardActivity extends AppCompatActivity
 
    /* private void getProfileDetail(){
 
-        MyAppolloClient.getMyAppolloClient("Bearer a34f659958ca87f95f79486573a400af33884ff9").query(
-                GetProfileDetails.builder().userId("5c34d10c91faf129a48e95bf")
+        MyAppolloClient.getMyAppolloClient(myToken).query(
+                GetProfileDetails.builder().userId(userId1)
                         .build()).enqueue(
                 new ApolloCall.Callback<GetProfileDetails.Data>() {
                     @Override
@@ -404,8 +404,8 @@ public class DashboardActivity extends AppCompatActivity
             Log.i("Network availabiltiy",""+isNetworkAvailable(getApplicationContext()));
             if(isNetworkAvailable(getApplicationContext()) )
             {
-                MyAppolloClient.getMyAppolloClient("Bearer 33b74950cb40017a6950da06400e71f0208bc327").query(
-                        GetNotificationList.builder().userId("5c2e46f9fb15963434c755f4")
+                MyAppolloClient.getMyAppolloClient(myToken).query(
+                        GetNotificationList.builder().userId(userId1)
                                 .build()).enqueue(
                         new ApolloCall.Callback<GetNotificationList.Data>() {
                             @Override
@@ -423,12 +423,11 @@ public class DashboardActivity extends AppCompatActivity
                                                     ((View) actionView.findViewById(R.id.textView)).setVisibility(View.VISIBLE);
                                                 myTextLayoutView.setText(Integer.toString(notificationSize));
 
-                                                //for (GetNotificationList.Notification noti : response.data().getUserNotification_Q().notifications()) {
-//                                                    notificationList.add(
-//                                                            new Notification(noti.postType(), "", "", "", noti.action(), "", noti.userName(), "", noti.postMessage(), "", "", "Y"));
-//                                                    Log.i("notifications", noti.action());
-                                               // }
-
+                                                for (GetNotificationList.Notification noti : response.data().getUserNotification_Q().notifications()) {
+                                                   /*notificationList.add(
+                                                           new Notification(noti.postType(),"","","", noti.action(),"", noti.userName(),"", noti.postMessage(),"","","Y"));
+                                                           Log.i("notifications", noti.action());*/
+                                                }
                                             }
                                         } else {
                                             Log.i("else responsedata", "inside else of  respnse");

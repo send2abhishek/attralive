@@ -29,6 +29,7 @@ public class PasswordRecover extends AppCompatActivity {
     String receivedOtp,enteredPassword,confirmedPassword,emailId;
     Button save,cancel;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,7 +141,6 @@ public class PasswordRecover extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if(otp.getText().toString().trim().isEmpty()){
                     otp.setError("Please enter OTP");
                     otp.requestFocus();
