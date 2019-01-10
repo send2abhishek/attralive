@@ -1,7 +1,4 @@
 package com.attra.attralive.activity;
-
-
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -23,7 +20,6 @@ import android.os.Build;
 import android.os.Parcelable;
 import android.os.StrictMode;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -48,16 +44,8 @@ import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
 import com.attra.attralive.Service.ApiService;
 import com.attra.attralive.Service.MyAppolloClient;
-import com.attra.attralive.fragment.HomeFragment;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.squareup.moshi.Json;
-
-
-
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -155,14 +143,11 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
 
 
         postDescription = findViewById(R.id.descText);
-
-
        // capturedImage = findViewById(R.id.capturedImage);
         fabCamera = findViewById(R.id.openCameraOptions);
         post = findViewById(R.id.btn_postnewsFeed);
         fabCamera.setOnClickListener(this);
         post.setOnClickListener(this);
-
 
         askPermissions();
         initRetrofitClient();
@@ -297,9 +282,7 @@ client         = new OkHttpClient.Builder().build();
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-/* if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            Uri imageUri = CropImage.getPickImageResultUri(this, data);
-*/
+
         if (resultCode == Activity.RESULT_OK) {
 
             capturedImage = findViewById(R.id.capturedImage);
@@ -312,8 +295,6 @@ client         = new OkHttpClient.Builder().build();
                     mBitmap = BitmapFactory.decodeFile(filePath);
                    // Bitmap resize = Bitmap.createScaledBitmap(mBitmap, 100,400,true);
                     capturedImage.setImageBitmap(mBitmap);
-
-
                 }
             }
 
@@ -347,7 +328,6 @@ client         = new OkHttpClient.Builder().build();
         super.onSaveInstanceState(outState);
 
         outState.putParcelable("pic_uri", picUri);
-
     }
 
     @Override
@@ -355,8 +335,6 @@ client         = new OkHttpClient.Builder().build();
         super.onRestoreInstanceState(savedInstanceState);
 
         picUri = savedInstanceState.getParcelable("pic_uri");
-
-
     }
 
     private ArrayList<String> findUnAskedPermissions(ArrayList<String> wanted) {
@@ -429,19 +407,6 @@ client         = new OkHttpClient.Builder().build();
 
     }
 
-    public static Bitmap scaleDown(Bitmap realImage, float maxImageSize,
-                                   boolean filter) {
-        float ratio = Math.min(
-                (float) maxImageSize / realImage.getWidth(),
-                (float) maxImageSize / realImage.getHeight());
-        int width = Math.round((float) ratio * realImage.getWidth());
-        int height = Math.round((float) ratio * realImage.getHeight());
-
-        Bitmap newBitmap = Bitmap.createScaledBitmap(realImage, width,
-                height, filter);
-        return newBitmap;
-    }
-
     private void multipartImageUpload() {
 
         try {
@@ -451,8 +416,7 @@ client         = new OkHttpClient.Builder().build();
             File file = new File(filesDir, "image" + ".jpeg");
             Log.i("multipartImageUpload","Inside this method");
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
-           // scaleDown(mBitmap,30,false);
-            mBitmap.compress(Bitmap.CompressFormat.PNG, 70, bos);
+            mBitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
             byte[] bitmapdata = bos.toByteArray();
 
 
@@ -484,7 +448,9 @@ client         = new OkHttpClient.Builder().build();
                     System.out.println("Image response"+ response);
 
                     if (response.code() == 200) {
-
+//                        successMsg.setText("Uploaded Successfully!");
+//                        successMsg.setTextColor(Color.BLUE);
+//
                         System.out.println("Image response"+ response);
 
 
@@ -577,11 +543,6 @@ client         = new OkHttpClient.Builder().build();
         Intent i = new Intent(getApplication(),DashboardActivity.class);
         startActivity(i);
     }
-
-
-
-
-
 
 
     @Override

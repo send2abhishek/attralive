@@ -1,23 +1,18 @@
 package com.attra.attralive.fragment;
-
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
 import com.attra.attralive.Service.MyAppolloClient;
-import com.attra.attralive.activity.EventRegistrationDetailsActivity;
-import com.squareup.picasso.Picasso;
 
 import javax.annotation.Nonnull;
 
@@ -27,6 +22,7 @@ import graphqlandroid.GetEventDetails;
  * A simple {@link Fragment} subclass.
  */
 public class EventRegisteredDetailsFragment extends Fragment {
+    TextView eventLocation;
 
 
     public EventRegisteredDetailsFragment() {
@@ -43,14 +39,15 @@ public class EventRegisteredDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v=inflater.inflate(R.layout.fragment_event_registered_details, container, false);
-        eventvenue=v.findViewById(R.id.tv_eventvenue);
-        eventdate=v.findViewById(R.id.tv_eventdate);
-        eventtime=v.findViewById(R.id.tv_eventtime);
-        register=v.findViewById(R.id.crd_regevent);
-        regdetails=v.findViewById(R.id.tv_regid);
-        qrcode=v.findViewById(R.id.im_qrcode);
-        linearLayout=v.findViewById(R.id.ll_qrcode);
+        View view=  inflater.inflate(R.layout.fragment_event_registered_details, container, false);
+
+        eventvenue=view.findViewById(R.id.tv_eventvenue);
+        eventdate=view.findViewById(R.id.tv_eventdate);
+        eventtime=view.findViewById(R.id.tv_eventtime);
+        register=view.findViewById(R.id.crd_regevent);
+        regdetails=view.findViewById(R.id.tv_regid);
+        qrcode=view.findViewById(R.id.im_qrcode);
+        linearLayout=view.findViewById(R.id.ll_qrcode);
         getEventDetails();
         String loc=this.getArguments().getString("location");
         System.out.println("loc"+loc);
@@ -61,7 +58,7 @@ public class EventRegisteredDetailsFragment extends Fragment {
                 linearLayout.setVisibility(View.VISIBLE);
             }
         });
-        return v;
+        return view;
     }
     private void getEventDetails()
     {

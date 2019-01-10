@@ -2,10 +2,8 @@ package com.attra.attralive.activity;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,17 +21,12 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
 import com.attra.attralive.Service.MyAppolloClient;
-import com.google.firebase.iid.FirebaseInstanceId;
-
 import javax.annotation.Nonnull;
-
-import graphqlandroid.OtpValidation;
 import graphqlandroid.UserRegistration;
 
 public class RegistrationActivity extends AppCompatActivity {
@@ -87,49 +80,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 alertScrollView();
             }
         });
-        //   SharedPreferences.Editor editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
-        // 0 - for private mode`
 
-       /* password.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @SuppressLint("ResourceAsColor")
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus==false) {
-
-                     if (!((password.getText().toString().trim().matches(numRegex))&&
-                            ( password.getText().toString().trim().matches(alphaRegex))) ) {
-                       // passworderror.setText("");
-                        passworderror.setTextColor(getResources().getColor(R.color.redcolor));
-                        passworderror.setText("Password should contain alphanumeric");
-                    }
-
-                }
-            }
-        });
-        fullname.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus==false) {
-                    if (fullname.getText().toString().trim().length()<8 ) {
-                        fullnameerror.setTextColor(getResources().getColor(R.color.redcolor));
-                        fullnameerror.setError("Username should be valid");
-
-                    }
-                }
-            }
-        });
-        email.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus==false) {
-                    if (Patterns.EMAIL_ADDRESS.matcher((email.getText().toString()+attraEmail.getText().toString()).trim()).matches() ) {
-                        emailerror.setTextColor(getResources().getColor(R.color.redcolor));
-                        emailerror.setError("Email should be valid emailID");
-
-                    }
-                }
-            }
-        });*/
         fullname.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -320,9 +271,8 @@ public class RegistrationActivity extends AppCompatActivity {
                                         }
                                     });
 
-
                         }
-                    }, 4000);
+                    }, 3000);
 
 
                 }

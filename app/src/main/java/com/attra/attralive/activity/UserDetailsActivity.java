@@ -183,46 +183,50 @@ public class UserDetailsActivity extends AppCompatActivity {
 
             }
         });
-        continueBtn.setOnClickListener(v -> {
+        continueBtn.setOnClickListener(new View.OnClickListener() {
 
-            String userName = "Awnish";
-            //String userId = "asd";
-            designation = userDesign.getText().toString();
-            workLoc = location.getSelectedItem().toString();
-            userBu = bu.getSelectedItem().toString();
-            mobile = phNo.getText().toString();
-            employeeId = empId.getText().toString();
-            String imagePath = "wqeqeqweqe";
+            @Override
+            public void onClick(View v) {
 
-            if (employeeId.trim().equals("")) {
-                empId.setError("Employee Id is required");
-                empId.requestFocus();
-            } else if (designation.trim().equals("")) {
-                userDesign.setError("Designation is required");
-                userDesign.requestFocus();
-            } else if (workLoc.trim().equals("")) {
-                ((TextView) location.getSelectedView()).setError("Select Location");
-                ((TextView) location.getSelectedView()).requestFocus();
-            }  else if (userBu.trim().equals("")) {
-                ((TextView) bu.getSelectedView()).setError("Select BU");
-                ((TextView) bu.getSelectedView()).requestFocus();
-            } else if (mobile.length() < 10) {
-                phNo.setError("Enter valid Contact Number");
-                phNo.requestFocus();
-            } else {
-                if(mBitmap!=null)
-                    multipartImageUpload();
-                else
-                {
-                    path="https://dsd8ltrb0t82s.cloudfront.net/ProfilePictures/1546848719271-image.jpeg";
-                    CallSubmitDataService();
+                String userName = "Awnish";
+                //String userId = "asd";
+                designation = userDesign.getText().toString();
+                workLoc = location.getSelectedItem().toString();
+                userBu = bu.getSelectedItem().toString();
+                mobile = phNo.getText().toString();
+                employeeId = empId.getText().toString();
+                String imagePath = "wqeqeqweqe";
+
+                if (employeeId.trim().equals("")) {
+                    empId.setError("Employee Id is required");
+                    empId.requestFocus();
+                } else if (designation.trim().equals("")) {
+                    userDesign.setError("Designation is required");
+                    userDesign.requestFocus();
+                } else if (workLoc.trim().equals("")) {
+                    ((TextView) location.getSelectedView()).setError("Select Location");
+                    ((TextView) location.getSelectedView()).requestFocus();
+                }  else if (userBu.trim().equals("")) {
+                    ((TextView) bu.getSelectedView()).setError("Select BU");
+                    ((TextView) bu.getSelectedView()).requestFocus();
+                } else if (mobile.length() < 10) {
+                    phNo.setError("Enter valid Contact Number");
+                    phNo.requestFocus();
+                } else {
+                    if(mBitmap!=null)
+                        multipartImageUpload();
+                    else
+                    {
+                        path="https://dsd8ltrb0t82s.cloudfront.net/ProfilePictures/1546848719271-image.jpeg";
+                        CallSubmitDataService();
+                    }
+                    // Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
+                    // startActivity(intent1);
+
                 }
-                 Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
-                 startActivity(intent1);
+
 
             }
-
-
         });
 
 
@@ -484,8 +488,8 @@ public class UserDetailsActivity extends AppCompatActivity {
     }
     private void CallSubmitDataService()
     {
-        MyAppolloClient.getMyAppolloClient(myToken).mutate(
-                UserDetailsUpdate.builder().userId(userId).name(userName).gender("F").designation(designation).empId(employeeId).location(workLoc)
+        MyAppolloClient.getMyAppolloClient("Bearer ae108cc309a817e3a05d8b7215c2e6242461eb78").mutate(
+                UserDetailsUpdate.builder().userId("5c31e8f07db2e805e077c037").name(userName).gender("F").designation(designation).empId(employeeId).location(workLoc)
                         .bu(userBu).mobileNumber(mobile).profileImagePath(path)
                         .build()).enqueue(
                 new ApolloCall.Callback<UserDetailsUpdate.Data>() {

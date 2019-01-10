@@ -63,23 +63,14 @@ public class HomeFragment extends Fragment {
     NewsFeed newsFeedList;
     TextView postFeed;
     ImageView descImage;
-
-
-    RecyclerView recyclerView;
     ArrayList<String> Number;
-    RecyclerView.LayoutManager RecyclerViewLayoutManager;
-    WidgetAdapter RecyclerViewHorizontalAdapter;
-    LinearLayoutManager HorizontalLayout;
-    View ChildView;
     String refreshToken,myToken,accesstoken;
-    int RecyclerViewItemPosition;
 
     SharedPreferences sharedPreferences;
 
-   // "https://developers.google.com/training/images/tacoma_narrows.mp4","https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png"
-
     ViewPager viewPager;
-    String[] images= new String[1];
+    String images[] = {"https://developers.google.com/training/images/tacoma_narrows.mp4","https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png"};
+    //String[] images= new String[1];
     //String images[] = {"https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png","https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png"};
     SliderAdapter myCustomPagerAdapter;
 
@@ -135,6 +126,10 @@ public class HomeFragment extends Fragment {
             //Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
 
         }
+
+
+
+
        // prepareNewsfeed();
         GetEventWidgetsFromService();
 
@@ -147,15 +142,19 @@ public class HomeFragment extends Fragment {
         newsFeed.setAdapter(newsFeedListAdapter);
 
 
+       // prepareNewsfeed();
+        GetEventWidgetsFromService();
+        System.out.println("Outside method "+images[0]);
+       // prepareNewsfeed();
 
+        System.out.println("After prepareNewsfeed");
+//        newsFeedListAdapter = new NewsFeedListAdapter(getActivity(), newsFeedArrayList);
+//        newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
+//        newsFeed.setLayoutManager(linearLayoutManager);
+//        newsFeed.setAdapter(newsFeedListAdapter);
 
 
         viewPager = view.findViewById(R.id.viewPager);
-
-
-//        Picasso.with(getActivity())
-//                .load("https://attralive.s3.ap-south-1.amazonaws.com/NewsFeedsPictures/1546237731525-launcher.jpeg")
-//                .into(example);
 
         myCustomPagerAdapter = new SliderAdapter(getActivity(), images);
         viewPager.setAdapter(myCustomPagerAdapter);
@@ -165,10 +164,6 @@ public class HomeFragment extends Fragment {
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.blogreadimage);
 
 
-
-
-
-        // Adding on item click listener to RecyclerView.
 
 
         postFeed.setOnClickListener(new View.OnClickListener() {
@@ -232,7 +227,6 @@ public class HomeFragment extends Fragment {
                        getActivity().runOnUiThread(new Runnable() {
                            @Override
                            public void run() {
-                               Log.i("Runnable","Run method");
                                myCustomPagerAdapter = new SliderAdapter(getActivity(), images);
                                viewPager.setAdapter(myCustomPagerAdapter);
 
@@ -309,9 +303,6 @@ public class HomeFragment extends Fragment {
                                       newsFeed.setAdapter(newsFeedListAdapter);
                                   }
                               });
-
-
-
                            }
                        }
                        else

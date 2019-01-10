@@ -68,12 +68,9 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
 
        // holder.descriptionImage.setImageResource(newsFeed.getNewsFeedImage());
 
-
-
-
-       Picasso.with(mcontext)
+        /* Picasso.with(mcontext)
                 .load(newsFeed.getNewsFeedImage())
-                .into(holder.descriptionImage);
+                .into(holder.descriptionImage);*/
 
         holder.optionmenu.setOnClickListener(new View.OnClickListener() {
             @Override

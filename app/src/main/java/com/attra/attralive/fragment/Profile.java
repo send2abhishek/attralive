@@ -1,8 +1,6 @@
 package com.attra.attralive.fragment;
 
-
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,20 +11,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
 import com.attra.attralive.Service.MyAppolloClient;
-import com.attra.attralive.activity.DashboardActivity;
 import com.squareup.picasso.Picasso;
-
 import javax.annotation.Nonnull;
-
 import graphqlandroid.GetProfileDetails;
-import graphqlandroid.UserDetailsUpdate;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,14 +45,10 @@ public class Profile extends Fragment {
             myToken = sharedPreferences.getString("authToken", "");
             userId = sharedPreferences.getString("userId","");
             userName = sharedPreferences.getString("userName","");
-
             Log.i("user id in userDtail",userId);
 
-
-
-            //      Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
-
         }
+
         // Inflate the layout for this fragment
         getActivity().setTitle(R.string.profile);
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
