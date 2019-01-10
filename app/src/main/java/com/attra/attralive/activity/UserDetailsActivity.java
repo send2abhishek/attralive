@@ -49,6 +49,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -87,8 +90,9 @@ public class UserDetailsActivity extends AppCompatActivity {
       List<String> locationList = new ArrayList<String>();
 
     Fragment fragment = null;
+    OkHttpClient client;
 
-
+    ApiService apiService;
     Uri picUri;
     private ArrayList<String> permissionsToRequest;
     private ArrayList<String> permissionsRejected = new ArrayList<>();
@@ -302,7 +306,7 @@ public class UserDetailsActivity extends AppCompatActivity {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
-                ((ImageView) findViewById(R.id.iv_qrCode)).setImageURI(result.getUri());
+               // ((ImageView) findViewById(R.id.iv_qrCode)).setImageURI(result.getUri());
                 Toast.makeText(this, "Cropping successful, Sample: " + result.getSampleSize(), Toast.LENGTH_LONG).show();
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Toast.makeText(this, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG).show();
@@ -526,7 +530,7 @@ public class UserDetailsActivity extends AppCompatActivity {
     private void CallSubmitDataService()
     {
         MyAppolloClient.getMyAppolloClient("Bearer ae108cc309a817e3a05d8b7215c2e6242461eb78").mutate(
-                UserDetailsUpdate.builder().userId("5c31e8f07db2e805e077c037").name(userName).gender("F").designation(designation).empId(employeeId).location(workLoc)
+                UserDetailsUpdate.builder().userId("5c31e8f07db2e805e077c037").name(userName).designation(designation).empId(employeeId).location(workLoc)
                         .bu(userBu).mobileNumber(mobile).profileImagePath(path)
                         .build()).enqueue(
                 new ApolloCall.Callback<UserDetailsUpdate.Data>() {

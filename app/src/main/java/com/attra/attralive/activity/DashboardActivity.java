@@ -424,9 +424,9 @@ public class DashboardActivity extends AppCompatActivity
                                                 myTextLayoutView.setText(Integer.toString(notificationSize));
 
                                                 for (GetNotificationList.Notification noti : response.data().getUserNotification_Q().notifications()) {
-                                                    notificationList.add(
-                                                            new Notification(noti.postType(), "", "", "", noti.action(), "", noti.userName(), "", noti.postMessage(), "", "", "Y"));
-                                                    Log.i("notifications", noti.action());
+                                                   // notificationList.add(
+                                                      //      new Notification(noti.postType(), "", "", "", noti.action(), "", noti.userName(), "", noti.postMessage(), "", "", "Y"));
+                                                   // Log.i("notifications", noti.action());
                                                 }
 
                                             }
