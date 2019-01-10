@@ -1,7 +1,7 @@
 mutation LikePost(
 $userId: String!,
 $postId: String!){
-like_M(userId:$userId,postId:$postId){
+postLike_M(userId:$userId,postId:$postId){
 status
 message}
 

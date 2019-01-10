@@ -1,0 +1,15 @@
+query getEventWidgets
+($status:String!,
+$location:String!)
+{
+getEventWidget_Q(status:$status,Location:$location) {
+status
+ message
+ widget
+ {
+ event_widget_path
+ event_id
+ }
+
+ }
+}

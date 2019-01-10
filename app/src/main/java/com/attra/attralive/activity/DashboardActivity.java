@@ -247,8 +247,8 @@ public class DashboardActivity extends AppCompatActivity
 
    /* private void getProfileDetail(){
 
-        MyAppolloClient.getMyAppolloClient(myToken).query(
-                GetProfileDetails.builder().userId(userId1)
+        MyAppolloClient.getMyAppolloClient("Bearer a34f659958ca87f95f79486573a400af33884ff9").query(
+                GetProfileDetails.builder().userId("5c34d10c91faf129a48e95bf")
                         .build()).enqueue(
                 new ApolloCall.Callback<GetProfileDetails.Data>() {
                     @Override
@@ -423,11 +423,11 @@ public class DashboardActivity extends AppCompatActivity
                                                     ((View) actionView.findViewById(R.id.textView)).setVisibility(View.VISIBLE);
                                                 myTextLayoutView.setText(Integer.toString(notificationSize));
 
-                                                for (GetNotificationList.Notification noti : response.data().getUserNotification_Q().notifications()) {
-                                                    notificationList.add(
-                                                            new Notification(noti.postType(), "", "", "", noti.action(), "", noti.userName(), "", noti.postMessage(), "", "", "Y"));
-                                                    Log.i("notifications", noti.action());
-                                                }
+                                                //for (GetNotificationList.Notification noti : response.data().getUserNotification_Q().notifications()) {
+//                                                    notificationList.add(
+//                                                            new Notification(noti.postType(), "", "", "", noti.action(), "", noti.userName(), "", noti.postMessage(), "", "", "Y"));
+//                                                    Log.i("notifications", noti.action());
+                                               // }
 
                                             }
                                         } else {

@@ -47,6 +47,7 @@ import java.util.TimerTask;
 
 import javax.annotation.Nonnull;
 
+import graphqlandroid.GetEventWidgets;
 import graphqlandroid.GetPosts;
 
 import static com.attra.attralive.activity.OtpValidationActivity.PREFS_AUTH;
@@ -114,7 +115,7 @@ public class HomeFragment extends Fragment {
         Number = new ArrayList<>();
         linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 
-        prepareNewsfeed();
+        prepareNewsfeed(myToken);
         sharedPreferences = getActivity().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
             myToken = sharedPreferences.getString("authToken", "");

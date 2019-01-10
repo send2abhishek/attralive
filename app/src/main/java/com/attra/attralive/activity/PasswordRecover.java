@@ -28,7 +28,6 @@ public class PasswordRecover extends AppCompatActivity {
     EditText otp,password,cnfPassword;
     String receivedOtp,enteredPassword,confirmedPassword,emailId;
     Button save,cancel;
-    int otpNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,11 +140,7 @@ public class PasswordRecover extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try{
-                    otpNum = Integer.parseInt(otp.getText().toString());
-                }catch(NumberFormatException ex){ // handle your exception
 
-                }
                 if(otp.getText().toString().trim().isEmpty()){
                     otp.setError("Please enter OTP");
                     otp.requestFocus();
@@ -172,11 +167,11 @@ public class PasswordRecover extends AppCompatActivity {
 
                 }else
                     Log.i("email in forgot pass",emailId);
-                Log.i("OTP in forgot pass", String.valueOf(otpNum));
+                Log.i("OTP in forgot pass", otp.getText().toString());
                 Log.i("pass in forgot pass",password.getText().toString());
 
                 progressdialog.show();
-                MyAppolloClient.getMyAppolloClient("").mutate(ForgotPasswordValidation.builder().email(emailId).oTP(otpNum).newPassword(password.getText().toString()).confirmPassword(cnfPassword.getText().toString()).build()).enqueue(new ApolloCall.Callback<ForgotPasswordValidation.Data>() {
+                MyAppolloClient.getMyAppolloClient("").mutate(ForgotPasswordValidation.builder().email(emailId).oTP(otp.getText().toString()).newPassword(password.getText().toString()).confirmPassword(cnfPassword.getText().toString()).build()).enqueue(new ApolloCall.Callback<ForgotPasswordValidation.Data>() {
                     @Override
                     public void onResponse(@Nonnull Response<ForgotPasswordValidation.Data> response) {
                         String status = response.data().forgotPasswordValidation_M().status();

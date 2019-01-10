@@ -2781,7 +2781,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "SCALAR",
-                      "name": "Int",
+                      "name": "String",
                       "ofType": null
                     }
                   },
@@ -2825,7 +2825,7 @@
               "deprecationReason": null
             },
             {
-              "name": "like_M",
+              "name": "postLike_M",
               "description": "",
               "args": [
                 {
@@ -2948,7 +2948,7 @@
               "deprecationReason": null
             },
             {
-              "name": "comment_M",
+              "name": "postComment_M",
               "description": "",
               "args": [
                 {
@@ -3003,7 +3003,7 @@
               "deprecationReason": null
             },
             {
-              "name": "report_M",
+              "name": "postReport_M",
               "description": "",
               "args": [
                 {

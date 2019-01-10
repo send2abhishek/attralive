@@ -49,6 +49,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -88,6 +91,9 @@ public class UserDetailsActivity extends AppCompatActivity {
 
     Fragment fragment = null;
 
+    ApiService apiService;
+
+    OkHttpClient client;
 
     Uri picUri;
     private ArrayList<String> permissionsToRequest;
@@ -428,7 +434,7 @@ public class UserDetailsActivity extends AppCompatActivity {
     private void initRetrofitClient() {
         client         = new OkHttpClient.Builder().build();
 
-        apiService = new Retrofit.Builder().baseUrl("http://10.200.44.25:4001").client(client).build().create(ApiService.class);
+        apiService = new Retrofit.Builder().baseUrl("http://10.200.44.20:4001").client(client).build().create(ApiService.class);
     }
 
 
@@ -526,7 +532,7 @@ public class UserDetailsActivity extends AppCompatActivity {
     private void CallSubmitDataService()
     {
         MyAppolloClient.getMyAppolloClient("Bearer ae108cc309a817e3a05d8b7215c2e6242461eb78").mutate(
-                UserDetailsUpdate.builder().userId("5c31e8f07db2e805e077c037").name(userName).gender("F").designation(designation).empId(employeeId).location(workLoc)
+                UserDetailsUpdate.builder().userId("5c31e8f07db2e805e077c037").name(userName).designation(designation).empId(employeeId).location(workLoc)
                         .bu(userBu).mobileNumber(mobile).profileImagePath(path)
                         .build()).enqueue(
                 new ApolloCall.Callback<UserDetailsUpdate.Data>() {
