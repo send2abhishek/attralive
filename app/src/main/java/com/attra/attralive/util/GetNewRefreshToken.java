@@ -25,10 +25,10 @@ public class GetNewRefreshToken {
                     public void onResponse(@Nonnull Response<GetRefreshToken.Data> response) {
                         String message = response.data().getRefreshToken_Q().message();
                         String status = response.data().getRefreshToken_Q().status();
-                        if(status.equals("success")){
+                        if(status.equals("Success")){
                             String accessToken= response.data().getRefreshToken_Q().accessToken();
                             String tokenExpiry = response.data().getRefreshToken_Q().accessTokenExpiresAt();
-                            String newRefreshToken = response.data().getRefreshToken_Q().accessToken();
+                            String newRefreshToken = response.data().getRefreshToken_Q().RefreshToken();
                             String refreshTokenExpiry = response.data().getRefreshToken_Q().accessTokenExpiresAt();
                             String user = response.data().getRefreshToken_Q().user();
                             String userName = response.data().getRefreshToken_Q().name();

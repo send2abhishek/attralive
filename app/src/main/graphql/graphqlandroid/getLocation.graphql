@@ -1,5 +1,7 @@
 query getLocation{
   getLocations_Q{
     locations
+    status
+         message
   }
 }

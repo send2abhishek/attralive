@@ -43,12 +43,12 @@ public class OtpValidationActivity extends AppCompatActivity {
     String emailId,password;
     String otpNumber;
     String token="";
-    int opt;
-    String refreshToken;
+    String opt;
+    String refreshToken,RefreshToken;
     SharedPreferences sharedPreferences;
     private static String accessToken,authToken;
     public static String  Authorization= "Basic YXBwbGljYXRpb246c2VjcmV0";
-    public static final String PREFS_AUTH ="my_auth";
+   // public static final String PREFS_AUTH ="my_auth";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -158,7 +158,7 @@ public class OtpValidationActivity extends AppCompatActivity {
                         }
 
                     }else{
-                        opt= Integer.parseInt(otpNumber);
+                        opt= otpNumber;
                         final ProgressDialog loading = ProgressDialog.show(OtpValidationActivity.this, "Authenticating", "Please wait while we check the entered code", false, false);
                         Handler handler = new Handler();
                         handler.postDelayed(new Runnable() {
@@ -202,7 +202,7 @@ private void callservice()
 
                                 if (message.equals("Invalid token: access token has expired")) {
                                     GetNewRefreshToken.getRefreshtoken(refreshToken, OtpValidationActivity.this);
-                                    sharedPreferences = getSharedPreferences(PREFS_AUTH, Context.MODE_PRIVATE);
+                                    sharedPreferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
                                     if (sharedPreferences.contains("authToken")) {
                                         String myToken = sharedPreferences.getString("authToken", "");
                                         callservice();
@@ -272,7 +272,7 @@ private void callservice()
                     public void onResponse(@Nonnull Response<UserLoginAuth.Data> response) {
                         accessToken= response.data().userLoginAuth_Q().accessToken();
                         String tokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
-                        refreshToken = response.data().userLoginAuth_Q().accessToken();
+                        refreshToken = response.data().userLoginAuth_Q().RefreshToken();
                         String refreshTokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
                         String user = response.data().userLoginAuth_Q().user();
                         String message = response.data().userLoginAuth_Q().message();
@@ -281,10 +281,11 @@ private void callservice()
                         String status = response.data().userLoginAuth_Q().status();
                         Log.i("access Token",accessToken);
                         authToken="Bearer"+" "+accessToken;
+                        //refreshToken="Bearer"+" "+RefreshToken;
                         Log.i("brarer token",authToken);
                         if(status.equals("Success")){
 
-                          SharedPreferences  preferences = getApplicationContext().getSharedPreferences(PREFS_AUTH, 0);
+                          SharedPreferences  preferences = getApplicationContext().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, 0);
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.putString("authToken",authToken);
                             editor.putString("refreshToken",refreshToken);
@@ -293,18 +294,18 @@ private void callservice()
                             editor.putString("userName",userName);
                             editor.commit();
 
-                        }else if(status.equals("Failure")){
+                        }/*else if(status.equals("Failure")){
                             if(message.equals("Invalid token: access token has expired")){
 
                                 GetNewRefreshToken.getRefreshtoken(refreshToken,OtpValidationActivity.this);
 
                                // getNewRefreshToken(refreshToken);
 
-                                /*getNewRefreshToken(refreshToken);*/
+                                *//*getNewRefreshToken(refreshToken);*//*
 
                             }
 
-                        }
+                        }*/
 
                     }
 

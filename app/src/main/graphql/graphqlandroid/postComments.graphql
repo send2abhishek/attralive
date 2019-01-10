@@ -1,0 +1,10 @@
+mutation postComments($userId:String!,$comment:String!,$postId:String!)
+{
+  postComment_M(userId:$userId,comment:$comment,postId:$postId)
+  {
+    commentId
+    comment
+    status
+    message
+  }
+}

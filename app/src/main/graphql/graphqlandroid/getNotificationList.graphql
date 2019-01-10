@@ -15,6 +15,7 @@ userId
 userName
 time
 postMessage
+readStatus
   }
   }
 }

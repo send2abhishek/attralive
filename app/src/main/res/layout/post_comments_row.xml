@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="2dp"
+    android:paddingBottom="3dp"
+    android:paddingLeft="10dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/maincommentslayout">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/im_profile"
+            android:src="@drawable/ic_behance"
+            android:scaleType="fitCenter"
+            android:layout_gravity="top"
+            android:paddingTop="5dp"
+            />
+        <LinearLayout
+
+            android:paddingLeft="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/commentslayout">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:id="@+id/tv_userName"
+                android:text="asfdg"
+                android:textColor="#0055ff"
+                />
+            <TextView
+                android:paddingTop="2dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:id="@+id/tv_location"
+                android:text="dddsvzfbgscdvfcxczxc"/>
+            <TextView
+                android:paddingTop="2dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:id="@+id/tv_timeago"
+                android:text="1 hour ago"/>
+            <TextView
+                android:paddingTop="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:id="@+id/tv_commentmsg"
+                android:text="1 hour ago"
+                android:textStyle="bold"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

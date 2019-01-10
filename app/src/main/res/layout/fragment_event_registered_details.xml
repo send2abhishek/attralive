@@ -46,7 +46,8 @@
                 android:layout_toRightOf="@+id/tv_regid"
                 android:background="@drawable/grey_rectangle"
                 android:layout_alignParentEnd="true"
-                android:id="@+id/im_qrcode"/>
+                android:id="@+id/im_qrcode"
+                android:scaleType="fitXY"/>
 
         </RelativeLayout>
 

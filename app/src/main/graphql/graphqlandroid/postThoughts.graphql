@@ -3,6 +3,7 @@ $userId:String!,
 $description:String!,
 $filePath:String){
 addPost_M(userId:$userId,description:$description,filePath:$filePath){
-userId
+status
+  message
 }
 }

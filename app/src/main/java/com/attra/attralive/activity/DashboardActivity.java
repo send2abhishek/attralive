@@ -40,6 +40,7 @@ import com.attra.attralive.fragment.HolidayCalender;
 import com.attra.attralive.fragment.HomeFragment;
 import com.attra.attralive.fragment.LearningD;
 import com.attra.attralive.model.NewsFeed;
+import com.attra.attralive.util.GetNewRefreshToken;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -51,8 +52,9 @@ import javax.annotation.Nonnull;
 
 import graphqlandroid.GetNotificationList;
 import graphqlandroid.GetProfileDetails;
+import graphqlandroid.GetRefreshToken;
 
-import static com.attra.attralive.activity.OtpValidationActivity.PREFS_AUTH;
+//import static com.attra.attralive.activity.OtpValidationActivity.PREFS_AUTH;
 
 public class DashboardActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -61,11 +63,11 @@ public class DashboardActivity extends AppCompatActivity
     LinearLayoutManager linearLayoutManager;
     ImageView profileImage,profileNav;
     TextView userName,userEmail;
-    String userId1,username;
-    String myToken;
+    String userId1,username,location;
+    String myToken,refreshToken;
     int notificationSize=0;
     private static final String TAG = "DashboardActivity";
-
+Intent intent;
     private SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +76,8 @@ public class DashboardActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         this.getWindow().setStatusBarColor(Color.TRANSPARENT);
+        intent=getIntent();
+        location=intent.getStringExtra("location");
         subscribeToTopic();
 
 
@@ -98,18 +102,18 @@ public class DashboardActivity extends AppCompatActivity
         userEmail = headerView.findViewById(R.id.tv_email);
         profileImage = headerView.findViewById(R.id.civ_profilePic);
 
-        sharedPreferences = getSharedPreferences(PREFS_AUTH, Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
             myToken = sharedPreferences.getString("authToken", "");
             userId1 = sharedPreferences.getString("userId", "");
             username = sharedPreferences.getString("userName","");
-
+            refreshToken=sharedPreferences.getString("refreshToken","");
       //      Toast.makeText(getApplicationContext(), userId, Toast.LENGTH_LONG).show();
             Log.i("token in dashboard",myToken);
             Log.i("user id in dashboard",userId1);
 
         }
-        getProfileDetail();
+        getProfileDetail(myToken);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Create channel to show notifications.
             String channelId  = getString(R.string.default_notification_channel_id);
@@ -154,48 +158,85 @@ public class DashboardActivity extends AppCompatActivity
                 });
     }*/
 
-    private void getProfileDetail(){
+    private void getProfileDetail(String accesstoken){
 
-        MyAppolloClient.getMyAppolloClient(myToken).query(
+        MyAppolloClient.getMyAppolloClient(accesstoken).query(
                 GetProfileDetails.builder().userId(userId1)
                         .build()).enqueue(
                 new ApolloCall.Callback<GetProfileDetails.Data>() {
                     @Override
                     public void onResponse(@Nonnull Response<GetProfileDetails.Data> response) {
-                        Log.i("res", String.valueOf(response));
-                        String message = response.data().getProfileDetails_Q().message();
-                        String status = response.data().getProfileDetails_Q().status();
-                        Log.i("message in dashboard",message);
-                        Log.i("mstatus in dashboard",status);
-                        if(response.data().getProfileDetails_Q().name()!=null){
+                        if (response.data().getProfileDetails_Q() != null) {
+                            Log.i("res", String.valueOf(response));
+                            String message = response.data().getProfileDetails_Q().message();
+                            String status = response.data().getProfileDetails_Q().status();
+                            Log.i("message in dashboard", message);
+                            Log.i("mstatus in dashboard", status);
+                            if (response.data().getProfileDetails_Q().name() != null) {
                            /* String message = response.data().getProfileDetails_Q().message();
                             String status = response.data().getProfileDetails_Q().status();*/
-                            if(status.equals("Success")){
-                                String username = response.data().getProfileDetails_Q().name();
-                                String emaiId = response.data().getProfileDetails_Q().email();
-                                String imgPath = response.data().getProfileDetails_Q().profileImagePath();
-                                Log.i("profile image path",imgPath);
-                                DashboardActivity.this.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        userName.setText(username);
-                                        userEmail.setText(emaiId);
-                                        Picasso.with(getApplicationContext()).load(imgPath).fit().into(profileImage);
+                                if (status.equals("Success")) {
+                                    String username = response.data().getProfileDetails_Q().name();
+                                    String emaiId = response.data().getProfileDetails_Q().email();
+                                    String imgPath = response.data().getProfileDetails_Q().profileImagePath();
+                                    Log.i("profile image path", imgPath);
+                                    DashboardActivity.this.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            userName.setText(username);
+                                            userEmail.setText(emaiId);
+                                            Picasso.with(getApplicationContext()).load(imgPath).fit().into(profileImage);
 
-                                    }
-                                });
-                            }
-                            else if(status.equals("Failure")){
+                                        }
+                                    });
+                                } else if (status.equals("Failure")) {
+                                    MyAppolloClient.getMyAppolloClient(GetNewRefreshToken.Authorization).query(GetRefreshToken.builder().
+                                            refreshToken(refreshToken).grant_type("refresh_token").build()).enqueue(new ApolloCall.Callback<GetRefreshToken.Data>() {
+                                        @Override
+                                        public void onResponse(@Nonnull Response<GetRefreshToken.Data> response) {
+                                            String status = response.data().getRefreshToken_Q().status();
+                                            if (status.equals("Success")) {
+                                                String accessToken = response.data().getRefreshToken_Q().accessToken();
+                                                // String tokenExpiry = response.data().getRefreshToken_Q().accessTokenExpiresAt();
+                                                String newRefreshToken = response.data().getRefreshToken_Q().RefreshToken();
+                                                //String refreshTokenExpiry = response.data().getRefreshToken_Q().accessTokenExpiresAt();
+                                                // String user = response.data().getRefreshToken_Q().user();
+                                                // String userName = response.data().getRefreshToken_Q().name();
+                                                Log.d("access Token", accessToken);
+                                                String authToken = "Bearer" + " " + accessToken;
+                                                Log.d("brarer token", authToken);
+                                                SharedPreferences preferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, 0);
+                                                SharedPreferences.Editor editor = preferences.edit();
+                                                editor.putString("authToken", authToken);
+                                                editor.putString("refreshToken", newRefreshToken);
+                                                editor.commit();
+                                                sharedPreferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
+                                                if (sharedPreferences.contains("authToken")) {
+                                                    String myToken = sharedPreferences.getString("authToken", "");
+                                                    getProfileDetail(myToken);
+                                                    //Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
+
+                                                    // }
+                                                }
+                                            }
+                                        }
+
+
+                                        @Override
+                                        public void onFailure(@Nonnull ApolloException e) {
+
+                                        }
+                                    });
+                                }
 
                             }
 
                         }
-
                     }
+                        @Override
+                        public void onFailure (@Nonnull ApolloException e){
+                        }
 
-                    @Override
-                    public void onFailure(@Nonnull ApolloException e) {
-                    }
                 }
         );
     }
@@ -291,7 +332,8 @@ public class DashboardActivity extends AppCompatActivity
                     loadFragment(fragment);
                     return true;
                 case R.id.navigation_event:
-                    Intent i=new Intent(getApplicationContext(),EventDetailsActivity.class);
+                    Intent i=new Intent(getApplicationContext(),EventRegistrationDetailsActivity.class);
+                    i.putExtra("location",location);
                     startActivity(i);
                     return true;
                 case R.id.navigation_gallery:

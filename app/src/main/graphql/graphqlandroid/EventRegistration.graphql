@@ -1,0 +1,10 @@
+mutation eventRegistration($email:String!,$userId:String!,$eventID:String!)
+{
+  eventRegistrartion_M(email:$email,userId:$userId,eventID:$eventID)
+  {
+    QRCodeLink
+    registrationId
+    status
+    message
+  }
+}

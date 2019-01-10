@@ -432,8 +432,8 @@ client         = new OkHttpClient.Builder().build();
                     public void onResponse(@Nonnull com.apollographql.apollo.api.Response<PostThought.Data> response) {
                         Log.i("","inside callpostmethod");
                         Log.i("",description);
-                        String status = response.data().addPost_M().userId();
-                        String message = response.data().addPost_M().userId();
+                        String status = response.data().addPost_M().status();
+                        String message = response.data().addPost_M().message();
 
                        // String status = response.data().addPost_M().userId();
                         NewsFeedPostActivity.this.runOnUiThread(new Runnable() {

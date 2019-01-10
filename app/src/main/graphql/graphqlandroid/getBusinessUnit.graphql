@@ -1,5 +1,7 @@
 query getBusinessUnit{
-  getBusinessUnits_Q{
-    businessUnits
-  }
-}
+   getBusinessUnits_Q{
+     businessUnits
+     status
+     message
+   }
+ }

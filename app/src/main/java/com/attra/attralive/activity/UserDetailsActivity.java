@@ -1,6 +1,7 @@
 package com.attra.attralive.activity;
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -44,6 +45,7 @@ import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
 import com.attra.attralive.Service.ApiService;
 import com.attra.attralive.Service.MyAppolloClient;
+import com.attra.attralive.util.GetNewRefreshToken;
 import com.google.gson.Gson;
 
 import java.io.ByteArrayOutputStream;
@@ -96,18 +98,19 @@ public class UserDetailsActivity extends AppCompatActivity {
     Fragment fragment = null;
 
 
-    Uri picUri;
+    Uri picUri,outputFileUri;
     private ArrayList<String> permissionsToRequest;
     private ArrayList<String> permissionsRejected = new ArrayList<>();
     private ArrayList<String> permissions = new ArrayList<>();
     private final static int ALL_PERMISSIONS_RESULT = 107;
     private final static int IMAGE_RESULT = 200;
+    private final static int PIC_CROP = 2;
 
 
 
     EditText postDescription;
 
-    String status, message, path, description,myToken,username,userId;
+    String status, message, path, description,myToken,username,userId,refreshToken;
     CardView uploadimage;
 
     ImageView fabCamera, capturedImage,upload;
@@ -121,7 +124,7 @@ public class UserDetailsActivity extends AppCompatActivity {
     EditText empId, phNo, userDesign;
     String buValue,userName;
     private static ApolloClient apolloClient;
-    public static final String PREFS_AUTH = "my_auth";
+    //
     public static String Authorization = "Basic YXBwbGljYXRpb246c2VjcmV0";
 
     private SharedPreferences sharedPreferences;
@@ -158,22 +161,19 @@ public class UserDetailsActivity extends AppCompatActivity {
 
 
 
-        sharedPreferences = getSharedPreferences(PREFS_AUTH, Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
             myToken = sharedPreferences.getString("authToken", "");
-
+            refreshToken=sharedPreferences.getString("refreshToken","");
             userId = sharedPreferences.getString("userId","");
             userName = sharedPreferences.getString("userName","");
             Log.i("user id in userDtail",userId);
             Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
 
-            String username = sharedPreferences.getString("userName","");
-            //      Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
-
         }
 
-        getUserBU();
-        getUserLocation();
+       getUserBU(myToken);
+      getUserLocation(myToken);
         /*sendDeviceToken();*/
 
         //postDescription = findViewById(R.id.descText);
@@ -205,14 +205,12 @@ public class UserDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String userName = "Awnish";
-                //String userId = "asd";
+
                 designation = userDesign.getText().toString();
-                workLoc = location.getSelectedItem().toString();
-                userBu = bu.getSelectedItem().toString();
+               // workLoc = location.getSelectedItem().toString();
+               // userBu = bu.getSelectedItem().toString();
                 mobile = phNo.getText().toString();
                 employeeId = empId.getText().toString();
-                String imagePath = "wqeqeqweqe";
 
                 /*int sid=radioGroup.getCheckedRadioButtonId();
                 radioButton=findViewById(sid);
@@ -240,7 +238,7 @@ public class UserDetailsActivity extends AppCompatActivity {
                     else
                     {
                         path="https://dsd8ltrb0t82s.cloudfront.net/ProfilePictures/1546848719271-image.jpeg";
-                        CallSubmitDataService();
+                        CallSubmitDataService(myToken);
                     }
                     // Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
                     // startActivity(intent1);
@@ -291,14 +289,16 @@ public class UserDetailsActivity extends AppCompatActivity {
     }
 
 
-    private void getUserLocation(){
-        MyAppolloClient.getMyAppolloClient("Bearer ae108cc309a817e3a05d8b7215c2e6242461eb78").query(
+    private void getUserLocation(String accesstoken){
+        MyAppolloClient.getMyAppolloClient(accesstoken).query(
                 GetLocation.builder()
                         .build()).enqueue(
                 new ApolloCall.Callback<GetLocation.Data>() {
                     @Override
                     public void onResponse(@Nonnull Response<GetLocation.Data> response) {
                         Log.i("res", String.valueOf(response));
+                        String Status=response.data().getLocations_Q().status();
+                        String Message=response.data().getLocations_Q().message();
                         if(response.data().getLocations_Q().locations()!=null)
                         {
                             for(int loopVar= 0; loopVar<response.data().getLocations_Q().locations().size(); loopVar++) {
@@ -318,7 +318,24 @@ public class UserDetailsActivity extends AppCompatActivity {
                                 location.setSelection(0);
                             }
                         });
+                        if(Status.equals("Failure")){
 
+                            if(Message.equals("Invalid token: access token is invalid")){
+
+                                GetNewRefreshToken.getRefreshtoken(refreshToken,UserDetailsActivity.this);
+                                UserDetailsActivity.this.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        sharedPreferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
+                                        if (sharedPreferences.contains("authToken")) {
+                                            String myToken = sharedPreferences.getString("authToken", "");
+                                            getUserLocation(myToken);
+                                            Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
+                            }
+                        }
                     }
 
                     @Override
@@ -329,17 +346,19 @@ public class UserDetailsActivity extends AppCompatActivity {
 
     }
 
-    private void getUserBU(){
+    private void getUserBU(String accesstoken){
 
 
         //Log.i("token in user details",myToken);
-        MyAppolloClient.getMyAppolloClient("Bearer ae108cc309a817e3a05d8b7215c2e6242461eb78").query(
+        MyAppolloClient.getMyAppolloClient(accesstoken).query(
                 GetBusinessUnit.builder()
                         .build()).enqueue(
                 new ApolloCall.Callback<GetBusinessUnit.Data>() {
                     @Override
                     public void onResponse(@Nonnull Response<GetBusinessUnit.Data> response) {
                         Log.i("res", String.valueOf(response));
+                        String Status=response.data().getBusinessUnits_Q().status();
+                        String Message=response.data().getBusinessUnits_Q().message();
                         if(response.data().getBusinessUnits_Q().businessUnits()!=null) {
                             for (int loopVar = 0; loopVar < response.data().getBusinessUnits_Q().businessUnits().size(); loopVar++) {
                                 String businessUnitData = response.data().getBusinessUnits_Q().businessUnits().get(loopVar);
@@ -359,7 +378,24 @@ public class UserDetailsActivity extends AppCompatActivity {
                                 bu.setSelection(0);
                             }
                         });
+                         if(Status.equals("Failure")){
+                            if(Message.equals("Invalid token: access token is invalid")){
 
+                                GetNewRefreshToken.getRefreshtoken(refreshToken,UserDetailsActivity.this);
+                                UserDetailsActivity.this.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        sharedPreferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
+                                        if (sharedPreferences.contains("authToken")) {
+                                            String myToken = sharedPreferences.getString("authToken", "");
+                                            getUserBU(myToken);
+                                            Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
+
+                                        }
+                                    }
+                                });
+                            }
+                        }
                     }
 
                     @Override
@@ -412,7 +448,7 @@ public class UserDetailsActivity extends AppCompatActivity {
     }
     public Intent getPickImageChooserIntent() {
 
-        Uri outputFileUri = getCaptureImageOutputUri();
+         outputFileUri = getCaptureImageOutputUri();
 
         List<Intent> allIntents = new ArrayList<>();
         PackageManager packageManager = getPackageManager();
@@ -432,7 +468,8 @@ public class UserDetailsActivity extends AppCompatActivity {
         Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
         galleryIntent.setType("image/*");
         List<ResolveInfo> listGallery = packageManager.queryIntentActivities(galleryIntent, 0);
-        for (ResolveInfo res : listGallery) {
+        for (ResolveInfo res : listGallery)
+        {
             Intent intent = new Intent(galleryIntent);
             intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
             intent.setPackage(res.activityInfo.packageName);
@@ -453,7 +490,8 @@ public class UserDetailsActivity extends AppCompatActivity {
 
         return chooserIntent;
     }
-    private Uri getCaptureImageOutputUri() {
+    private Uri
+    getCaptureImageOutputUri() {
         Uri outputFileUri = null;
         File getImage = getExternalFilesDir("");
         if (getImage != null) {
@@ -473,6 +511,7 @@ public class UserDetailsActivity extends AppCompatActivity {
 
 
                 String filePath = getImageFilePath(data);
+                //cropImage();
                 System.out.println("file path"+filePath);
                 if (filePath != null) {
                     mBitmap = BitmapFactory.decodeFile(filePath);
@@ -481,9 +520,51 @@ public class UserDetailsActivity extends AppCompatActivity {
 
                 }
             }
+            else if(requestCode==PIC_CROP)
+            {
+               Bundle extras = data.getExtras();
+                //get the cropped bitmap
+                Bitmap thePic = extras.getParcelable("data");
+
+                /*String filePath = getImageFilePath(data);
+                System.out.println("file path"+filePath);
+                if (filePath != null) {
+                    mBitmap = BitmapFactory.decodeFile(filePath);
+                    upload.setImageDrawable(null);
+                    upload.setImageBitmap(mBitmap);
+
+                }*/
+            }
 
         }
 
+    }
+    private void cropImage()
+    {
+        try {
+            Intent cropIntent = new Intent("com.android.camera.action.CROP");
+            //indicate image type and Uri
+            cropIntent.setDataAndType(outputFileUri, "image/*");
+
+            //set crop properties
+            cropIntent.putExtra("crop", "true");
+            //indicate aspect of desired crop
+            cropIntent.putExtra("aspectX", 1);
+            cropIntent.putExtra("aspectY", 1);
+            //indicate output X and Y
+            cropIntent.putExtra("outputX", 256);
+            cropIntent.putExtra("outputY", 256);
+            //retrieve data on return
+            cropIntent.putExtra("return-data", true);
+            //start the activity - we handle returning in onActivityResult
+            startActivityForResult(cropIntent, PIC_CROP);
+        }
+        catch(ActivityNotFoundException anfe){
+            //display an error message
+            String errorMessage = "Whoops - your device doesn't support the crop action!";
+            Toast toast = Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
     public String getImageFilePath(Intent data) {
         return getImageFromFilePath(data);
@@ -539,11 +620,11 @@ public class UserDetailsActivity extends AppCompatActivity {
             Log.i("",file.getName());
 
 
-            RequestBody userId = createPartFromString("5c31e8f07db2e805e077c037");
+            RequestBody usrId = createPartFromString(userId);
             RequestBody type = createPartFromString("profilePicture");
             RequestBody name = RequestBody.create(MediaType.parse("text/plain"), "profilePicture");
             HashMap<String, RequestBody> map = new HashMap<>();
-            map.put("userId", userId);
+            map.put("userId", usrId);
             map.put("type", type);
             Call<ResponseBody> req = apiService.postImage(map, body);
             req.enqueue(new Callback<ResponseBody>() {
@@ -575,7 +656,7 @@ public class UserDetailsActivity extends AppCompatActivity {
                             path = jsonJavaRootObject.get("path").toString();
 
                             System.out.println(status+" " + message+" " + path);
-                            CallSubmitDataService();
+                            CallSubmitDataService(myToken);
 
 
                         } catch (IOException e) {
@@ -609,10 +690,11 @@ public class UserDetailsActivity extends AppCompatActivity {
     private RequestBody createPartFromString(String data) {
         return RequestBody.create(MultipartBody.FORM,data);
     }
-    private void CallSubmitDataService()
+    private void CallSubmitDataService(String accesstoken)
     {
-        MyAppolloClient.getMyAppolloClient("Bearer ae108cc309a817e3a05d8b7215c2e6242461eb78").mutate(
-                UserDetailsUpdate.builder().userId("5c31e8f07db2e805e077c037").name(userName).gender("F").designation(designation).empId(employeeId).location(workLoc)
+       // Log.d("accesstoken",accesstoken);
+        MyAppolloClient.getMyAppolloClient(accesstoken).mutate(
+                UserDetailsUpdate.builder().userId(userId).name(userName).designation(designation).empId(employeeId).location(workLoc)
                         .bu(userBu).mobileNumber(mobile).profileImagePath(path)
                         .build()).enqueue(
                 new ApolloCall.Callback<UserDetailsUpdate.Data>() {
@@ -627,13 +709,26 @@ public class UserDetailsActivity extends AppCompatActivity {
                         if(status.equals("Success")){
                             Log.d("res_message in User", message);
                             Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
+                            intent1.putExtra("location",workLoc);
                             startActivity(intent1);
                         } else if(status.equals("Failure")){
-                            // if(message.equals("")){
-                            Log.d("res_message in User ", message);
+                               if(message.equals("Invalid token: access token is invalid")){
 
-                            // }
+                            GetNewRefreshToken.getRefreshtoken(refreshToken,UserDetailsActivity.this);
+                            UserDetailsActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    sharedPreferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
+                                    if (sharedPreferences.contains("authToken")) {
+                                        String myToken = sharedPreferences.getString("authToken", "");
+                                        CallSubmitDataService(myToken);
+                                        Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
+
+                                    }
+                                }
+                            });
                         }
+                    }
 
                     }
 

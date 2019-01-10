@@ -1,5 +1,5 @@
 mutation OtpValidation($email:String!,
-$otp:Int!){
+$otp:String!){
 otpValidation_M(email:$email,
 OTP:$otp){
 otpstatus

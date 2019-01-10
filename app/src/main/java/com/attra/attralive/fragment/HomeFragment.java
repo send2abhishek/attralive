@@ -50,7 +50,7 @@ import javax.annotation.Nonnull;
 import graphqlandroid.GetEventWidgets;
 import graphqlandroid.GetPosts;
 
-import static com.attra.attralive.activity.OtpValidationActivity.PREFS_AUTH;
+//import static com.attra.attralive.activity.OtpValidationActivity.PREFS_AUTH;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -88,7 +88,7 @@ public class HomeFragment extends Fragment {
 
 
 
-         sharedPreferences =this.getActivity().getSharedPreferences(PREFS_AUTH, Context.MODE_PRIVATE);
+         sharedPreferences =this.getActivity().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
             myToken = sharedPreferences.getString("authToken", "");
             userId1 = sharedPreferences.getString("userId", "");
@@ -224,7 +224,7 @@ public class HomeFragment extends Fragment {
     private void prepareNewsfeed(String myToken) {
 
 
-       MyAppolloClient.getMyAppolloClient("Bearer ae108cc309a817e3a05d8b7215c2e6242461eb78").query(
+       MyAppolloClient.getMyAppolloClient("Bearer d25858f45e6638dadacc9b93b7309b8a839d4537").query(
 
                GetPosts.builder().build()).enqueue(
                new ApolloCall.Callback<GetPosts.Data>() {

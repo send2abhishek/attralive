@@ -1,0 +1,43 @@
+query getPostDetails($postId:String!)
+{
+  getPostDetails_Q(postId:$postId)
+  {
+    postDetails
+    {
+      postId
+      userId
+      location
+      likesCount
+      filePath
+      profileImagePath
+      likes
+      {
+        likedUserId
+        likedTimeago
+        likedUserName
+        likedDateAndTime
+        likedUserLocation
+        likedUserProfilePath
+      }
+      name
+      description
+      dateAndTime
+       timeago
+      commentsCount
+      comments
+      {
+        commentedUserId
+        commentedUserName
+
+          commentedDateAndTime
+          commentedTimeago
+          commentMsg
+          commentId
+
+        commentedUserLocation
+        commentedUserProfilePath
+      }
+
+    }
+  }
+}
