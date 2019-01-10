@@ -95,8 +95,8 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
                 MyAppolloClient.getMyAppolloClient(myToken).mutate(LikePost.builder().postId(holder.postId.getText().toString()).userId(userId).build()).enqueue(new ApolloCall.Callback<LikePost.Data>() {
                     @Override
                     public void onResponse(@Nonnull Response<LikePost.Data> response) {
-                        status = response.data().like_M().status();
-                        message = response.data().like_M().message();
+                        status = response.data().postLike_M().status();
+                        message = response.data().postLike_M().message();
                         Log.i("like post ",status);
                         Log.i("message",message);
                         if(status.equals("Success")){

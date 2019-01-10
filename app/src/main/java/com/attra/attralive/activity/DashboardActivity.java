@@ -404,8 +404,8 @@ public class DashboardActivity extends AppCompatActivity
             Log.i("Network availabiltiy",""+isNetworkAvailable(getApplicationContext()));
             if(isNetworkAvailable(getApplicationContext()) )
             {
-                MyAppolloClient.getMyAppolloClient("Bearer 33b74950cb40017a6950da06400e71f0208bc327").query(
-                        GetNotificationList.builder().userId("5c2e46f9fb15963434c755f4")
+                MyAppolloClient.getMyAppolloClient(myToken).query(
+                        GetNotificationList.builder().userId(userId1)
                                 .build()).enqueue(
                         new ApolloCall.Callback<GetNotificationList.Data>() {
                             @Override
@@ -424,11 +424,10 @@ public class DashboardActivity extends AppCompatActivity
                                                 myTextLayoutView.setText(Integer.toString(notificationSize));
 
                                                 for (GetNotificationList.Notification noti : response.data().getUserNotification_Q().notifications()) {
-                                                   // notificationList.add(
-                                                      //      new Notification(noti.postType(), "", "", "", noti.action(), "", noti.userName(), "", noti.postMessage(), "", "", "Y"));
-                                                   // Log.i("notifications", noti.action());
+                                                   /*notificationList.add(
+                                                           new Notification(noti.postType(),"","","", noti.action(),"", noti.userName(),"", noti.postMessage(),"","","Y"));
+                                                           Log.i("notifications", noti.action());*/
                                                 }
-
                                             }
                                         } else {
                                             Log.i("else responsedata", "inside else of  respnse");

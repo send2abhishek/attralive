@@ -138,11 +138,11 @@
     <string name="submit_btn">Submit</string>
 
     <string name="helpcontent">
-        1. Employee registers through Attra email id, mobile number and location of the event\n
-        2. Before registration completion, employee has to accept the Terms and conditions\n
-        3. A unique one time randomly generated PIN is sent to the employees Attra email id\n
-        4. The user has to login using the Attra email id and the unique PIN\n
-        5. In case the user forgets the PIN, Forgot PIN link can be accessed and the user will be prompted for entering his/her Attra email id
+        1. Employee registers through User Name, Attra Email ID and Password Details.
+        2. Before registration completion, employee has to accept the Terms and conditions.
+        3. A unique one time randomly generated PIN is sent on Attra Email ID for the user once the registration process completed.
+        4. The user has to enter and verify the OTP received to activate account.
+        5. The user has to login using the Attra Email ID and the Password created during registration.
     </string>
     <string name="helpbutton">Help for Registration</string>
     <!-- TODO: Remove or change this placeholder text -->

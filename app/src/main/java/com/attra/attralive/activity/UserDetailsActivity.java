@@ -355,8 +355,6 @@ public class UserDetailsActivity extends AppCompatActivity {
 
     private void getUserBU(){
 
-
-        //Log.i("token in user details",myToken);
         MyAppolloClient.getMyAppolloClient(myToken).query(
                 GetBusinessUnit.builder()
                         .build()).enqueue(
