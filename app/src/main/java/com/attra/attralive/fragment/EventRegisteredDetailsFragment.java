@@ -70,13 +70,13 @@ public class EventRegisteredDetailsFragment extends Fragment {
             @Override
             public void onResponse(@Nonnull Response<GetEventDetails.Data> response) {
 
-            eventtitle=response.data().getEventDetails_Q().event_title();
-            description=response.data().getEventDetails_Q().Description();
-            venue=response.data().getEventDetails_Q().venue();
-            startdate=response.data().getEventDetails_Q().Schedule().get(0).start_date();
-            starttime=response.data().getEventDetails_Q().Schedule().get(0).start_time();
-            enddate=response.data().getEventDetails_Q().Schedule().get(0).end_date();
-            endtime=response.data().getEventDetails_Q().Schedule().get(0).end_time();
+//            eventtitle=response.data().getEventDetails_Q().event_title();
+//            description=response.data().getEventDetails_Q().Description();
+//            venue=response.data().getEventDetails_Q().venue();
+//            startdate=response.data().getEventDetails_Q().Schedule().get(0).start_date();
+//            starttime=response.data().getEventDetails_Q().Schedule().get(0).start_time();
+//            enddate=response.data().getEventDetails_Q().Schedule().get(0).end_date();
+//            endtime=response.data().getEventDetails_Q().Schedule().get(0).end_time();
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

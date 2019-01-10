@@ -4,12 +4,20 @@ import android.widget.ImageView;
 
 public class NewsFeed {
 
-    String imageId,newsFeedImage;
-    String userName,title,feedTime,feedDescription,noOfLikes,noOfCommenst;
+    int  noOfLikes,noOfCommenst;
+    String imageId, userid,postID;
+            String newsFeedImage;
+    String userName,location,feedTime,feedDescription;
 
-    public String getImageId() {
-        return imageId;
-    }
+    public String getPostID() { return postID;}
+
+    public void setPostID(String postId){ this.postID = postId; }
+
+    public String getUserid() {return userid;}
+
+    public void setUserid(String  userid){this.userid = userid;}
+
+    public String getImageId() { return imageId;}
 
     public void setImageId(String imageId) {
         this.imageId = imageId;
@@ -31,20 +39,20 @@ public class NewsFeed {
         this.userName = userName;
     }
 
-    public String getTitle() {
-        return title;
+    public String getLocation() {
+        return location;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getFeedTime() {
         return feedTime;
     }
 
-    public void setFeedTime(String feedTime) {
-        this.feedTime = feedTime;
+    public String setFeedTime(String feedTime) {
+        return this.feedTime = feedTime;
     }
 
     public String getFeedDescription() {
@@ -55,39 +63,31 @@ public class NewsFeed {
         this.feedDescription = feedDescription;
     }
 
-    public String getNoOfLikes() {
+    public int getNoOfLikes() {
         return noOfLikes;
     }
 
-    public void setNoOfLikes(String noOfLikes) {
-        this.noOfLikes = noOfLikes;
+    public void setNoOfLikes(int noOfLikes) {
+         this.noOfLikes = noOfLikes;
     }
 
-    public String getNoOfCommenst() {
+    public int getNoOfCommenst() {
         return noOfCommenst;
     }
 
-    public void setNoOfCommenst(String noOfCommenst) {
+    public void setNoOfCommenst(int noOfCommenst) {
         this.noOfCommenst = noOfCommenst;
     }
 
 
-//    public NewsFeed(int imageId, int newsFeedImage, String userName, String title, String feedTime, String feedDescription, String noOfLikes, String noOfCommenst) {
-//        this.imageId = imageId;
-//        this.newsFeedImage = newsFeedImage;
-//        this.userName = userName;
-//        this.title = title;
-//        this.feedTime = feedTime;
-//        this.feedDescription = feedDescription;
-//        this.noOfLikes = noOfLikes;
-//        this.noOfCommenst = noOfCommenst;
-//    }
-
-    public NewsFeed(String image, String newsFeedImage, String userName, String title, String feedTime, String feedDescription, String noOfLikes, String noOfCommenst) {
+    public NewsFeed(String  userId, String postId, String image, String newsFeedImage, String userName,
+                    String location, String feedTime, String feedDescription, int noOfLikes, int noOfCommenst) {
+       this.userid = userId;
+        this.postID = postId;
         this.imageId = image;
         this.newsFeedImage = newsFeedImage;
         this.userName = userName;
-        this.title = title;
+        this.location = location;
         this.feedTime = feedTime;
         this.feedDescription = feedDescription;
         this.noOfLikes = noOfLikes;

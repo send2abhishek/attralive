@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.text.style.LeadingMarginSpan;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.attra.attralive.R;
 import com.attra.attralive.model.NewsFeed;
@@ -27,6 +29,7 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
 {
     Context mcontext;
     ArrayList<NewsFeed>newsFeeds;
+
 
     NewsFeed newsFeed;
     public NewsFeedListAdapter(Context context, ArrayList<NewsFeed> notificationArrayList) {
@@ -47,19 +50,21 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
 
 
        holder.userName.setText(newsFeed.getUserName());
-      // holder.userImage.setImageResource(newsFeed.getImageId());
-
-        holder.title.setText(newsFeed.getTitle());
+       Picasso.with(mcontext)
+               .load(newsFeed.getImageId())
+               .into(holder.userImage);
+       //holder.userImage.setImageResource(newsFeed.getImageId());
+        holder.title.setText(newsFeed.getLocation());
         holder.time.setText(newsFeed.getFeedTime());
         holder.description.setText(newsFeed.getFeedDescription());
-        holder.noOfLikes.setText(newsFeed.getNoOfLikes());
-        holder.noofComments.setText(newsFeed.getNoOfCommenst());
+        holder.noOfLikes.setText(String.valueOf(newsFeed.getNoOfLikes()));
+        holder.noofComments.setText(String.valueOf(newsFeed.getNoOfCommenst()));
 
         //holder.descriptionImage.setImageResource(newsFeed.getNewsFeedImage());*/
 
-        Picasso.with(mcontext)
-               .load(newsFeed.getNewsFeedImage())
-               .into(holder.descriptionImage);
+//        Picasso.with(mcontext)
+//               .load(newsFeed.getNewsFeedImage())
+//               .into(holder.descriptionImage);
 
        // holder.descriptionImage.setImageResource(newsFeed.getNewsFeedImage());
 
@@ -74,35 +79,49 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
             @Override
             public void onClick(View view) {
 
+                String postid = newsFeed.getPostID();
+                String userId = newsFeed.getUserid();
+                String dummy = "nnn";
+
+
                 //creating a popup menu
                 PopupMenu popup = new PopupMenu(mcontext,view);
                 //inflating menu from xml resource
                 popup.inflate(R.menu.newsfeed_options);
                 //adding click listener
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.editFeed:
-                                //handle menu1 click
-                                return true;
-                            case R.id.deleteFeed:
-                                //handle menu2 click
-                                return true;
-                            case R.id.reportFeed:
-                                //handle menu3 click
-                                return true;
-                            case R.id.disableFeed:
-                                //handle menu3 click
-                                return true;
+                popup.setOnMenuItemClickListener(item -> {
 
-                            default:
-                                return false;
-                        }
+
+                    switch (item.getItemId()) {
+                        case R.id.editFeed:
+                            //handle menu1 click
+                            return true;
+                        case R.id.deleteFeed:
+                            //handle menu2 click
+                            return true;
+                        case R.id.reportFeed:
+                            //handle menu3 click
+                            return true;
+                        case R.id.disableFeed:
+                            //handle menu3 click
+                            return true;
+
+                        default:
+                            return false;
                     }
                 });
                 //displaying the popup
-                popup.show();
+                if(userId ==dummy )
+                {
+                    popup.show();
+                }
+                else
+                {
+                    popup.dismiss();
+                    Toast.makeText(mcontext,"Disabled",Toast.LENGTH_SHORT).show();
+                }
+
+
 
             }
         });

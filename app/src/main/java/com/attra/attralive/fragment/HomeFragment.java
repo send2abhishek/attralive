@@ -80,6 +80,7 @@ public class HomeFragment extends Fragment {
 
     ViewPager viewPager;
     String[] images= new String[1];
+    //String images[] = {"https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png","https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png"};
     SliderAdapter myCustomPagerAdapter;
 
     // imgview.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -134,10 +135,6 @@ public class HomeFragment extends Fragment {
             //Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
 
         }
-
-
-
-
        // prepareNewsfeed();
         GetEventWidgetsFromService();
 
@@ -150,16 +147,7 @@ public class HomeFragment extends Fragment {
         newsFeed.setAdapter(newsFeedListAdapter);
 
 
-       // prepareNewsfeed();
-        GetEventWidgetsFromService();
-        System.out.println("Outside method "+images[0]);
-       // prepareNewsfeed();
 
-        System.out.println("After prepareNewsfeed");
-//        newsFeedListAdapter = new NewsFeedListAdapter(getActivity(), newsFeedArrayList);
-//        newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
-//        newsFeed.setLayoutManager(linearLayoutManager);
-//        newsFeed.setAdapter(newsFeedListAdapter);
 
 
         viewPager = view.findViewById(R.id.viewPager);
@@ -171,12 +159,13 @@ public class HomeFragment extends Fragment {
 
         myCustomPagerAdapter = new SliderAdapter(getActivity(), images);
         viewPager.setAdapter(myCustomPagerAdapter);
+        autoScroll();
 
         ImageView imageView = view.findViewById(R.id.imageView);
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.blogreadimage);
 
 
-        autoScroll();
+
 
 
         // Adding on item click listener to RecyclerView.
@@ -232,9 +221,9 @@ public class HomeFragment extends Fragment {
                            for(int i =0;i<response.data().getEventWidget_Q().widget().size();i++)
                            {
 
-                               String eventId = response.data().getEventWidget_Q().widget().get(0).event_id();
-                               eventWidgetPath = response.data().getEventWidget_Q().widget().get(0).event_widget_path();
-
+                               String eventId = response.data().getEventWidget_Q().widget().get(i).event_id();
+                               eventWidgetPath = response.data().getEventWidget_Q().widget().get(i).event_widget_path();
+                               Log.i("Widget",eventWidgetPath);
                                images[i] = eventWidgetPath;
 
                           }
@@ -243,6 +232,7 @@ public class HomeFragment extends Fragment {
                        getActivity().runOnUiThread(new Runnable() {
                            @Override
                            public void run() {
+                               Log.i("Runnable","Run method");
                                myCustomPagerAdapter = new SliderAdapter(getActivity(), images);
                                viewPager.setAdapter(myCustomPagerAdapter);
 
@@ -267,13 +257,7 @@ public class HomeFragment extends Fragment {
     private void prepareNewsfeed(String myToken) {
 
 
-       MyAppolloClient.getMyAppolloClient("Bearer a2fba7c054a979eb63a22186ca142a14e08706f2").query(
-
-
-
-
-
-
+       MyAppolloClient.getMyAppolloClient(myToken).query(
                GetPosts.builder().build()).enqueue(
                new ApolloCall.Callback<GetPosts.Data>() {
                    @Override
@@ -287,28 +271,31 @@ public class HomeFragment extends Fragment {
 
                            for(int i =0;i<response.data().getPosts_Q().posts().size();i++)
                            {
+                               Log.i("Here",response.data().getPosts_Q().posts().get(i).userId()+
+                                       response.data().getPosts_Q().posts().get(i).postId()
+                                       +response.data().getPosts_Q().posts().get(i).profileImagePath()+
+                                       response.data().getPosts_Q().posts().get(i).filePath()+
+                                       response.data().getPosts_Q().posts().get(i).name()+
+                                       response.data().getPosts_Q().posts().get(i).location()+
+                                       response.data().getPosts_Q().posts().get(i).timeago()+
+                                       response.data().getPosts_Q().posts().get(i).description()+
+                                       response.data().getPosts_Q().posts().get(i).likesCount()+
+                                       response.data().getPosts_Q().posts().get(i).commentsCount());
 
-                           //   String data = response.data().getPosts_Q().posts().get(i).description();
+                              newsFeedList = new NewsFeed(
+                                      response.data().getPosts_Q().posts().get(i).userId(),
+                                      response.data().getPosts_Q().posts().get(i).postId(),
+                                      response.data().getPosts_Q().posts().get(i).profileImagePath(),
+                                      response.data().getPosts_Q().posts().get(i).filePath(),
+                                      response.data().getPosts_Q().posts().get(i).name(),
+                                      response.data().getPosts_Q().posts().get(i).location(),
+                                      response.data().getPosts_Q().posts().get(i).timeago(),
+                                      response.data().getPosts_Q().posts().get(i).description(),
+                                      response.data().getPosts_Q().posts().get(i).likesCount(),
+                                      response.data().getPosts_Q().posts().get(i).commentsCount());
 
 
 
-
-                               Log.i("",response.data().getPosts_Q().posts().get(i).description());
-
-                             /* newsFeedList = new NewsFeedNew(response.data().getPosts_Q().posts().get(i).userId(),
-                                      response.data().getPosts_Q().posts().get(i).description(),response.data().getPosts_Q().posts().get(i).filePath());
-                              Log.i("",response.data().getPosts_Q().posts().get(i).description());
-*/
-                              newsFeedList = new NewsFeed("",response.data().getPosts_Q().posts().get(i).filePath(),"","",
-                              "",response.data().getPosts_Q().posts().get(i).description(),"","");
-                             // Log.i("",response.data().getPosts_Q().posts().get(i).description());
-                               Log.i("",response.data().getPosts_Q().posts().get(i).filePath());
-
-
-
-                              /* Log.i("",response.data().getPosts_Q().posts().get(i).filePath());
-                               */
-                             //  SetDescPic();
 
                               newsFeedArrayList.add(newsFeedList);
 
@@ -317,7 +304,7 @@ public class HomeFragment extends Fragment {
                                   public void run() {
 
                                       newsFeedListAdapter = new NewsFeedListAdapter(getActivity(), newsFeedArrayList);
-                                      newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
+                                     // newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
                                       newsFeed.setLayoutManager(linearLayoutManager);
                                       newsFeed.setAdapter(newsFeedListAdapter);
                                   }

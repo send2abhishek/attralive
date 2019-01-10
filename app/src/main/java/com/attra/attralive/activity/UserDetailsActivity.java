@@ -1,4 +1,6 @@
 package com.attra.attralive.activity;
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.ComponentName;
@@ -29,6 +31,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -45,6 +48,8 @@ import com.attra.attralive.R;
 import com.attra.attralive.Service.ApiService;
 import com.attra.attralive.Service.MyAppolloClient;
 import com.google.gson.Gson;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -82,8 +87,8 @@ public class UserDetailsActivity extends AppCompatActivity {
     CardView continueBtn;
 
     TextView dob;
-      List<String> buList = new ArrayList<String>();
-      List<String> locationList = new ArrayList<String>();
+    List<String> buList = new ArrayList<String>();
+    List<String> locationList = new ArrayList<String>();
     private RadioGroup radioGroup;
     private RadioButton radioButton;
 
@@ -110,14 +115,14 @@ public class UserDetailsActivity extends AppCompatActivity {
     String status, message, path, description,myToken,username,userId;
     CardView uploadimage;
 
-    ImageView fabCamera, capturedImage,uploadImage;
+    ImageView fabCamera, capturedImage,upload;
     Bitmap mBitmap;
     TextView successMsg, Description;
     Button post;
 
 
 
-    String emailId, password;
+    String emailId, password,userBu,designation,workLoc,mobile,employeeId;
     EditText empId, phNo, userDesign;
     String buValue,userName;
     private static ApolloClient apolloClient;
@@ -125,13 +130,6 @@ public class UserDetailsActivity extends AppCompatActivity {
     public static String Authorization = "Basic YXBwbGljYXRpb246c2VjcmV0";
 
     private SharedPreferences sharedPreferences;
-
-
-
-   /* private SharedPreferences sharedPreferences;
-    String myToken;*/
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,20 +139,14 @@ public class UserDetailsActivity extends AppCompatActivity {
         bu = findViewById(R.id.sp_selectbu);
         location = findViewById(R.id.sp_userWorkLocation);
         continueBtn = findViewById(R.id.crd_continuebutton);
-        Intent intent = getIntent();
-        emailId = intent.getStringExtra("emailId");
-        password = intent.getStringExtra("password");
 
         empId = findViewById(R.id.et_empId);
 
-        userName=intent.getStringExtra("username");
-        userId=intent.getStringExtra("userId");
-        //empId = findViewById(R.id.et_entername);
         phNo = findViewById(R.id.et_mobilenumber);
 
         uploadimage=findViewById(R.id.crd_upload);
 
-        uploadImage = findViewById(R.id.im_profileimage);
+        upload = findViewById(R.id.im_profileimage);
 
 
 
@@ -168,22 +160,12 @@ public class UserDetailsActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
 
             String username = sharedPreferences.getString("userName","");
-      //      Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
+            //      Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
 
         }
 
         getUserBU();
         getUserLocation();
-        /*sendDeviceToken();*/
-
-        //postDescription = findViewById(R.id.descText);
-
-
-        // capturedImage = findViewById(R.id.capturedImage);
-//        fabCamera = findViewById(R.id.openCameraOptions);
-//        post = findViewById(R.id.btn_postnewsFeed);
-        //fabCamera.setOnClickListener(this);
-       // post.setOnClickListener(this);
 
 
         askPermissions();
@@ -192,128 +174,100 @@ public class UserDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //uploadProfileImage();
-                startActivityForResult(getPickImageChooserIntent(), IMAGE_RESULT);
-               multipartImageUpload();
+
+                onSelectImageClick(v);
+                // multipartImageUpload();
 
 
 
 
             }
         });
-        continueBtn.setOnClickListener(new View.OnClickListener() {
+        continueBtn.setOnClickListener(v -> {
 
-            @Override
-            public void onClick(View v) {
+            String userName = "Awnish";
+            //String userId = "asd";
+            designation = userDesign.getText().toString();
+            workLoc = location.getSelectedItem().toString();
+            userBu = bu.getSelectedItem().toString();
+            mobile = phNo.getText().toString();
+            employeeId = empId.getText().toString();
+            String imagePath = "wqeqeqweqe";
 
-                String userName = "Awnish";
-                //String userId = "asd";
-                String designation = userDesign.getText().toString();
-                String workLoc = location.getSelectedItem().toString();
-                String userBu = bu.getSelectedItem().toString();
-                String mobile = phNo.getText().toString();
-                String employeeId = empId.getText().toString();
-                String imagePath = "wqeqeqweqe";
-
-                int sid=radioGroup.getCheckedRadioButtonId();
-                radioButton=findViewById(sid);
-                String gender = radioButton.getText().toString();
-
-
-                if (employeeId.trim().equals("")) {
-                    empId.setError("Employee Id is required");
-                    empId.requestFocus();
-                } else if (designation.trim().equals("")) {
-                    userDesign.setError("Designation is required");
-                    userDesign.requestFocus();
-                } else if (workLoc.trim().equals("")) {
-                    ((TextView) location.getSelectedView()).setError("Select Location");
-                    ((TextView) location.getSelectedView()).requestFocus();
-                }  else if (userBu.trim().equals("")) {
-                    ((TextView) bu.getSelectedView()).setError("Select BU");
-                    ((TextView) bu.getSelectedView()).requestFocus();
-                } else if (mobile.length() < 10) {
-                    phNo.setError("Enter valid Contact Number");
-                    phNo.requestFocus();
-                } else {
-
-/*
-                    Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
-                    startActivity(intent1);*/
-                    MyAppolloClient.getMyAppolloClient(myToken).mutate(
-                            UserDetailsUpdate.builder().userId(userId).name(userName).gender("M").designation(designation).empId(employeeId).location(workLoc)
-                                    .bu(userBu).mobileNumber(mobile).profileImagePath("jjjjj")
-                                    .build()).enqueue(
-                            new ApolloCall.Callback<UserDetailsUpdate.Data>() {
-                                @Override
-                                public void onResponse(@Nonnull Response<UserDetailsUpdate.Data> response) {
-//                                                String message= response.data().otpValidation_M().otpstatus();
-                                    System.out.println("res_message in User"+ response);
-                                    String status = response.data().updateUserDetails_M().status();
-                                    final String message = response.data().updateUserDetails_M().message();
-                                    Log.d("res_message in User",message);
-                                   // Log.d("res_status userDetails", status);
-                                    if(status.equals("Success")){
-                                        Log.d("res_message in User", message);
-                                        Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
-                                        startActivity(intent1);
-                                    } else if(status.equals("Failure")){
-                                       // if(message.equals("")){
-                                            Log.d("res_message in User ", message);
-
-                                       // }
-                                    }
-
-                                }
-
-                                @Override
-                                public void onFailure(@Nonnull ApolloException e) {
-                                }
-                            }
-                    );
+            if (employeeId.trim().equals("")) {
+                empId.setError("Employee Id is required");
+                empId.requestFocus();
+            } else if (designation.trim().equals("")) {
+                userDesign.setError("Designation is required");
+                userDesign.requestFocus();
+            } else if (workLoc.trim().equals("")) {
+                ((TextView) location.getSelectedView()).setError("Select Location");
+                ((TextView) location.getSelectedView()).requestFocus();
+            }  else if (userBu.trim().equals("")) {
+                ((TextView) bu.getSelectedView()).setError("Select BU");
+                ((TextView) bu.getSelectedView()).requestFocus();
+            } else if (mobile.length() < 10) {
+                phNo.setError("Enter valid Contact Number");
+                phNo.requestFocus();
+            } else {
+                if(mBitmap!=null)
+                    multipartImageUpload();
+                else
+                {
+                    path="https://dsd8ltrb0t82s.cloudfront.net/ProfilePictures/1546848719271-image.jpeg";
+                    CallSubmitDataService();
                 }
-
+                 Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
+                 startActivity(intent1);
 
             }
+
+
         });
 
-
-       /* continueBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.println("==========================MAHA=====");
-                int selectedId = radioSexGroup.getCheckedRadioButtonId();
-                // find the radiobutton by returned id
-                radioSexButton = (RadioButton) findViewById(selectedId);
-                gender= radioSexButton.getText().toString();
-                locationValue = location.getSelectedItem().toString();
-                buValue = bu.getSelectedItem().toString();
-
-                Toast.makeText(UserDetailsActivity.this, ""+gender+"="+designationValue+"="+locationValue+"="+buValue, Toast.LENGTH_SHORT).show();
-                System.out.println("===========================NANDI===="+gender+"="+designationValue+"="+locationValue+"="+buValue);
-                if(gender==null){
-                    Toast.makeText(UserDetailsActivity.this, "Please Select Gender", Toast.LENGTH_SHORT).show();
-                }else if(designationValue.equals("Please select")){
-                    Toast.makeText(UserDetailsActivity.this, "Please Select Designation", Toast.LENGTH_SHORT).show();
-                }else if(locationValue.equals("Please select")){
-                    Toast.makeText(UserDetailsActivity.this, "Please Select Location", Toast.LENGTH_SHORT).show();
-                }else if(buValue.equals("Please select")){
-                    Toast.makeText(UserDetailsActivity.this, "Please Select BU", Toast.LENGTH_SHORT).show();
-                }else if(designationValue==null){
-                    Toast.makeText(UserDetailsActivity.this, "Please Select Designation", Toast.LENGTH_SHORT).show();
-                }else if(designationValue==null){
-                    Toast.makeText(UserDetailsActivity.this, "Please Select Designation", Toast.LENGTH_SHORT).show();
-                }
-                else {
-
-
-                    Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
-                    startActivity(intent);
-                }
-            }
-        });*/
 
 
     }
+    public void onSelectImageClick(View view) {
+        CropImage.startPickImageActivity(this);
+    }
+    private void startCropImageActivity(Uri imageUri) {
+        CropImage.activity(imageUri)
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setMultiTouchEnabled(true)
+                .start(this);
+    }
+    @Override
+    @SuppressLint("NewApi")
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        // handle result of pick image chooser
+        if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            Uri imageUri = CropImage.getPickImageResultUri(this, data);
+
+            // For API >= 23 we need to check specifically that we have permissions to read external storage.
+            if (CropImage.isReadExternalStoragePermissionsRequired(this, imageUri)) {
+                // request permissions and handle the result in onRequestPermissionsResult()
+                picUri = imageUri;
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
+            } else {
+                // no permissions required or already grunted, can start crop image activity
+                startCropImageActivity(imageUri);
+            }
+        }
+
+        // handle result of CropImageActivity
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                ((ImageView) findViewById(R.id.iv_qrCode)).setImageURI(result.getUri());
+                Toast.makeText(this, "Cropping successful, Sample: " + result.getSampleSize(), Toast.LENGTH_LONG).show();
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Toast.makeText(this, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
 
 
     private void getUserLocation(){
@@ -326,11 +280,11 @@ public class UserDetailsActivity extends AppCompatActivity {
                         Log.i("res", String.valueOf(response));
                         if(response.data().getLocations_Q().locations()!=null)
                         {
-                        for(int loopVar= 0; loopVar<response.data().getLocations_Q().locations().size(); loopVar++) {
-                            String locationData = response.data().getLocations_Q().locations().get(loopVar);
-                            locationList.add(locationData);
-                            Log.i("location", locationData);
-                        }
+                            for(int loopVar= 0; loopVar<response.data().getLocations_Q().locations().size(); loopVar++) {
+                                String locationData = response.data().getLocations_Q().locations().get(loopVar);
+                                locationList.add(locationData);
+                                Log.i("location", locationData);
+                            }
                         }
 
                         UserDetailsActivity.this.runOnUiThread(new Runnable() {
@@ -354,10 +308,10 @@ public class UserDetailsActivity extends AppCompatActivity {
 
     }
 
-     private void getUserBU(){
+    private void getUserBU(){
 
 
-        Log.i("token in user details",myToken);
+        //Log.i("token in user details",myToken);
         MyAppolloClient.getMyAppolloClient(myToken).query(
                 GetBusinessUnit.builder()
                         .build()).enqueue(
@@ -433,110 +387,17 @@ public class UserDetailsActivity extends AppCompatActivity {
     private void initRetrofitClient() {
         client         = new OkHttpClient.Builder().build();
 
-        apiService = new Retrofit.Builder().baseUrl("http://10.200.44.20:4001").client(client).build().create(ApiService.class);
-    }
-    public Intent getPickImageChooserIntent() {
-
-        Uri outputFileUri = getCaptureImageOutputUri();
-
-        List<Intent> allIntents = new ArrayList<>();
-        PackageManager packageManager = getPackageManager();
-
-        Intent captureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
-        for (ResolveInfo res : listCam) {
-            Intent intent = new Intent(captureIntent);
-            intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-            intent.setPackage(res.activityInfo.packageName);
-            if (outputFileUri != null) {
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-            }
-            allIntents.add(intent);
-        }
-
-        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        galleryIntent.setType("image/*");
-        List<ResolveInfo> listGallery = packageManager.queryIntentActivities(galleryIntent, 0);
-        for (ResolveInfo res : listGallery) {
-            Intent intent = new Intent(galleryIntent);
-            intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-            intent.setPackage(res.activityInfo.packageName);
-            allIntents.add(intent);
-        }
-
-        Intent mainIntent = allIntents.get(allIntents.size() - 1);
-        for (Intent intent : allIntents) {
-            if (intent.getComponent().getClassName().equals("com.android.documentsui.DocumentsActivity")) {
-                mainIntent = intent;
-                break;
-            }
-        }
-        allIntents.remove(mainIntent);
-
-        Intent chooserIntent = Intent.createChooser(mainIntent, "Select source");
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, allIntents.toArray(new Parcelable[allIntents.size()]));
-
-        return chooserIntent;
-    }
-    private Uri getCaptureImageOutputUri() {
-        Uri outputFileUri = null;
-        File getImage = getExternalFilesDir("");
-        if (getImage != null) {
-            outputFileUri = Uri.fromFile(new File(getImage.getPath(), "profile.jpeg"));
-        }
-        return outputFileUri;
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-
-        if (resultCode == Activity.RESULT_OK) {
-
-            capturedImage = findViewById(R.id.capturedImage);
-
-            if (requestCode == IMAGE_RESULT) {
-
-
-                String filePath = getImageFilePath(data);
-                if (filePath != null) {
-                    mBitmap = BitmapFactory.decodeFile(filePath);
-                    capturedImage.setImageBitmap(mBitmap);
-                }
-            }
-
-        }
-
-    }
-    public String getImageFilePath(Intent data) {
-        return getImageFromFilePath(data);
-    }
-    private String getImageFromFilePath(Intent data) {
-        boolean isCamera = data == null || data.getData() == null;
-
-        if (isCamera) return getCaptureImageOutputUri().getPath();
-        else return getPathFromURI(data.getData());
-
-    }
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putParcelable("pic_uri", picUri);
+        apiService = new Retrofit.Builder().baseUrl("http://10.200.44.25:4001").client(client).build().create(ApiService.class);
     }
 
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
 
-        picUri = savedInstanceState.getParcelable("pic_uri");
-    }
-    private String getPathFromURI(Uri contentUri) {
-        String[] proj = {MediaStore.Audio.Media.DATA};
-        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
-    }
+
+
+
+
+
+
+
     private void multipartImageUpload() {
 
         try {
@@ -548,7 +409,6 @@ public class UserDetailsActivity extends AppCompatActivity {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             mBitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
             byte[] bitmapdata = bos.toByteArray();
-
 
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(bitmapdata);
@@ -562,9 +422,9 @@ public class UserDetailsActivity extends AppCompatActivity {
             Log.i("",file.getName());
 
 
-            RequestBody userId = createPartFromString("12345");
+            RequestBody userId = createPartFromString("5c31e8f07db2e805e077c037");
             RequestBody type = createPartFromString("profilePicture");
-            // RequestBody name = RequestBody.create(MediaType.parse("text/plain"), "postPicture");
+            RequestBody name = RequestBody.create(MediaType.parse("text/plain"), "profilePicture");
             HashMap<String, RequestBody> map = new HashMap<>();
             map.put("userId", userId);
             map.put("type", type);
@@ -575,17 +435,7 @@ public class UserDetailsActivity extends AppCompatActivity {
                     System.out.println("Image response"+ response);
 
                     if (response.code() == 200) {
-//                        successMsg.setText("Uploaded Successfully!");
-//                        successMsg.setTextColor(Color.BLUE);
-//
                         System.out.println("Image response"+ response);
-
-                        org.json.simple.JSONObject jsonObj = null;
-                        try {
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
 
                         try {
                             String data = response.body().string();
@@ -598,7 +448,7 @@ public class UserDetailsActivity extends AppCompatActivity {
                             path = jsonJavaRootObject.get("path").toString();
 
                             System.out.println(status+" " + message+" " + path);
-                            //CallPostService();
+                            CallSubmitDataService();
 
 
                         } catch (IOException e) {
@@ -632,9 +482,39 @@ public class UserDetailsActivity extends AppCompatActivity {
     private RequestBody createPartFromString(String data) {
         return RequestBody.create(MultipartBody.FORM,data);
     }
-    private void uploadProfileImage()
+    private void CallSubmitDataService()
     {
+        MyAppolloClient.getMyAppolloClient(myToken).mutate(
+                UserDetailsUpdate.builder().userId(userId).name(userName).gender("F").designation(designation).empId(employeeId).location(workLoc)
+                        .bu(userBu).mobileNumber(mobile).profileImagePath(path)
+                        .build()).enqueue(
+                new ApolloCall.Callback<UserDetailsUpdate.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<UserDetailsUpdate.Data> response) {
+//                                                String message= response.data().otpValidation_M().otpstatus();
+                        System.out.println("res_message in User"+ response);
+                        String status = response.data().updateUserDetails_M().status();
+                        final String message = response.data().updateUserDetails_M().message();
+                        Log.d("res_message in User",message);
+                        // Log.d("res_status userDetails", status);
+                        if(status.equals("Success")){
+                            Log.d("res_message in User", message);
+                            Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
+                            startActivity(intent1);
+                        } else if(status.equals("Failure")){
+                            // if(message.equals("")){
+                            Log.d("res_message in User ", message);
 
+                            // }
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+                    }
+                }
+        );
     }
 
 

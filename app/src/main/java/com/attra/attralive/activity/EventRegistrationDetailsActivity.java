@@ -60,7 +60,7 @@ private void getEventDetails()
             query(GetEventDetails.builder().status("A").build()).enqueue(new ApolloCall.Callback<GetEventDetails.Data>() {
         @Override
         public void onResponse(@Nonnull Response<GetEventDetails.Data> response) {
-            eventpath=response.data().getEventDetails_Q().event_image_path();
+          //  eventpath=response.data().getEventDetails_Q().event_image_path();
             EventRegistrationDetailsActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

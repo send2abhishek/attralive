@@ -104,9 +104,13 @@ public class DashboardActivity extends AppCompatActivity
             userId1 = sharedPreferences.getString("userId", "");
             username = sharedPreferences.getString("userName","");
 
+            Log.i("userid",userId1);
+
       //      Toast.makeText(getApplicationContext(), userId, Toast.LENGTH_LONG).show();
             Log.i("token in dashboard",myToken);
             Log.i("user id in dashboard",userId1);
+            Log.i("user name in dashboard",username);
+
 
         }
         //getProfileDetail();

@@ -35,7 +35,7 @@ EditText userName,userPassword;
 TextView attraemail,forgotpswd,registerHere;
 TextInputLayout passwordtil,usernametil;
 CheckBox saveLoginCheckBox;
-String status,message;
+String status,message, userId;
 
 
     private SharedPreferences loginPreferences;
@@ -161,6 +161,7 @@ String status,message;
                 loginPrefsEditor.putBoolean("saveLogin", true);
                 loginPrefsEditor.putString("username", username);
                 loginPrefsEditor.putString("password", password);
+                loginPrefsEditor.putString("userId",userId);
                 loginPrefsEditor.commit();
             } else {
                 loginPrefsEditor.clear();
@@ -176,6 +177,7 @@ String status,message;
                 public void onResponse(@Nonnull Response<UserLoginAuth.Data> response) {
                     status = response.data().userLoginAuth_Q().status().toString();
                     message = response.data().userLoginAuth_Q().message();
+                    userId = response.data().userLoginAuth_Q().user_id();
                     LoginActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -183,6 +185,8 @@ String status,message;
                                 Toast.makeText(LoginActivity.this, "Login success", Toast.LENGTH_LONG).show();
                                 Intent i=new Intent(LoginActivity.this,DashboardActivity.class);
                                 startActivity(i);
+
+
                             } else if ((status.equals("Failure")) && (message.equals("Invalid Username or Password"))) {
                                 Toast.makeText(LoginActivity.this,"Username or password is incorrect",Toast.LENGTH_LONG).show();
                             }

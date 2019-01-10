@@ -261,7 +261,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 if(!(password.getText().toString().trim().equals(s.toString())))
                 {
                     confrmpswderror.setTextColor(getResources().getColor(R.color.redcolor));
-                    confrmpswderror.setText("Password not matching");
+                    confrmpswderror.setText("Passwords do not match");
                 }
             }
         });

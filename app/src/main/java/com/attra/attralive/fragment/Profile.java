@@ -53,7 +53,9 @@ public class Profile extends Fragment {
             myToken = sharedPreferences.getString("authToken", "");
             userId = sharedPreferences.getString("userId","");
             userName = sharedPreferences.getString("userName","");
+
             Log.i("user id in userDtail",userId);
+
 
 
             //      Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
