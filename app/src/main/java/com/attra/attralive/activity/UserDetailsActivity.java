@@ -137,7 +137,7 @@ public class UserDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_details);
-        userDesign = findViewById(R.id.et_designation);
+      /*  userDesign = findViewById(R.id.et_designation);
         bu = findViewById(R.id.sp_selectbu);
         location = findViewById(R.id.sp_userWorkLocation);
         continueBtn = findViewById(R.id.crd_continuebutton);
@@ -174,7 +174,7 @@ public class UserDetailsActivity extends AppCompatActivity {
 
         getUserBU();
         getUserLocation();
-        /*sendDeviceToken();*/
+        *//*sendDeviceToken();*//*
 
         //postDescription = findViewById(R.id.descText);
 
@@ -214,9 +214,9 @@ public class UserDetailsActivity extends AppCompatActivity {
                 employeeId = empId.getText().toString();
                 String imagePath = "wqeqeqweqe";
 
-                /*int sid=radioGroup.getCheckedRadioButtonId();
+                *//*int sid=radioGroup.getCheckedRadioButtonId();
                 radioButton=findViewById(sid);
-                String gender = radioButton.getText().toString();*/
+                String gender = radioButton.getText().toString();*//*
 
 
                 if (employeeId.trim().equals("")) {
@@ -252,7 +252,7 @@ public class UserDetailsActivity extends AppCompatActivity {
         });
 
 
-       /* continueBtn.setOnClickListener(new View.OnClickListener() {
+       *//* continueBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 System.out.println("==========================MAHA=====");
@@ -285,7 +285,7 @@ public class UserDetailsActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
             }
-        });*/
+        });*//*
 
 
     }
@@ -557,12 +557,12 @@ public class UserDetailsActivity extends AppCompatActivity {
 //
                         System.out.println("Image response"+ response);
 
-                        /*org.json.simple.JSONObject jsonObj = null;
+                        *//*org.json.simple.JSONObject jsonObj = null;
                         try {
 
                         } catch (Exception e) {
                             e.printStackTrace();
-                        }*/
+                        }*//*
 
                         try {
                             String data = response.body().string();
@@ -642,7 +642,24 @@ public class UserDetailsActivity extends AppCompatActivity {
                     }
                 }
         );
-    }
+
+*/    Spinner spinner = (Spinner) findViewById(R.id.spinner);
+
+        // Initializing a String Array
+        String[] plants = new String[]{
+                "Black birch",
+                "Bolean birch",
+                "Canoe birch",
+                "Cherry birch",
+                "European weeping birch"
+        };
+
+        // Initializing an ArrayAdapter
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
+                this,R.layout.spinner_item,plants
+        );
+        spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
+        spinner.setAdapter(spinnerArrayAdapter);}
 
 
 
