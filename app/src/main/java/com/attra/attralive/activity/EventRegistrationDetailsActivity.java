@@ -27,7 +27,9 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+/*
 import graphqlandroid.GetEventDetails;
+*/
 
 public class EventRegistrationDetailsActivity extends AppCompatActivity {
     private TabLayout tabLayout;
@@ -46,7 +48,7 @@ public class EventRegistrationDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event_registration_details);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         eventposter=findViewById(R.id.im_eventposter);
-        getEventDetails();
+       /* getEventDetails();*/
         setupViewPager(viewPager);
       //  intent=getIntent();
 
@@ -54,7 +56,7 @@ public class EventRegistrationDetailsActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
     }
-private void getEventDetails()
+/*private void getEventDetails()
 {
     MyAppolloClient.getMyAppolloClient("Bearer 90f57fce635b44bf4a58733f69f9d24da5f3e6e2").
             query(GetEventDetails.builder().status("A").build()).enqueue(new ApolloCall.Callback<GetEventDetails.Data>() {
@@ -67,13 +69,13 @@ private void getEventDetails()
                     Picasso.with(EventRegistrationDetailsActivity.this).load(eventpath).into(eventposter);
                 }
             });
-            /*eventtitle=response.data().getEventDetails_Q().event_title();
+            *//*eventtitle=response.data().getEventDetails_Q().event_title();
             description=response.data().getEventDetails_Q().Description();
             venue=response.data().getEventDetails_Q().venue();
             startdate=response.data().getEventDetails_Q().Schedule().get(0).start_date();
             starttime=response.data().getEventDetails_Q().Schedule().get(0).start_date();
             startdate=response.data().getEventDetails_Q().Schedule().get(0).start_date();
-            startdate=response.data().getEventDetails_Q().Schedule().get(0).start_date();*/
+            startdate=response.data().getEventDetails_Q().Schedule().get(0).start_date();*//*
 
         }
 
@@ -82,7 +84,7 @@ private void getEventDetails()
 
         }
     });
-}
+}*/
     private void setupViewPager(ViewPager viewPager) {
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
         fragment=new EventRegisteredDetailsFragment();

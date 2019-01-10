@@ -3,5 +3,6 @@ $otp:Int!){
 otpValidation_M(email:$user,
 OTP:$otp){
 otpstatus
+message
 }
 }

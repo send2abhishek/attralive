@@ -3,6 +3,7 @@ $userId:String!
 ){
 getProfileDetails_Q(userId:$userId){
 name,
+empId,
 status,
 email,
 message,
@@ -11,6 +12,7 @@ designation,
 location,
 mobileNumber,
 bu,
-roles
+roles,
+userQRCodeLink
 }
 }

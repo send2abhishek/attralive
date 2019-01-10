@@ -23,8 +23,10 @@
     <string name="holiday_calender">Holiday Calender</string>
     <string name="facilities">Facilities</string>
     <string name="resetpassword">Reset Password</string>
-    <string name="enter_current_password">Enter Current Password</string>
+    <string name="enter_current_password">Current Password</string>
+    <string name="confirm_password">Confirm Password</string>
     <string name="new_password">New Password</string>
+    <string name="cancel">Cancle</string>
 
 
     <!--Dashboard Screen String-->
@@ -40,6 +42,7 @@
     <!--OTP validation screen-->
     <string name="enter_the_otp">Please enter the 4-digit OTP</string>
     <string name="have_not_received_OTP">Haven\'t received OTP</string>
+    <string name="otp">OTP</string>
     <string name="resend_otp">Resend OTP</string>
     <string name="validate">VALIDATE</string>
 
@@ -141,7 +144,7 @@
         4. The user has to login using the Attra email id and the unique PIN\n
         5. In case the user forgets the PIN, Forgot PIN link can be accessed and the user will be prompted for entering his/her Attra email id
     </string>
-    <string name="helpbutton">Help</string>
+    <string name="helpbutton">Help for Registration</string>
     <!-- TODO: Remove or change this placeholder text -->
 
     <string name="hello_blank_fragment">EC-Phase II,Hosur road,"\n"

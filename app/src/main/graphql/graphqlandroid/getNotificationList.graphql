@@ -10,6 +10,9 @@ $userId:String!
     postType
 postId
 ownerId
+ownerName
+userImage
+readStatus
 action
 userId
 userName

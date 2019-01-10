@@ -1,18 +1,24 @@
 package com.attra.attralive.activity;
 
 import android.app.Activity;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,6 +26,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +34,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
@@ -40,6 +48,8 @@ import com.attra.attralive.fragment.HolidayCalender;
 import com.attra.attralive.fragment.HomeFragment;
 import com.attra.attralive.fragment.LearningD;
 import com.attra.attralive.model.NewsFeed;
+import com.attra.attralive.util.Config;
+import com.attra.attralive.util.NotificationUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -49,8 +59,10 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import javax.annotation.Nonnull;
 
+import graphqlandroid.ForgotPassword;
 import graphqlandroid.GetNotificationList;
 import graphqlandroid.GetProfileDetails;
+import graphqlandroid.Logout;
 
 import static com.attra.attralive.activity.OtpValidationActivity.PREFS_AUTH;
 
@@ -59,12 +71,16 @@ public class DashboardActivity extends AppCompatActivity
     Fragment fragment = null;
     ArrayList<NewsFeed> notificationArrayList;
     LinearLayoutManager linearLayoutManager;
-    ImageView profileImage,profileNav;
+    ImageView profileImage;
     TextView userName,userEmail;
     String userId1,username;
     String myToken;
     int notificationSize=0;
     private static final String TAG = "DashboardActivity";
+    public static String  Authorization= "Basic YXBwbGljYXRpb246c2VjcmV0";
+
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
+    private TextView txtRegId, txtMessage;
 
     private SharedPreferences sharedPreferences;
     @Override
@@ -74,7 +90,31 @@ public class DashboardActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         this.getWindow().setStatusBarColor(Color.TRANSPARENT);
-        subscribeToTopic();
+
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                // checking for type intent filter
+                if (intent.getAction().equals(Config.REGISTRATION_COMPLETE)) {
+                    // gcm successfully registered
+                    // now subscribe to `global` topic to receive app wide notifications
+                    FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
+
+                    displayFirebaseRegId();
+
+                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
+                    // new push notification is received
+
+                    String message = intent.getStringExtra("message");
+
+                    Toast.makeText(getApplicationContext(), "Push notification: " + message, Toast.LENGTH_LONG).show();
+
+                    txtMessage.setText(message);
+                }
+            }
+        };
+
 
 
         fragment = new HomeFragment();
@@ -109,16 +149,29 @@ public class DashboardActivity extends AppCompatActivity
             Log.i("user id in dashboard",userId1);
 
         }
-        getProfileDetail();
+
+        /*
+        getProfileDetail();*/
+/*
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Create channel to show notifications.
-            String channelId  = getString(R.string.default_notification_channel_id);
-            String channelName = getString(R.string.default_notification_channel_name);
-            NotificationManager notificationManager =
-                    getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(new NotificationChannel(channelId,
-                    channelName, NotificationManager.IMPORTANCE_LOW));
+            NotificationManager notificationManager = (NotificationManager)getApplicationContext()
+                    .getSystemService(Context.NOTIFICATION_SERVICE);
+            Notification notification = new Notification(R.drawable.icon_blog_filled,
+                    "Message received", System.currentTimeMillis());
+            // Hide the notification after its selected
+            notification.flags |= Notification.FLAG_AUTO_CANCEL;
+
+            //adding LED lights to notification
+            notification.defaults |= Notification.DEFAULT_LIGHTS;
+
+            Intent intent = new Intent("android.intent.action.VIEW",
+                    Uri.parse("http://my.example.com/"));
+            PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
+                    intent, 0);
+            notificationManager.notify(0, notification);
         }
+*/
 
 
         if (getIntent().getExtras() != null) {
@@ -131,6 +184,40 @@ public class DashboardActivity extends AppCompatActivity
         Log.d(TAG, "Refreshed token: " + refreshedToken);
         // TODO: Implement this method to send any registration to your app's servers.
 
+    }
+
+    private void displayFirebaseRegId() {
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(Config.SHARED_PREF, 0);
+        String regId = pref.getString("regId", null);
+
+        Log.e(TAG, "Firebase reg id: " + regId);
+
+        if (!TextUtils.isEmpty(regId))
+            txtRegId.setText("Firebase Reg Id: " + regId);
+        else
+            txtRegId.setText("Firebase Reg Id is not received yet!");
+    }
+
+    protected void onResume() {
+        super.onResume();
+
+        // register GCM registration complete receiver
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(Config.REGISTRATION_COMPLETE));
+
+        // register new push message receiver
+        // by doing this, the activity will be notified each time a new message arrives
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(Config.PUSH_NOTIFICATION));
+
+        // clear the notification area when the app is opened
+        NotificationUtils.clearNotifications(getApplicationContext());
+    }
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+        super.onPause();
     }
 
 /*    private void getRegistrationToken(){
@@ -154,7 +241,7 @@ public class DashboardActivity extends AppCompatActivity
                 });
     }*/
 
-    private void getProfileDetail(){
+   /* private void getProfileDetail(){
 
         MyAppolloClient.getMyAppolloClient(myToken).query(
                 GetProfileDetails.builder().userId(userId1)
@@ -168,8 +255,8 @@ public class DashboardActivity extends AppCompatActivity
                         Log.i("message in dashboard",message);
                         Log.i("mstatus in dashboard",status);
                         if(response.data().getProfileDetails_Q().name()!=null){
-                           /* String message = response.data().getProfileDetails_Q().message();
-                            String status = response.data().getProfileDetails_Q().status();*/
+                           *//* String message = response.data().getProfileDetails_Q().message();
+                            String status = response.data().getProfileDetails_Q().status();*//*
                             if(status.equals("Success")){
                                 String username = response.data().getProfileDetails_Q().name();
                                 String emaiId = response.data().getProfileDetails_Q().email();
@@ -198,26 +285,7 @@ public class DashboardActivity extends AppCompatActivity
                     }
                 }
         );
-    }
-
-
-
-    private void subscribeToTopic(){
-
-        FirebaseMessaging.getInstance().subscribeToTopic("weather")
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        String msg = getString(R.string.msg_subscribed);
-                        if (!task.isSuccessful()) {
-                            msg = getString(R.string.msg_subscribe_failed);
-                        }
-                        Log.d(TAG, msg);
-                      //  Toast.makeText(DashboardActivity.this, msg, Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-    }
+    }*/
 
 
     @Override
@@ -270,8 +338,7 @@ public class DashboardActivity extends AppCompatActivity
             loadFragment(fragment);
 
         }else if (id == R.id.nav_logout) {
-            Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
-            startActivity(intent);
+            logoutUser();
 
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -291,7 +358,7 @@ public class DashboardActivity extends AppCompatActivity
                     loadFragment(fragment);
                     return true;
                 case R.id.navigation_event:
-                    Intent i=new Intent(getApplicationContext(),EventDetailsActivity.class);
+                    Intent i=new Intent(getApplicationContext(),EventRegistrationDetailsActivity.class);
                     startActivity(i);
                     return true;
                 case R.id.navigation_gallery:
@@ -381,6 +448,34 @@ public class DashboardActivity extends AppCompatActivity
             });
         }
         return super.onCreateOptionsMenu(menu);
+    }
+    private void logoutUser(){
+        MyAppolloClient.getMyAppolloClient(Authorization).mutate(Logout.builder().userId(userId1).build()).enqueue(new ApolloCall.Callback<Logout.Data>() {
+            @Override
+            public void onResponse(@Nonnull Response<Logout.Data> response) {
+                String status = response.data().userLogout_M().status();
+                String message = response.data().userLogout_M().message();
+                Log.i("logout status ",status);
+                Log.i(" logout message",message);
+                DashboardActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (status.equals("Success")) {
+                            Toast.makeText(DashboardActivity.this, "Logout Successfully", Toast.LENGTH_LONG).show();
+                            Intent i=new Intent(DashboardActivity.this,LoginActivity.class);
+                            startActivity(i);
+                        } else if ((status.equals("Failure")) && (message.equals("Invalid Username or Password"))) {
+                            Toast.makeText(DashboardActivity.this,"Please try again",Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(@Nonnull ApolloException e) {
+
+            }
+        });
     }
 
 }

@@ -3,12 +3,11 @@ $userId:String!,
 $name:String!,
 $empId:String!,
 $designation:String!,
-$gender:String!,
 $location:String!,
 $bu:String!,
 $mobileNumber:String!,
 $profileImagePath:String!){
-updateUserDetails_M(userId:$userId,name:$name,empId:$empId,designation:$designation,gender:$gender,location:$location,bu:$bu,mobileNumber:$mobileNumber,profileImagePath:$profileImagePath){
+updateUserDetails_M(userId:$userId,name:$name,empId:$empId,designation:$designation,location:$location,bu:$bu,mobileNumber:$mobileNumber,profileImagePath:$profileImagePath){
 status
 message
 }

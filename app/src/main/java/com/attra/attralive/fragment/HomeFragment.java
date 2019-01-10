@@ -63,12 +63,12 @@ public class HomeFragment extends Fragment {
     TextView postFeed;
     ImageView descImage;
     ArrayList<String> Number;
-    String refreshToken,myToken,accesstoken;
+    String refreshToken,myToken,accesstoken,postId;
 
     SharedPreferences sharedPreferences;
 
     ViewPager viewPager;
-    String images[] = {"https://developers.google.com/training/images/tacoma_narrows.mp4","https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png"};
+    String images[] = {"https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png","https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png","https://dsd8ltrb0t82s.cloudfront.net/EventsQRCodes/Att_5c2353c4daea021e34431842.png"};
     SliderAdapter myCustomPagerAdapter;
 
     private static int currentPage = 0;
@@ -92,7 +92,8 @@ public class HomeFragment extends Fragment {
             myToken = sharedPreferences.getString("authToken", "");
             userId1 = sharedPreferences.getString("userId", "");
             username = sharedPreferences.getString("userName","");
-
+            postId = sharedPreferences.getString("postId","");
+            refreshToken = sharedPreferences.getString("refreshToken", "");
             //      Toast.makeText(getApplicationContext(), userId, Toast.LENGTH_LONG).show();
             Log.i("token in dashboard",myToken);
             Log.i("user id in dashboard",userId1);
@@ -105,20 +106,6 @@ public class HomeFragment extends Fragment {
         Number = new ArrayList<>();
         linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 
-        sharedPreferences = getActivity().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
-        if (sharedPreferences.contains("authToken")) {
-            myToken = sharedPreferences.getString("authToken", "");
-            //callservice(myToken);
-            Toast.makeText(getActivity(), myToken, Toast.LENGTH_LONG).show();
-
-        }
-        if (sharedPreferences.contains("refreshToken")) {
-            refreshToken = sharedPreferences.getString("refreshToken", "");
-            Toast.makeText(getActivity(), refreshToken, Toast.LENGTH_LONG).show();
-            //callservice(myToken);
-            //Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
-
-        }
         prepareNewsfeed();
         newsFeedListAdapter = new NewsFeedListAdapter(getActivity(), newsFeedArrayList);
         newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
@@ -197,7 +184,7 @@ public class HomeFragment extends Fragment {
                                   public void run() {
 
                                       newsFeedListAdapter = new NewsFeedListAdapter(getActivity(), newsFeedArrayList);
-                                      newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
+                                    //  newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
                                       newsFeed.setLayoutManager(linearLayoutManager);
                                       newsFeed.setAdapter(newsFeedListAdapter);
                                   }

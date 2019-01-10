@@ -129,7 +129,7 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
     private void initRetrofitClient() {
 client         = new OkHttpClient.Builder().build();
 
-        apiService = new Retrofit.Builder().baseUrl("http://10.200.44.20:4001").client(client).build().create(ApiService.class);
+        apiService = new Retrofit.Builder().baseUrl("http://10.200.42.80:4001").client(client).build().create(ApiService.class);
     }
 
     public Intent CallGetVideoMethod()
@@ -435,8 +435,8 @@ client         = new OkHttpClient.Builder().build();
                     public void onResponse(@Nonnull com.apollographql.apollo.api.Response<PostThought.Data> response) {
                         Log.i("","inside callpostmethod");
                         Log.i("",description);
-                        String status = response.data().addPost_M().userId();
-                        String message = response.data().addPost_M().userId();
+                        String status = response.data().addPost_M().status();
+                        String message = response.data().addPost_M().message();
 
                        // String status = response.data().addPost_M().userId();
                         NewsFeedPostActivity.this.runOnUiThread(new Runnable() {

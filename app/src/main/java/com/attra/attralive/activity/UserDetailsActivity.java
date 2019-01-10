@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -24,6 +25,10 @@ import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
 import com.attra.attralive.Service.ApiService;
 import com.attra.attralive.Service.MyAppolloClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
@@ -38,18 +43,6 @@ public class UserDetailsActivity extends AppCompatActivity   {
     CardView continueBtn;
       List<String> buList = new ArrayList<String>();
       List<String> locationList = new ArrayList<String>();
-    private RadioGroup radioGroup;
-    private RadioButton radioButton;
-
-    ApiService apiService;
-
-    OkHttpClient client;
-    Uri picUri;
-    private ArrayList<String> permissionsToRequest;
-    private ArrayList<String> permissionsRejected = new ArrayList<>();
-    private ArrayList<String> permissions = new ArrayList<>();
-    private final static int ALL_PERMISSIONS_RESULT = 107;
-    private final static int IMAGE_RESULT = 200;
 
     String status, message, path, description,myToken,userName,userId;
     CardView uploadimage;
@@ -76,24 +69,24 @@ public class UserDetailsActivity extends AppCompatActivity   {
         emailId = intent.getStringExtra("emailId");
         password = intent.getStringExtra("password");
         empId = findViewById(R.id.et_empId);
-        userName=intent.getStringExtra("username");
-        userId=intent.getStringExtra("userId");
+        userName = intent.getStringExtra("username");
+        userId = intent.getStringExtra("userId");
         //empId = findViewById(R.id.et_entername);
         phNo = findViewById(R.id.et_mobilenumber);
-        uploadimage=findViewById(R.id.crd_upload);
+        uploadimage = findViewById(R.id.crd_upload);
         uploadImage = findViewById(R.id.im_profileimage);
 
         sharedPreferences = getSharedPreferences(PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
             myToken = sharedPreferences.getString("authToken", "");
 
-            userId = sharedPreferences.getString("userId","");
-            userName = sharedPreferences.getString("userName","");
-            Log.i("user id in userDtail",userId);
+            userId = sharedPreferences.getString("userId", "");
+            userName = sharedPreferences.getString("userName", "");
+            Log.i("user id in userDtail", userId);
             Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
 
-            String username = sharedPreferences.getString("userName","");
-      //      Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
+            String username = sharedPreferences.getString("userName", "");
+            //      Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
 
         }
 
@@ -113,11 +106,6 @@ public class UserDetailsActivity extends AppCompatActivity   {
                 String userBu = bu.getSelectedItem().toString();
                 String mobile = phNo.getText().toString();
                 String employeeId = empId.getText().toString();
-                String imagePath = "wqeqeqweqe";
-
-                int sid=radioGroup.getCheckedRadioButtonId();
-                radioButton=findViewById(sid);
-                String gender = radioButton.getText().toString();
 
 
                 if (employeeId.trim().equals("")) {
@@ -129,7 +117,7 @@ public class UserDetailsActivity extends AppCompatActivity   {
                 } else if (workLoc.trim().equals("")) {
                     ((TextView) location.getSelectedView()).setError("Select Location");
                     ((TextView) location.getSelectedView()).requestFocus();
-                }  else if (userBu.trim().equals("")) {
+                } else if (userBu.trim().equals("")) {
                     ((TextView) bu.getSelectedView()).setError("Select BU");
                     ((TextView) bu.getSelectedView()).requestFocus();
                 } else if (mobile.length() < 10) {
@@ -141,27 +129,31 @@ public class UserDetailsActivity extends AppCompatActivity   {
                     Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
                     startActivity(intent1);*/
                     MyAppolloClient.getMyAppolloClient(myToken).mutate(
-                            UserDetailsUpdate.builder().userId(userId).name(userName).gender("M").designation(designation).empId(employeeId).location(workLoc)
-                                    .bu(userBu).mobileNumber(mobile).profileImagePath(path)
+                            UserDetailsUpdate.builder().userId(userId).name(userName).designation(designation).empId(employeeId).location(workLoc)
+                                    .bu(userBu).mobileNumber(mobile).profileImagePath("asdasd")
                                     .build()).enqueue(
                             new ApolloCall.Callback<UserDetailsUpdate.Data>() {
                                 @Override
                                 public void onResponse(@Nonnull Response<UserDetailsUpdate.Data> response) {
 //                                                String message= response.data().otpValidation_M().otpstatus();
-                                    System.out.println("res_message in User"+ response);
+                                    System.out.println("res_message in User" + response);
                                     String status = response.data().updateUserDetails_M().status();
                                     final String message = response.data().updateUserDetails_M().message();
-                                    Log.d("res_message in User",message);
-                                   // Log.d("res_status userDetails", status);
-                                    if(status.equals("Success")){
+                                    Log.d("res_message in User", message);
+                                    // Log.d("res_status userDetails", status);
+                                    if (status.equals("Success")) {
                                         Log.d("res_message in User", message);
+                                        if(workLoc.equals("Bangalore")){
+                                            subscribeToTopic(workLoc);
+                                        }
+
                                         Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
                                         startActivity(intent1);
-                                    } else if(status.equals("Failure")){
-                                       // if(message.equals("")){
-                                            Log.d("res_message in User ", message);
+                                    } else if (status.equals("Failure")) {
+                                        // if(message.equals("")){
+                                        Log.d("res_message in User ", message);
 
-                                       // }
+                                        // }
                                     }
 
                                 }
@@ -176,7 +168,23 @@ public class UserDetailsActivity extends AppCompatActivity   {
 
             }
         });
+    }
+    private void subscribeToTopic(String location){
 
+        FirebaseMessaging.getInstance().subscribeToTopic(location)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String msg = getString(R.string.msg_subscribed);
+                        if (!task.isSuccessful()) {
+                            msg = getString(R.string.msg_subscribe_failed);
+                            Log.i("subscribed to topic"+""+location,msg);
+                        }
+                        //  Toast.makeText(DashboardActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+    }
 
        /* continueBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -214,7 +222,7 @@ public class UserDetailsActivity extends AppCompatActivity   {
         });*/
 
 
-    }
+
 
 
     private void getUserLocation(){

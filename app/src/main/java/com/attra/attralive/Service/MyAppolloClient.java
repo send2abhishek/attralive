@@ -13,13 +13,11 @@ public class MyAppolloClient {
 
     //  private static  final String BASE_URL = "http://10.200.44.23:4000/graphql";
 
-
   //  private static  final String URL = "http://10.200.44.25:4001/graphql";
 
-    private static  final String URL = "http://10.200.44.23:4001/graphql";
+    private static  final String URL = "http://10.0.75.1:4001/graphql";
 
     // private static  final String BASE_URL = "http://10.200.44.21:4000/graphql";
-
 
     // private static  final String BASE_URL = "http://10.200.42.176:4000/graphql";
 

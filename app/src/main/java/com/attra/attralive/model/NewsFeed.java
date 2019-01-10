@@ -4,7 +4,22 @@ import android.widget.ImageView;
 
 public class NewsFeed {
 
-    String imageId,newsFeedImage;
+    String imageId;
+    String newsFeedImage;
+
+    public NewsFeed(String postId) {
+        this.postId = postId;
+    }
+
+    public String getPostId() {
+        return postId;
+    }
+
+    public void setPostId(String postId) {
+        this.postId = postId;
+    }
+
+    String postId;
     String userName,title,feedTime,feedDescription,noOfLikes,noOfCommenst;
 
     public String getImageId() {

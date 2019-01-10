@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="75dp"
-            android:layout_marginTop="130dp"
+            android:layout_marginTop="70dp"
             android:layout_marginRight="75dp"
             android:layout_marginBottom="45dp"
             android:gravity="center"
@@ -99,7 +99,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="33dp"
-            android:layout_marginTop="210dp"
+            android:layout_marginTop="150dp"
             android:layout_marginRight="36dp"
             android:layout_marginBottom="10dp"
             android:orientation="vertical">
@@ -167,7 +167,6 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="4dp"
                 >
 
                 <TextView
@@ -243,7 +242,6 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="4dp"
                 >
 
                 <TextView
@@ -308,7 +306,6 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="4dp"
                 >
 
                 <TextView
@@ -358,14 +355,12 @@
                 android:lineHeight="24sp"
                 android:paddingTop="5dp"
                 android:singleLine="true"
-
-
                 android:textSize="10sp"
                 android:textStyle="italic" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+               >
                 <CheckBox
                     android:id="@+id/i_agree"
                     android:text="@string/agree"

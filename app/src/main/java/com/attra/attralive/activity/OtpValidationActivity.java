@@ -43,7 +43,7 @@ public class OtpValidationActivity extends AppCompatActivity {
     String emailId,password;
     String otpNumber;
     String token="";
-    int opt;
+    String opt;
     String refreshToken;
     SharedPreferences sharedPreferences;
     private static String accessToken,authToken;
@@ -158,7 +158,7 @@ public class OtpValidationActivity extends AppCompatActivity {
                         }
 
                     }else{
-                        opt= Integer.parseInt(otpNumber);
+                        opt= otpNumber;
                         final ProgressDialog loading = ProgressDialog.show(OtpValidationActivity.this, "Authenticating", "Please wait while we check the entered code", false, false);
                         Handler handler = new Handler();
                         handler.postDelayed(new Runnable() {

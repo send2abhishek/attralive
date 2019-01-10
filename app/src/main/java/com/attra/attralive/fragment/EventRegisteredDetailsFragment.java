@@ -16,7 +16,7 @@ import com.attra.attralive.Service.MyAppolloClient;
 
 import javax.annotation.Nonnull;
 
-import graphqlandroid.GetEventDetails;
+/*import graphqlandroid.GetEventDetails;*/
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,7 +48,7 @@ public class EventRegisteredDetailsFragment extends Fragment {
         regdetails=view.findViewById(R.id.tv_regid);
         qrcode=view.findViewById(R.id.im_qrcode);
         linearLayout=view.findViewById(R.id.ll_qrcode);
-        getEventDetails();
+        /*getEventDetails();*/
         String loc=this.getArguments().getString("location");
         System.out.println("loc"+loc);
         register.setOnClickListener(new View.OnClickListener() {
@@ -60,9 +60,9 @@ public class EventRegisteredDetailsFragment extends Fragment {
         });
         return view;
     }
-    private void getEventDetails()
+   /* private void getEventDetails()
     {
-        MyAppolloClient.getMyAppolloClient("Bearer 90f57fce635b44bf4a58733f69f9d24da5f3e6e2").
+        MyAppolloClient.getMyAppolloClient("Bearer dd40cc6f95df6e7cf802c1493d6fe0a18ddfef5c").
                 query(GetEventDetails.builder().status("A").build()).enqueue(new ApolloCall.Callback<GetEventDetails.Data>() {
             @Override
             public void onResponse(@Nonnull Response<GetEventDetails.Data> response) {
@@ -89,6 +89,6 @@ public class EventRegisteredDetailsFragment extends Fragment {
 
             }
         });
-    }
+    }*/
 
 }

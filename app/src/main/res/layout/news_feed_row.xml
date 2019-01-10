@@ -175,6 +175,11 @@
                     android:layout_marginLeft="10dp"
                     android:text="@string/like"
                     android:textSize="13sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:id="@+id/tv_postId"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
