@@ -15,10 +15,21 @@ import java.util.regex.Pattern;
 
 public class NetworkUtil {
     public static boolean isNetworkAvailable(Context context) {
+        boolean connected = false;
         ConnectivityManager connectivityManager
                 = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE));
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+        Log.i("Networkinfo",""+activeNetworkInfo);
+        if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            connected = true;
+            Log.i("isConnected wifi",""+connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState());
+            Log.i("isConnected mobile data",""+connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState()  );
+        }
+        else {
+            connected = false;
+        }
+        return connected;
     }
     public static String versionRelease(){
         String VersionRelease = Build.VERSION.RELEASE;

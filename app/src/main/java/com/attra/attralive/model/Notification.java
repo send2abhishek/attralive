@@ -1,6 +1,8 @@
 package com.attra.attralive.model;
 
-public class Notification {
+import java.io.Serializable;
+
+public class Notification implements Serializable {
     public String getPostType() {
         return postType;
     }
@@ -119,13 +121,8 @@ public class Notification {
     private String   ownerName;
     private String action;
     private String     userId;
-    private String userName;
 
-    private String   time;
-    private String postMessage;
-    private String      userImage;
-    private String gender;
-    public Notification(String postType, String postId, String ownerId, String ownerName, String action, String userId, String userName, String time, String postMessage, String userImage, String gender) {
+    public Notification(String postType, String postId, String ownerId, String ownerName, String action, String userId, String userName, String time, String postMessage, String userImage, String gender, String readStatus) {
         this.postType = postType;
         this.postId = postId;
         this.ownerId = ownerId;
@@ -137,7 +134,25 @@ public class Notification {
         this.postMessage = postMessage;
         this.userImage = userImage;
         this.gender = gender;
+        this.readStatus = readStatus;
     }
+
+    private String userName;
+
+    private String   time;
+    private String postMessage;
+    private String      userImage;
+    private String gender;
+    private String readStatus;
+
+    public String getReadStatus() {
+        return readStatus;
+    }
+
+    public void setReadStatus(String readStatus) {
+        this.readStatus = readStatus;
+    }
+
 
 
 }

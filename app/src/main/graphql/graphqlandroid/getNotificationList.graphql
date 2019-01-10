@@ -1,20 +1,22 @@
 query getNotificationList(
-$userId:String!
-){
+$userId:String!){
  getUserNotification_Q(userId:$userId)
   {
     status
     message
     notifications
   {
-    postType
-postId
-ownerId
-action
-userId
-userName
-time
-postMessage
+       postType
+       postId
+       ownerId
+       action
+       userId
+       userName
+       time
+       readStatus
+       postMessage
+
+
   }
   }
 }
