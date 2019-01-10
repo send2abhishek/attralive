@@ -50,23 +50,6 @@ public class NotificationAdapter extends  RecyclerView.Adapter<NotificationAdapt
         productViewHolder.textViewTitle.setText(Html.fromHtml(str));
         productViewHolder.textViewShortDesc.setText("2 days ago");
         Picasso.with(mcntx).load("https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546592733408-29a82067b71bd9e3df95e1c0ba5c4daf--fantasy-art-avatar-jake-sully.jpg").fit().into(commentnotifyDp);
-       /* Picasso.with(mcntx).load("https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546592733408-29a82067b71bd9e3df95e1c0ba5c4daf--fantasy-art-avatar-jake-sully.jpg").into(new Target(){
-
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                commentnotifyDp.setBackground(new BitmapDrawable(mcntx.getResources(), bitmap));
-            }
-
-            @Override
-            public void onBitmapFailed(final Drawable errorDrawable) {
-                Log.d("TAG", "FAILED");
-            }
-
-            @Override
-            public void onPrepareLoad(final Drawable placeHolderDrawable) {
-                Log.d("TAG", "Prepare Load");
-            }
-        });*/
 
     }
 
