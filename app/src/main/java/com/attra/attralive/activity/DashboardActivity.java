@@ -27,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
@@ -40,6 +41,7 @@ import com.attra.attralive.fragment.HolidayCalender;
 import com.attra.attralive.fragment.HomeFragment;
 import com.attra.attralive.fragment.LearningD;
 import com.attra.attralive.model.NewsFeed;
+import com.attra.attralive.model.Notification;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -53,6 +55,7 @@ import graphqlandroid.GetNotificationList;
 import graphqlandroid.GetProfileDetails;
 
 import static com.attra.attralive.activity.OtpValidationActivity.PREFS_AUTH;
+import static com.attra.attralive.util.NetworkUtil.isNetworkAvailable;
 
 public class DashboardActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -64,6 +67,7 @@ public class DashboardActivity extends AppCompatActivity
     String userId1,username;
     String myToken;
     int notificationSize=0;
+    ArrayList<Notification> notificationList;
     private static final String TAG = "DashboardActivity";
 
     private SharedPreferences sharedPreferences;
@@ -328,52 +332,66 @@ public class DashboardActivity extends AppCompatActivity
             mImageLayoutView = actionView.findViewById(R.id.imageView);
             myTextLayoutView = actionView.findViewById(R.id.textView);
             ((View) actionView.findViewById(R.id.textView)).setVisibility(View.GONE);
-            MyAppolloClient.getMyAppolloClient(myToken).query(
-                    GetNotificationList.builder().userId(userId1)
-                            .build()).enqueue(
-                    new ApolloCall.Callback<GetNotificationList.Data>() {
-                        @Override
-                        public void onResponse(@Nonnull Response<GetNotificationList.Data> response) {
-                           DashboardActivity.this.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
 
-                                    if(response.data()!=null &&response.data().getUserNotification_Q()!=null && response.data().getUserNotification_Q().notifications()!=null)
-                                    {
-                                        Log.i("Run method notification", "Run method notification");
-                                        notificationSize = response.data().getUserNotification_Q().notifications().size();
-                                        Log.i("notification-size ", notificationSize+"");
-                                        if(notificationSize>0) {
-                                            ((View) actionView.findViewById(R.id.textView)).setVisibility(View.VISIBLE);
-                                            myTextLayoutView.setText(notificationSize + "");
+            notificationList= new ArrayList<Notification>();
+            Log.i("Network availabiltiy",""+isNetworkAvailable(getApplicationContext()));
+            if(isNetworkAvailable(getApplicationContext()) )
+            {
+                MyAppolloClient.getMyAppolloClient("Bearer 33b74950cb40017a6950da06400e71f0208bc327").query(
+                        GetNotificationList.builder().userId("5c2e46f9fb15963434c755f4")
+                                .build()).enqueue(
+                        new ApolloCall.Callback<GetNotificationList.Data>() {
+                            @Override
+                            public void onResponse(@Nonnull Response<GetNotificationList.Data> response) {
+                                DashboardActivity.this.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        if (response.data() != null && response.data().getUserNotification_Q() != null && response.data().getUserNotification_Q().notifications() != null) {
+                                            Log.i("Run method notification", "Run method notification");
+                                            notificationSize = response.data().getUserNotification_Q().notifications().size();
+                                            Log.i("notification-size ", notificationSize + "");
+                                            if (notificationSize > 0) {
+                                                if (((View) actionView.findViewById(R.id.textView)) != null)
+                                                    ((View) actionView.findViewById(R.id.textView)).setVisibility(View.VISIBLE);
+                                                myTextLayoutView.setText(Integer.toString(notificationSize));
+
+                                                for (GetNotificationList.Notification noti : response.data().getUserNotification_Q().notifications()) {
+                                                    notificationList.add(
+                                                            new Notification(noti.postType(), "", "", "", noti.action(), "", noti.userName(), "", noti.postMessage(), "", "", "Y"));
+                                                    Log.i("notifications", noti.action());
+                                                }
+
+                                            }
+                                        } else {
+                                            Log.i("else responsedata", "inside else of  respnse");
+                                            myTextLayoutView.setText("0");
                                         }
-                                    }
-                                    else
-                                    {
-                                        Log.i("else responsedata", "inside else of  respnse");
-                                        myTextLayoutView.setText("0");
-                                    }
 
-                                }
-                            });
+                                    }
+                                });
 
+                            }
+
+                            @Override
+                            public void onFailure(@Nonnull ApolloException e) {
+                                Log.i("Failure", "OnFailure method   " + e.getMessage());
+                            }
                         }
-                        @Override
-                        public void onFailure(@Nonnull ApolloException e) {
-                            Log.i("Failure", "OnFailure method   "+e.getMessage());
-                        }
-                    }
-            );
+                );
+            }else
+            {
+                Toast.makeText(this, "Please check network connectivity", Toast.LENGTH_SHORT).show();
+            }
         }
         if(mImageLayoutView!=null) {
             mImageLayoutView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(DashboardActivity.this, notificationActivity.class);
+                    if(notificationSize>0 && notificationList!=null)
+                        intent.putExtra("NOTIFICATION_LIST", notificationList);
 
-                    intent.putExtra("sagar", "Sagar commented on your postmmmmmmmmmmmmmmmmmmmmmmmmmm");
-                    intent.putExtra("sachin", "Sachin commented on your post");
-                    intent.putExtra("sangaraj", "Sangaraj commented on your postllllllllllllllllllllllllllll");
                     startActivity(intent);
                     ((View) actionView.findViewById(R.id.textView)).setVisibility(View.GONE);
 
