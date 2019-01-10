@@ -281,7 +281,6 @@ private void callservice()
                         String status = response.data().userLoginAuth_Q().status();
                         Log.i("access Token",accessToken);
                         authToken="Bearer"+" "+accessToken;
-                        //refreshToken="Bearer"+" "+RefreshToken;
                         Log.i("brarer token",authToken);
                         if(status.equals("Success")){
 
@@ -294,18 +293,18 @@ private void callservice()
                             editor.putString("userName",userName);
                             editor.commit();
 
-                        }/*else if(status.equals("Failure")){
+                        }else if(status.equals("Failure")){
                             if(message.equals("Invalid token: access token has expired")){
 
                                 GetNewRefreshToken.getRefreshtoken(refreshToken,OtpValidationActivity.this);
 
                                // getNewRefreshToken(refreshToken);
 
-                                *//*getNewRefreshToken(refreshToken);*//*
+                                /*getNewRefreshToken(refreshToken);*/
 
                             }
 
-                        }*/
+                        }
 
                     }
 

@@ -75,7 +75,7 @@ public class Profile extends Fragment {
     private SharedPreferences sharedPreferences;
     String myToken,userId,userName;
     public static final String PREFS_AUTH = "my_auth";
-    ImageView profilePic;
+    ImageView profilePic,qrCode;
 
     ApiService apiService;
 
@@ -132,6 +132,7 @@ public class Profile extends Fragment {
         location = view.findViewById(R.id.sp_userWorkLocation);
         profilePic = view.findViewById(R.id.civ_profileimage);
         submitdata=view.findViewById(R.id.crd_continuebutton);
+        qrCode = view.findViewById(R.id.img_qrCode);
         getProfileDetail();
         askPermissions();
         initRetrofitClient();
@@ -518,12 +519,17 @@ submitdata.setOnClickListener(new View.OnClickListener() {
                                 String location = response.data().getProfileDetails_Q().location();
                                 String businessUnit = response.data().getProfileDetails_Q().bu();
                                 String imgPath = response.data().getProfileDetails_Q().profileImagePath();
+                                String qrCodePath = response.data().getProfileDetails_Q().userQRCodeLink();
+                                String emplyeeId = response.data().getProfileDetails_Q().empId();
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
                                         Picasso.with(getActivity()).load(imgPath).fit().into(profilePic);
                                         userDesign.setText(design);
+                                        Picasso.with(getActivity()).load(qrCodePath).fit().into(qrCode);
                                         phone.setText(phoneNo);
+                                        empId.setText(emplyeeId);
+
 
                                     }
                                 });

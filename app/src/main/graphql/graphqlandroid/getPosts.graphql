@@ -1,11 +1,20 @@
 query getPosts{
   getPosts_Q{
+       status
+       message
     posts{
     userId
+    postId
+    name
+    location
+    dateAndTime
+    timeago
+    likesCount
+    commentsCount
     description
     filePath
+    profileImagePath
     }
-     status
-     message
+
   }
 }

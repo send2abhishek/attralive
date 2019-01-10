@@ -1,6 +1,7 @@
 package com.attra.attralive.activity;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,14 +13,21 @@ import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Parcelable;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.EventLogTags;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -42,27 +50,38 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Nonnull;
+
+import graphqlandroid.GetProfileDetails;
 import graphqlandroid.PostThought;
+import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.http.HTTP;
+import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
+
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class NewsFeedPostActivity extends AppCompatActivity implements View.OnClickListener {
-
     ApiService apiService;
     OkHttpClient client;
     Fragment fragment = null;
@@ -74,15 +93,17 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
     private final static int IMAGE_RESULT = 200;
     ImageView fabCamera, capturedImage;
     Bitmap mBitmap;
+    Intent CropIntent;
+    Uri outputFileUri;
     TextView successMsg;
     EditText postDescription;
+    TextView Etusername, tvlocation;
+    ImageView imageView;
     Button post;
-    String status, message, path, description,myToken,username,userId;
+    String status, message, path, description,myToken,username,userID,location;
     public static final String PREFS_AUTH ="my_auth";
     private SharedPreferences sharedPreferences;
     VideoView videoView;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,14 +111,36 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         // getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_news_feed_post);
-
-
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
         sharedPreferences = getSharedPreferences(PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
             myToken = sharedPreferences.getString("authToken", "");
-            username = sharedPreferences.getString("userName","");
-            userId = sharedPreferences.getString("userId","");
+            //username = sharedPreferences.getString("username","");
         }
+            userID = sharedPreferences.getString("userId","");
+
+            Log.i("rrrrrrrrrrrrrrrrrrr",userID);
+            Log.i("tok",myToken);
+
+            //getNameandLocation();
+
+
+        Etusername = findViewById(R.id.et_username);
+       tvlocation=findViewById(R.id.tv_title);
+       imageView = findViewById(R.id.img_userImage);
+
+       Picasso.with(getApplication())
+               .load("https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546764535169-image.jpeg")
+               .into(imageView);
+
+       Etusername.setText("Mohseen");
+       tvlocation.setText("Bangalore");
+
+
+
+        System.out.println(username);
+
 
         postDescription = findViewById(R.id.descText);
        // capturedImage = findViewById(R.id.capturedImage);
@@ -108,6 +151,43 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
 
         askPermissions();
         initRetrofitClient();
+
+
+
+
+    }
+
+    public void getNameandLocation()
+    {
+        MyAppolloClient.getMyAppolloClient(myToken).query(
+                GetProfileDetails.builder().userId(userID)
+                        .build()).enqueue(
+                new ApolloCall.Callback<GetProfileDetails.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull com.apollographql.apollo.api.Response<GetProfileDetails.Data> response) {
+                        Log.i("res", String.valueOf(response));
+                        String status = response.data().getProfileDetails_Q().status();
+                        Log.i("mstatus in profile", status);
+                        if (response.data().getProfileDetails_Q().name() != null) {
+                            if (status.equals("Success")) {
+                                username = response.data().getProfileDetails_Q().name();
+                                 location = response.data().getProfileDetails_Q().location();
+                                Log.i("location in newsfeed",location);
+
+                            } else if (status.equals("Failure")) {
+
+                            }
+
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+                    }
+                }
+        );
 
     }
 
@@ -129,7 +209,7 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
     private void initRetrofitClient() {
 client         = new OkHttpClient.Builder().build();
 
-        apiService = new Retrofit.Builder().baseUrl("http://10.200.44.20:4001").client(client).build().create(ApiService.class);
+        apiService = new Retrofit.Builder().baseUrl("http://10.200.42.80:4001").client(client).build().create(ApiService.class);
     }
 
     public Intent CallGetVideoMethod()
@@ -145,7 +225,7 @@ client         = new OkHttpClient.Builder().build();
 
     public Intent getPickImageChooserIntent() {
 
-        Uri outputFileUri = getCaptureImageOutputUri();
+         outputFileUri = getCaptureImageOutputUri();
 
         List<Intent> allIntents = new ArrayList<>();
         PackageManager packageManager = getPackageManager();
@@ -184,8 +264,10 @@ client         = new OkHttpClient.Builder().build();
         Intent chooserIntent = Intent.createChooser(mainIntent, "Select source");
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, allIntents.toArray(new Parcelable[allIntents.size()]));
 
+
         return chooserIntent;
     }
+
 
 
     private Uri getCaptureImageOutputUri() {
@@ -211,6 +293,7 @@ client         = new OkHttpClient.Builder().build();
                 String filePath = getImageFilePath(data);
                 if (filePath != null) {
                     mBitmap = BitmapFactory.decodeFile(filePath);
+                   // Bitmap resize = Bitmap.createScaledBitmap(mBitmap, 100,400,true);
                     capturedImage.setImageBitmap(mBitmap);
                 }
             }
@@ -349,7 +432,7 @@ client         = new OkHttpClient.Builder().build();
             Log.i("",file.getName());
 
 
-            RequestBody userId = createPartFromString("12345");
+            RequestBody userId = createPartFromString(userID);
             RequestBody type = createPartFromString("postPicture");
            // RequestBody name = RequestBody.create(MediaType.parse("text/plain"), "postPicture");
 
@@ -396,6 +479,9 @@ client         = new OkHttpClient.Builder().build();
                     }
 
                     Toast.makeText(getApplicationContext(), "Successfully updated" + " ", Toast.LENGTH_LONG).show();
+
+                    Intent i = new Intent(NewsFeedPostActivity.this,DashboardActivity.class);
+                    startActivity(i);
                 }
 
                 @Override
@@ -422,11 +508,12 @@ client         = new OkHttpClient.Builder().build();
     private RequestBody createPartFromString(String data) {
         return RequestBody.create(MultipartBody.FORM,data);
     }
-
         public void CallPostService()
+
         {
+
         MyAppolloClient.getMyAppolloClient(myToken).mutate(
-                PostThought.builder().userId(userId).description(description).filePath(path).build()).enqueue(
+                PostThought.builder().userId(userID).description(description).filePath(path).build()).enqueue(
                 new ApolloCall.Callback<PostThought.Data>() {
                     @Override
                     public void onResponse(@Nonnull com.apollographql.apollo.api.Response<PostThought.Data> response) {
@@ -453,7 +540,8 @@ client         = new OkHttpClient.Builder().build();
         );
 
 
-        finish();
+        Intent i = new Intent(getApplication(),DashboardActivity.class);
+        startActivity(i);
     }
 
 
@@ -470,15 +558,9 @@ client         = new OkHttpClient.Builder().build();
 
 
             case R.id.btn_postnewsFeed:
-                if(postDescription.getText().toString().isEmpty())
-                {
-                    postDescription.setError("Description cannot be emopty");
-                    postDescription.requestFocus();
-                }
-                else
-                {
-                    description = postDescription.getText().toString();
-                }
+
+               description = postDescription.getText().toString();
+
                 if (mBitmap != null)
                     multipartImageUpload();
                 else {

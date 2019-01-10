@@ -1,0 +1,6 @@
+mutation Logout($userId: String!){
+userLogout_M(userId:$userId){
+status
+message
+}
+}

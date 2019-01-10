@@ -1,4 +1,6 @@
 package com.attra.attralive.activity;
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.ActivityNotFoundException;
@@ -14,12 +16,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 
-import android.graphics.Bitmap;
-import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -30,6 +30,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -46,7 +47,12 @@ import com.attra.attralive.R;
 import com.attra.attralive.Service.ApiService;
 import com.attra.attralive.Service.MyAppolloClient;
 import com.attra.attralive.util.GetNewRefreshToken;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -82,31 +88,20 @@ import graphqlandroid.UserDetailsUpdate;
 public class UserDetailsActivity extends AppCompatActivity {
     Spinner bu, location;
     CardView continueBtn;
-
-    TextView dob;
-    List<String> buList = new ArrayList<String>();
-    List<String> locationList = new ArrayList<String>();
-    private RadioGroup radioGroup;
-    private RadioButton radioButton;
-
-    ApiService apiService;
-
-    OkHttpClient client;
-
-
+      List<String> buList = new ArrayList<String>();
+      List<String> locationList = new ArrayList<String>();
 
     Fragment fragment = null;
+    OkHttpClient client;
 
-
-    Uri picUri,outputFileUri;
+    ApiService apiService;
+    Uri picUri;
     private ArrayList<String> permissionsToRequest;
     private ArrayList<String> permissionsRejected = new ArrayList<>();
     private ArrayList<String> permissions = new ArrayList<>();
     private final static int ALL_PERMISSIONS_RESULT = 107;
     private final static int IMAGE_RESULT = 200;
     private final static int PIC_CROP = 2;
-
-
 
     EditText postDescription;
 
@@ -117,6 +112,7 @@ public class UserDetailsActivity extends AppCompatActivity {
     Bitmap mBitmap;
     TextView successMsg, Description;
     Button post;
+    Uri outputFileUri;
 
 
 
@@ -129,13 +125,6 @@ public class UserDetailsActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
 
-
-
-   /* private SharedPreferences sharedPreferences;
-    String myToken;*/
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -144,15 +133,12 @@ public class UserDetailsActivity extends AppCompatActivity {
         bu = findViewById(R.id.sp_selectbu);
         location = findViewById(R.id.sp_userWorkLocation);
         continueBtn = findViewById(R.id.crd_continuebutton);
-        // Intent intent = getIntent();
-        // emailId = intent.getStringExtra("emailId");
-        // password = intent.getStringExtra("password");
 
         empId = findViewById(R.id.et_empId);
 
-        // userName=intent.getStringExtra("username");
-        // userId=intent.getStringExtra("userId");
-        //empId = findViewById(R.id.et_entername);
+        phNo = findViewById(R.id.et_mobilenumber);
+        uploadimage = findViewById(R.id.crd_upload);
+
         phNo = findViewById(R.id.et_mobilenumber);
 
         uploadimage=findViewById(R.id.crd_upload);
@@ -184,6 +170,8 @@ public class UserDetailsActivity extends AppCompatActivity {
 //        post = findViewById(R.id.btn_postnewsFeed);
         //fabCamera.setOnClickListener(this);
         // post.setOnClickListener(this);
+      //  getUserBU();
+        //getUserLocation();
 
 
         askPermissions();
@@ -192,8 +180,9 @@ public class UserDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //uploadProfileImage();
-                startActivityForResult(getPickImageChooserIntent(), IMAGE_RESULT);
+               // startActivityForResult(getPickImageChooserIntent(v), IMAGE_RESULT);
                 // multipartImageUpload();
+                onSelectImageClick(v);
 
 
 
@@ -207,15 +196,18 @@ public class UserDetailsActivity extends AppCompatActivity {
 
 
                 designation = userDesign.getText().toString();
-               // workLoc = location.getSelectedItem().toString();
-               // userBu = bu.getSelectedItem().toString();
+                // workLoc = location.getSelectedItem().toString();
+                // userBu = bu.getSelectedItem().toString();
                 mobile = phNo.getText().toString();
                 employeeId = empId.getText().toString();
+                String userName = "Awnish";
+                //String userId = "asd";
 
-                /*int sid=radioGroup.getCheckedRadioButtonId();
-                radioButton=findViewById(sid);
-                String gender = radioButton.getText().toString();*/
-
+                String designation = userDesign.getText().toString();
+                String workLoc = location.getSelectedItem().toString();
+                String userBu = bu.getSelectedItem().toString();
+                String mobile = phNo.getText().toString();
+                String employeeId = empId.getText().toString();
 
                 if (employeeId.trim().equals("")) {
                     empId.setError("Employee Id is required");
@@ -226,66 +218,119 @@ public class UserDetailsActivity extends AppCompatActivity {
                 } else if (workLoc.trim().equals("")) {
                     ((TextView) location.getSelectedView()).setError("Select Location");
                     ((TextView) location.getSelectedView()).requestFocus();
-                }  else if (userBu.trim().equals("")) {
+                } else if (userBu.trim().equals("")) {
                     ((TextView) bu.getSelectedView()).setError("Select BU");
                     ((TextView) bu.getSelectedView()).requestFocus();
                 } else if (mobile.length() < 10) {
                     phNo.setError("Enter valid Contact Number");
                     phNo.requestFocus();
                 } else {
-                    if(mBitmap!=null)
+                    if (mBitmap != null)
                         multipartImageUpload();
-                    else
-                    {
-                        path="https://dsd8ltrb0t82s.cloudfront.net/ProfilePictures/1546848719271-image.jpeg";
+                    else {
+                        path = "https://dsd8ltrb0t82s.cloudfront.net/ProfilePictures/1546848719271-image.jpeg";
                         CallSubmitDataService(myToken);
                     }
-                    // Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
-                    // startActivity(intent1);
+
 
                 }
 
+                MyAppolloClient.getMyAppolloClient(myToken).mutate(
+                        UserDetailsUpdate.builder().userId(userId).name(userName).designation(designation).empId(employeeId).location(workLoc)
+                                .bu(userBu).mobileNumber(mobile).profileImagePath("asdasd")
+                                .build()).enqueue(
+                        new ApolloCall.Callback<UserDetailsUpdate.Data>() {
+                            @Override
+                            public void onResponse(@Nonnull Response<UserDetailsUpdate.Data> response) {
+                                System.out.println("res_message in User" + response);
+                                String status = response.data().updateUserDetails_M().status();
+                                final String message = response.data().updateUserDetails_M().message();
+                                Log.d("res_message in User", message);
+                                // Log.d("res_status userDetails", status);
+                                if (status.equals("Success")) {
+                                    Log.d("res_message in User", message);
+                                    if (workLoc.equals("Bangalore")) {
+                                        subscribeToTopic(workLoc);
+                                    }
+
+                                    Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
+                                    startActivity(intent1);
+                                } else if (status.equals("Failure")) {
+                                    // if(message.equals("")){
+                                    Log.d("res_message in User ", message);
+
+                                    // }
+                                }
+
+                            }
+
+                            @Override
+                            public void onFailure(@Nonnull ApolloException e) {
+                            }
+                        }
+                );
 
             }
         });
 
+    }
 
-       /* continueBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.println("==========================MAHA=====");
-                int selectedId = radioSexGroup.getCheckedRadioButtonId();
-                // find the radiobutton by returned id
-                radioSexButton = (RadioButton) findViewById(selectedId);
-                gender= radioSexButton.getText().toString();
-                locationValue = location.getSelectedItem().toString();
-                buValue = bu.getSelectedItem().toString();
+    private void subscribeToTopic(String location){
 
-                Toast.makeText(UserDetailsActivity.this, ""+gender+"="+designationValue+"="+locationValue+"="+buValue, Toast.LENGTH_SHORT).show();
-                System.out.println("===========================NANDI===="+gender+"="+designationValue+"="+locationValue+"="+buValue);
-                if(gender==null){
-                    Toast.makeText(UserDetailsActivity.this, "Please Select Gender", Toast.LENGTH_SHORT).show();
-                }else if(designationValue.equals("Please select")){
-                    Toast.makeText(UserDetailsActivity.this, "Please Select Designation", Toast.LENGTH_SHORT).show();
-                }else if(locationValue.equals("Please select")){
-                    Toast.makeText(UserDetailsActivity.this, "Please Select Location", Toast.LENGTH_SHORT).show();
-                }else if(buValue.equals("Please select")){
-                    Toast.makeText(UserDetailsActivity.this, "Please Select BU", Toast.LENGTH_SHORT).show();
-                }else if(designationValue==null){
-                    Toast.makeText(UserDetailsActivity.this, "Please Select Designation", Toast.LENGTH_SHORT).show();
-                }else if(designationValue==null){
-                    Toast.makeText(UserDetailsActivity.this, "Please Select Designation", Toast.LENGTH_SHORT).show();
-                }
-                else {
+        FirebaseMessaging.getInstance().subscribeToTopic(location)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String msg = getString(R.string.msg_subscribed);
+                        if (!task.isSuccessful()) {
+                            msg = getString(R.string.msg_subscribe_failed);
+                            Log.i("subscribed to topic"+""+location,msg);
+                        }
+                        //  Toast.makeText(DashboardActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+    }
 
 
-                    Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
-                    startActivity(intent);
-                }
+    public void onSelectImageClick(View view) {
+        CropImage.startPickImageActivity(this);
+    }
+    private void startCropImageActivity(Uri imageUri) {
+        CropImage.activity(imageUri)
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setMultiTouchEnabled(true)
+                .start(this);
+    }
+    @Override
+    @SuppressLint("NewApi")
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        // handle result of pick image chooser
+        if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            Uri imageUri = CropImage.getPickImageResultUri(this, data);
+
+            // For API >= 23 we need to check specifically that we have permissions to read external storage.
+            if (CropImage.isReadExternalStoragePermissionsRequired(this, imageUri)) {
+                // request permissions and handle the result in onRequestPermissionsResult()
+                picUri = imageUri;
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
+            } else {
+                // no permissions required or already grunted, can start crop image activity
+                startCropImageActivity(imageUri);
             }
-        });*/
+        }
 
-
+        // handle result of CropImageActivity
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                ((ImageView) findViewById(R.id.iv_qrCode)).setImageURI(result.getUri());
+                Toast.makeText(this, "Cropping successful, Sample: " + result.getSampleSize(), Toast.LENGTH_LONG).show();
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Toast.makeText(this, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
 
@@ -442,160 +487,13 @@ public class UserDetailsActivity extends AppCompatActivity {
         return (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1);
     }
     private void initRetrofitClient() {
-        client         = new OkHttpClient.Builder().build();
+        client = new OkHttpClient.Builder().build();
 
         apiService = new Retrofit.Builder().baseUrl("http://10.200.44.25:4001").client(client).build().create(ApiService.class);
     }
-    public Intent getPickImageChooserIntent() {
-
-         outputFileUri = getCaptureImageOutputUri();
-
-        List<Intent> allIntents = new ArrayList<>();
-        PackageManager packageManager = getPackageManager();
-
-        Intent captureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
-        for (ResolveInfo res : listCam) {
-            Intent intent = new Intent(captureIntent);
-            intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-            intent.setPackage(res.activityInfo.packageName);
-            if (outputFileUri != null) {
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-            }
-            allIntents.add(intent);
-        }
-
-        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        galleryIntent.setType("image/*");
-        List<ResolveInfo> listGallery = packageManager.queryIntentActivities(galleryIntent, 0);
-        for (ResolveInfo res : listGallery)
-        {
-            Intent intent = new Intent(galleryIntent);
-            intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-            intent.setPackage(res.activityInfo.packageName);
-            allIntents.add(intent);
-        }
-
-        Intent mainIntent = allIntents.get(allIntents.size() - 1);
-        for (Intent intent : allIntents) {
-            if (intent.getComponent().getClassName().equals("com.android.documentsui.DocumentsActivity")) {
-                mainIntent = intent;
-                break;
-            }
-        }
-        allIntents.remove(mainIntent);
-
-        Intent chooserIntent = Intent.createChooser(mainIntent, "Select source");
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, allIntents.toArray(new Parcelable[allIntents.size()]));
-
-        return chooserIntent;
-    }
-    private Uri
-    getCaptureImageOutputUri() {
-        Uri outputFileUri = null;
-        File getImage = getExternalFilesDir("");
-        if (getImage != null) {
-            outputFileUri = Uri.fromFile(new File(getImage.getPath(), "profile.jpeg"));
-        }
-        return outputFileUri;
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 
-        if (resultCode == Activity.RESULT_OK) {
 
-            //capturedImage = findViewById(R.id.im_profileimage);
-
-            if (requestCode == IMAGE_RESULT) {
-
-
-                String filePath = getImageFilePath(data);
-                //cropImage();
-                System.out.println("file path"+filePath);
-                if (filePath != null) {
-                    mBitmap = BitmapFactory.decodeFile(filePath);
-                    upload.setImageDrawable(null);
-                    upload.setImageBitmap(mBitmap);
-
-                }
-            }
-            else if(requestCode==PIC_CROP)
-            {
-               Bundle extras = data.getExtras();
-                //get the cropped bitmap
-                Bitmap thePic = extras.getParcelable("data");
-
-                /*String filePath = getImageFilePath(data);
-                System.out.println("file path"+filePath);
-                if (filePath != null) {
-                    mBitmap = BitmapFactory.decodeFile(filePath);
-                    upload.setImageDrawable(null);
-                    upload.setImageBitmap(mBitmap);
-
-                }*/
-            }
-
-        }
-
-    }
-    private void cropImage()
-    {
-        try {
-            Intent cropIntent = new Intent("com.android.camera.action.CROP");
-            //indicate image type and Uri
-            cropIntent.setDataAndType(outputFileUri, "image/*");
-
-            //set crop properties
-            cropIntent.putExtra("crop", "true");
-            //indicate aspect of desired crop
-            cropIntent.putExtra("aspectX", 1);
-            cropIntent.putExtra("aspectY", 1);
-            //indicate output X and Y
-            cropIntent.putExtra("outputX", 256);
-            cropIntent.putExtra("outputY", 256);
-            //retrieve data on return
-            cropIntent.putExtra("return-data", true);
-            //start the activity - we handle returning in onActivityResult
-            startActivityForResult(cropIntent, PIC_CROP);
-        }
-        catch(ActivityNotFoundException anfe){
-            //display an error message
-            String errorMessage = "Whoops - your device doesn't support the crop action!";
-            Toast toast = Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT);
-            toast.show();
-        }
-    }
-    public String getImageFilePath(Intent data) {
-        return getImageFromFilePath(data);
-    }
-    private String getImageFromFilePath(Intent data) {
-        boolean isCamera = data == null || data.getData() == null;
-
-        if (isCamera) return getCaptureImageOutputUri().getPath();
-        else return getPathFromURI(data.getData());
-
-    }
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putParcelable("pic_uri", picUri);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
-        picUri = savedInstanceState.getParcelable("pic_uri");
-    }
-    private String getPathFromURI(Uri contentUri) {
-        String[] proj = {MediaStore.Audio.Media.DATA};
-        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
-    }
     private void multipartImageUpload() {
 
         try {
@@ -633,17 +531,7 @@ public class UserDetailsActivity extends AppCompatActivity {
                     System.out.println("Image response"+ response);
 
                     if (response.code() == 200) {
-//                        successMsg.setText("Uploaded Successfully!");
-//                        successMsg.setTextColor(Color.BLUE);
-//
                         System.out.println("Image response"+ response);
-
-                        /*org.json.simple.JSONObject jsonObj = null;
-                        try {
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }*/
 
                         try {
                             String data = response.body().string();

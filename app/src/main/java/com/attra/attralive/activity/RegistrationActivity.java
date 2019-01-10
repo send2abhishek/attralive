@@ -64,7 +64,8 @@ public class RegistrationActivity extends AppCompatActivity {
         mi_agree = (CheckBox) findViewById(R.id.i_agree);
         help = findViewById(R.id.tv_help);
 
-
+        ProgressDialog progressdialog = new ProgressDialog(RegistrationActivity.this);
+        progressdialog.setMessage("Please Wait....");
         /*fullname.setText(FirebaseInstanceId.getInstance().getToken());*/
         //fullname.requestFocus();
         regbutton=findViewById(R.id.crd_regbutton);
@@ -212,7 +213,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 if(!(password.getText().toString().trim().equals(s.toString())))
                 {
                     confrmpswderror.setTextColor(getResources().getColor(R.color.redcolor));
-                    confrmpswderror.setText("Password not matching");
+                    confrmpswderror.setText("Passwords do not match");
                 }
             }
         });
@@ -223,14 +224,8 @@ public class RegistrationActivity extends AppCompatActivity {
                 if (!(mi_agree.isChecked())) {
                     Toast.makeText(RegistrationActivity.this, R.string.error_checkbox, Toast.LENGTH_SHORT).show();
                 } else {
-                    final ProgressDialog loading = ProgressDialog.show(RegistrationActivity.this, "Registering", "Please wait ", false, false);
-                    Handler handler = new Handler();
                     pwd = password.getText().toString();
-                    /*Intent intent = new Intent(RegistrationActivity.this, OtpValidationActivity.class);*/
-
-                    handler.postDelayed(new Runnable() {
-                        public void run() {
-                            loading.dismiss();
+                            progressdialog.show();
                             emailId = email.getText().toString() + attraEmail.getText().toString();
                             MyAppolloClient.getMyAppolloClient(token).mutate(UserRegistration.builder().name(fullname.getText().toString()).
                                     email((email.getText().toString() + attraEmail.getText().toString())).password(password.getText().toString()).build()).
@@ -244,6 +239,7 @@ public class RegistrationActivity extends AppCompatActivity {
                                                 @Override
                                                 public void run() {
                                                     if (status.equals("Success")) {
+                                                        progressdialog.dismiss();
                                                         linearLayout1.setVisibility(View.GONE);
                                                         linearLayout2.setVisibility(View.GONE);
                                                         Toast.makeText(RegistrationActivity.this, "otp sent to your registered emailid", Toast.LENGTH_LONG).show();
@@ -254,6 +250,7 @@ public class RegistrationActivity extends AppCompatActivity {
                                                         Log.i("pass in Reg", pwd);
                                                         startActivity(intent);
                                                     } else if ((status.equals("Failure")) && (message.equals("User already exists"))) {
+                                                        progressdialog.dismiss();
                                                         linearLayout1.setVisibility(View.GONE);
                                                         linearLayout2.setVisibility(View.GONE);
                                                         Toast.makeText(RegistrationActivity.this, "Already registered. Please Login", Toast.LENGTH_LONG).show();
@@ -270,9 +267,6 @@ public class RegistrationActivity extends AppCompatActivity {
 
                                         }
                                     });
-
-                        }
-                    }, 3000);
 
 
                 }

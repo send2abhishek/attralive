@@ -64,12 +64,16 @@ public class HomeFragment extends Fragment {
     TextView postFeed;
     ImageView descImage;
     ArrayList<String> Number;
-    String refreshToken,myToken,accesstoken;
+    String refreshToken,myToken,accesstoken,postId;
 
     SharedPreferences sharedPreferences;
 
     ViewPager viewPager;
-    String images[] = {"https://developers.google.com/training/images/tacoma_narrows.mp4","https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png"};
+
+    String images[] = {"https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png","https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png","https://dsd8ltrb0t82s.cloudfront.net/EventsQRCodes/Att_5c2353c4daea021e34431842.png"};
+
+    //String[] images= new String[1];
+    //String images[] = {"https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png","https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png"};
     SliderAdapter myCustomPagerAdapter;
 
     private static int currentPage = 0;
@@ -93,7 +97,8 @@ public class HomeFragment extends Fragment {
             myToken = sharedPreferences.getString("authToken", "");
             userId1 = sharedPreferences.getString("userId", "");
             username = sharedPreferences.getString("userName","");
-
+            postId = sharedPreferences.getString("postId","");
+            refreshToken = sharedPreferences.getString("refreshToken", "");
             //      Toast.makeText(getApplicationContext(), userId, Toast.LENGTH_LONG).show();
             Log.i("token in dashboard",myToken);
             Log.i("user id in dashboard",userId1);
@@ -106,6 +111,7 @@ public class HomeFragment extends Fragment {
         Number = new ArrayList<>();
         linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 
+        prepareNewsfeed(myToken);
         sharedPreferences = getActivity().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
             myToken = sharedPreferences.getString("authToken", "");
@@ -120,11 +126,26 @@ public class HomeFragment extends Fragment {
             //Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
 
         }
-//        prepareNewsfeed();
+
+
+
+
+       // prepareNewsfeed();
+        GetEventWidgetsFromService();
+
+        prepareNewsfeed(myToken);
+
+        System.out.println("After prepareNewsfeed");
         newsFeedListAdapter = new NewsFeedListAdapter(getActivity(), newsFeedArrayList);
         newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
         newsFeed.setLayoutManager(linearLayoutManager);
         newsFeed.setAdapter(newsFeedListAdapter);
+
+
+       // prepareNewsfeed();
+        GetEventWidgetsFromService();
+        System.out.println("Outside method "+images[0]);
+       // prepareNewsfeed();
 
         System.out.println("After prepareNewsfeed");
 
@@ -132,12 +153,13 @@ public class HomeFragment extends Fragment {
 
         myCustomPagerAdapter = new SliderAdapter(getActivity(), images);
         viewPager.setAdapter(myCustomPagerAdapter);
+        autoScroll();
 
         ImageView imageView = view.findViewById(R.id.imageView);
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.blogreadimage);
 
 
-        autoScroll();
+
 
         postFeed.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -224,8 +246,7 @@ public class HomeFragment extends Fragment {
     private void prepareNewsfeed(String myToken) {
 
 
-       MyAppolloClient.getMyAppolloClient("Bearer d25858f45e6638dadacc9b93b7309b8a839d4537").query(
-
+       MyAppolloClient.getMyAppolloClient(myToken).query(
                GetPosts.builder().build()).enqueue(
                new ApolloCall.Callback<GetPosts.Data>() {
                    @Override
@@ -239,12 +260,31 @@ public class HomeFragment extends Fragment {
 
                            for(int i =0;i<response.data().getPosts_Q().posts().size();i++)
                            {
-                               Log.i("",response.data().getPosts_Q().posts().get(i).description());
+                               Log.i("Here",response.data().getPosts_Q().posts().get(i).userId()+
+                                       response.data().getPosts_Q().posts().get(i).postId()
+                                       +response.data().getPosts_Q().posts().get(i).profileImagePath()+
+                                       response.data().getPosts_Q().posts().get(i).filePath()+
+                                       response.data().getPosts_Q().posts().get(i).name()+
+                                       response.data().getPosts_Q().posts().get(i).location()+
+                                       response.data().getPosts_Q().posts().get(i).timeago()+
+                                       response.data().getPosts_Q().posts().get(i).description()+
+                                       response.data().getPosts_Q().posts().get(i).likesCount()+
+                                       response.data().getPosts_Q().posts().get(i).commentsCount());
 
-                              newsFeedList = new NewsFeed("",response.data().getPosts_Q().posts().get(i).filePath(),"","",
-                              "",response.data().getPosts_Q().posts().get(i).description(),"","");
-                             // Log.i("",response.data().getPosts_Q().posts().get(i).description());
-                               Log.i("",response.data().getPosts_Q().posts().get(i).filePath());
+                              newsFeedList = new NewsFeed(
+                                      response.data().getPosts_Q().posts().get(i).userId(),
+                                      response.data().getPosts_Q().posts().get(i).postId(),
+                                      response.data().getPosts_Q().posts().get(i).profileImagePath(),
+                                      response.data().getPosts_Q().posts().get(i).filePath(),
+                                      response.data().getPosts_Q().posts().get(i).name(),
+                                      response.data().getPosts_Q().posts().get(i).location(),
+                                      response.data().getPosts_Q().posts().get(i).timeago(),
+                                      response.data().getPosts_Q().posts().get(i).description(),
+                                      response.data().getPosts_Q().posts().get(i).likesCount(),
+                                      response.data().getPosts_Q().posts().get(i).commentsCount());
+
+
+
 
                               newsFeedArrayList.add(newsFeedList);
 
@@ -253,7 +293,10 @@ public class HomeFragment extends Fragment {
                                   public void run() {
 
                                       newsFeedListAdapter = new NewsFeedListAdapter(getActivity(), newsFeedArrayList);
-                                      newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
+
+                                    //  newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
+
+                                     // newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
                                       newsFeed.setLayoutManager(linearLayoutManager);
                                       newsFeed.setAdapter(newsFeedListAdapter);
                                   }
@@ -270,7 +313,7 @@ public class HomeFragment extends Fragment {
                                    //callservice(myToken);
                                    //Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
                                }
-//                               prepareNewsfeed();
+                               prepareNewsfeed(accesstoken);
 
                        }
                    }
@@ -315,7 +358,7 @@ public class HomeFragment extends Fragment {
 
     }
 
-    public void autoScroll() {
+    public void autoScroll(){
         final Handler handler = new Handler();
         final Runnable Update = () -> {
             if (currentPage == images.length) {

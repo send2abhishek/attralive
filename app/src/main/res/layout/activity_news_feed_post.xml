@@ -13,14 +13,13 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/img_userImage"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="60dp"
             android:layout_gravity="left"
             android:layout_weight="1"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_account_circle_black_24dp"
+
             />
 
         <LinearLayout
@@ -28,17 +27,18 @@
             android:layout_height="wrap_content"
             android:layout_weight="3"
             android:orientation="vertical">
+
             <TextView
-                android:id="@+id/tv_username"
+                android:id="@+id/et_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:text="Awnish Kumar"/>
+                android:textSize="20sp" />
             <TextView
+
+                android:textSize="12sp"
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="subtitle"/>
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </LinearLayout>
 
@@ -102,7 +102,6 @@
                 android:layout_width="1dp"
                 android:layout_height="30dp"
                 android:background="@color/postThoughtsLineColor" />
-
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/img_video"
                 android:layout_width="18dp"

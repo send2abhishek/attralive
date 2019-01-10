@@ -1,0 +1,8 @@
+mutation LikePost(
+$userId: String!,
+$postId: String!){
+postLike_M(userId:$userId,postId:$postId){
+status
+message}
+
+}

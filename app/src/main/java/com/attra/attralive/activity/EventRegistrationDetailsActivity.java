@@ -42,7 +42,6 @@ public class EventRegistrationDetailsActivity extends AppCompatActivity {
     private final List<Fragment> mFragmentList = new ArrayList<>();
     private final List<String> mFragmentTitleList = new ArrayList<>();
     ViewPagerAdapter adapter;
-
     EventRegisteredDetailsFragment fragment;
     FAQFragment faqFragment;
     Intent intent;
@@ -62,6 +61,11 @@ public class EventRegistrationDetailsActivity extends AppCompatActivity {
         intent=getIntent();
         location=intent.getStringExtra("location");
 //       Toast.makeText(getApplicationContext(),intent.getStringExtra("location").toString(),Toast.LENGTH_LONG).show();
+       /* getEventDetails();*/
+        //setupViewPager(viewPager);
+      //  intent=getIntent();
+
+//        Toast.makeText(getApplicationContext(),intent.getStringExtra("location").toString(),Toast.LENGTH_LONG).show();
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         sharedPreferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
@@ -178,13 +182,8 @@ public class EventRegistrationDetailsActivity extends AppCompatActivity {
         fragment=new EventRegisteredDetailsFragment();
         Bundle bundle=new Bundle();
         bundle.putString("location","bangalore");
-        bundle.putString("userId","5c348f2fbce0216b54025908");
         fragment.setArguments(bundle);
         adapter.addFragment(fragment, "Details");
-        fragment=new EventRegisteredDetailsFragment();
-        Bundle bundle1=new Bundle();
-        bundle1.putString("location",location);
-        fragment.setArguments(bundle1);
         adapter.addFragment(new FAQFragment(), "FAQ");
         viewPager.setAdapter(adapter);
     }*/

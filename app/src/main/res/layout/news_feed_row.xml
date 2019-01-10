@@ -15,13 +15,12 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/img_userImage"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="left"
                 android:layout_weight="1"
-                android:scaleType="fitCenter"
                 />
 
             <LinearLayout
@@ -107,6 +106,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:layout_marginTop="4dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
@@ -175,6 +175,11 @@
                     android:layout_marginLeft="10dp"
                     android:text="@string/like"
                     android:textSize="13sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:id="@+id/tv_postId"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
