@@ -327,10 +327,56 @@ public class UserDetailsActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 ((ImageView) findViewById(R.id.im_profileimage)).setImageURI(result.getUri());
                 Toast.makeText(this, "Cropping successful, Sample: " + result.getSampleSize(), Toast.LENGTH_LONG).show();
+
+                String filePath = getImageFilePath(data);
+                Log.i("data",filePath);
+                if(filePath!=null)
+                {
+                    mBitmap = BitmapFactory.decodeFile(filePath);
+                    upload.setImageBitmap(mBitmap);
+                }
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Toast.makeText(this, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG).show();
             }
         }
+    }
+    public String getImageFilePath(Intent data) {
+        return getImageFromFilePath(data);
+    }
+    private String getImageFromFilePath(Intent data) {
+        boolean isCamera = data == null || data.getData() == null;
+
+        if (isCamera) return getCaptureImageOutputUri().getPath();
+        else return getPathFromURI(data.getData());
+
+    }
+    private Uri getCaptureImageOutputUri() {
+        Uri outputFileUri = null;
+        File getImage = getExternalFilesDir("");
+        if (getImage != null) {
+            outputFileUri = Uri.fromFile(new File(getImage.getPath(), "profile.jpeg"));
+        }
+        return outputFileUri;
+    }
+    private String getPathFromURI(Uri contentUri) {
+        String[] proj = {MediaStore.Audio.Media.DATA};
+        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+    }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelable("pic_uri", picUri);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        picUri = savedInstanceState.getParcelable("pic_uri");
     }
 
 
@@ -489,7 +535,7 @@ public class UserDetailsActivity extends AppCompatActivity {
     private void initRetrofitClient() {
         client = new OkHttpClient.Builder().build();
 
-        apiService = new Retrofit.Builder().baseUrl("http://192.168.1.6:4001").client(client).build().create(ApiService.class);
+        apiService = new Retrofit.Builder().baseUrl("http://10.200.44.20:4002").client(client).build().create(ApiService.class);
     }
 
 

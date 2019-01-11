@@ -230,6 +230,8 @@ public class HomeFragment extends Fragment {
 
                            for(int i =0;i<response.data().getPosts_Q().posts().size();i++)
                            {
+                               int likedUSerId = response.data().getPosts_Q().posts().get(i).likesCount();
+
                                Log.i("Here",response.data().getPosts_Q().posts().get(i).userId()+
                                        response.data().getPosts_Q().posts().get(i).postId()
                                        );
