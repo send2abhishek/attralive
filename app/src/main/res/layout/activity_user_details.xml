@@ -108,7 +108,7 @@
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/icon_empid_line"/>
+                        android:src="@drawable/icon_empid_fill"/>
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -134,7 +134,7 @@
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/icon_desig_line"/>
+                        android:src="@drawable/icon_desig_fill"/>
                     <android.support.design.widget.TextInputLayout
                         android:layout_marginTop="10dp"
                         android:layout_width="match_parent"
@@ -186,7 +186,7 @@
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/icon_wrkloc_line"/>
+                        android:src="@drawable/icon_wrkloc_fill"/>
                     <fr.ganfra.materialspinner.MaterialSpinner
                         app:ms_thickness="0.5dp"
                         android:layout_marginLeft="16dp"
@@ -210,7 +210,7 @@
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/icon_bu_line"/>
+                        android:src="@drawable/icon_bu_fill"/>
                     <fr.ganfra.materialspinner.MaterialSpinner
                         app:ms_thickness="0.5dp"
                         android:layout_marginLeft="16dp"
@@ -235,7 +235,7 @@
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/icon_phone_line"/>
+                        android:src="@drawable/icon_phone_fill"/>
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
