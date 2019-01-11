@@ -6,10 +6,14 @@ public class NewsFeed {
 
     String imageId;
     String newsFeedImage;
-
-    public NewsFeed(String postId) {
-        this.postId = postId;
-    }
+    String postId;
+    String userName;
+    String title;
+    String feedTime;
+    String feedDescription;
+    String location;
+    String userid;
+    int  noOfLikes,noOfCommenst;
 
     public String getPostId() {
         return postId;
@@ -18,25 +22,6 @@ public class NewsFeed {
     public void setPostId(String postId) {
         this.postId = postId;
     }
-
-    String postId;
-    String userName;
-
-    public NewsFeed(String imageId, String newsFeedImage, String postId, String userName, String title, String feedTime, String feedDescription, String location, String userid, String postID, int noOfLikes, int noOfCommenst) {
-        this.imageId = imageId;
-        this.newsFeedImage = newsFeedImage;
-        this.postId = postId;
-        this.userName = userName;
-        this.title = title;
-        this.feedTime = feedTime;
-        this.feedDescription = feedDescription;
-        this.location = location;
-        this.userid = userid;
-        this.postID = postID;
-        this.noOfLikes = noOfLikes;
-        this.noOfCommenst = noOfCommenst;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -44,20 +29,6 @@ public class NewsFeed {
     public void setTitle(String title) {
         this.title = title;
     }
-
-    String title;
-    String feedTime;
-    String feedDescription;
-    String location;
-    String userid;
-    String postID;
-    int  noOfLikes,noOfCommenst;
-
-
-
-    public String getPostID() { return postID;}
-
-    public void setPostID(String postId){ this.postID = postId; }
 
     public String getUserid() {return userid;}
 
@@ -129,7 +100,7 @@ public class NewsFeed {
     public NewsFeed(String  userId, String postId, String image, String newsFeedImage, String userName,
                     String location, String feedTime, String feedDescription, int noOfLikes, int noOfCommenst) {
        this.userid = userId;
-        this.postID = postId;
+        this.postId=postId;
         this.imageId = image;
         this.newsFeedImage = newsFeedImage;
         this.userName = userName;

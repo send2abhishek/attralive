@@ -366,7 +366,6 @@ submitdata.setOnClickListener(new View.OnClickListener() {
 
 
         if (resultCode == Activity.RESULT_OK) {
-
             //capturedImage = findViewById(R.id.im_profileimage);
 
             if (requestCode == IMAGE_RESULT) {

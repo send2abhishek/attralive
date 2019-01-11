@@ -75,6 +75,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.http.HTTP;
 import com.google.gson.Gson;
+import com.jakewharton.picasso.OkHttp3Downloader;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import static android.Manifest.permission.CAMERA;
@@ -92,6 +94,7 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
     private final static int ALL_PERMISSIONS_RESULT = 107;
     private final static int IMAGE_RESULT = 200;
     ImageView fabCamera, capturedImage;
+
     Bitmap mBitmap;
     Intent CropIntent;
     Uri outputFileUri;
@@ -113,9 +116,18 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.activity_news_feed_post);
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
+        OkHttpClient httpclient=new OkHttpClient();
+        Picasso picasso = new Picasso.Builder(NewsFeedPostActivity.this)
+                .downloader(new OkHttp3Downloader(httpclient))
+                .build();
         sharedPreferences = getSharedPreferences(PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
             myToken = sharedPreferences.getString("authToken", "");
+            username = sharedPreferences.getString("userName","");
+            /*userId = sharedPreferences.getString("userId","");
+            refreshToken=sharedPreferences.getString("refreshToken","");
+            worklocation=sharedPreferences.getString("location","");
+            profileimage=sharedPreferences.getString("profileImagePath","");*/
             //username = sharedPreferences.getString("username","");
         }
             userID = sharedPreferences.getString("userId","");
@@ -130,8 +142,9 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
        tvlocation=findViewById(R.id.tv_title);
        imageView = findViewById(R.id.img_userImage);
 
-       Picasso.with(getApplication())
-               .load("https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546764535169-image.jpeg")
+       Picasso.with(NewsFeedPostActivity.this)
+               .load("https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546764535169-image.jpeg").
+               memoryPolicy(MemoryPolicy.NO_CACHE)
                .into(imageView);
 
        Etusername.setText("Mohseen");

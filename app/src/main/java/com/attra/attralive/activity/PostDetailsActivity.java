@@ -1,6 +1,7 @@
 package com.attra.attralive.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,6 +28,7 @@ import com.attra.attralive.adapter.PostCommentsAdapter;
 import com.attra.attralive.model.AllComments;
 import com.attra.attralive.model.AllPostLikes;
 import com.attra.attralive.util.GetNewRefreshToken;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -52,10 +55,13 @@ Button post;
 Boolean isLiked=false;
 AllPostLikes allPostLikes;
 AllComments allComments;
+String postIdinput;
 String postId,postuserId,location,filePath,profileImagePath,likedUserId,likedTimeago,likedUserName,likedDateAndTime,
             likedUserLocation,likedUserProfilePath,name,description,dateAndTime,timeago,commentedUserId,
         commentedUserName, commentedUserLocation,commentedUserProfilePath,commentedDateAndTime,commentedTimeago,commentMsg,commentId;
 int likesCount,commentsCount;
+Intent intent;
+String worklocation,profileimage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,22 +81,47 @@ int likesCount,commentsCount;
         commentscount=findViewById(R.id.tv_noOfComments);
         post=findViewById(R.id.bt_post);
         likeimage=findViewById(R.id.img_like);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Post Details");
         allpostcomments=new ArrayList<AllComments>();
         allpostlikeslist=new ArrayList<AllPostLikes>();
         linearLayoutManager1=new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         linearLayoutManager2=new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
+        intent=getIntent();
+        postIdinput=intent.getStringExtra("postId");
         sharedPreferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
+
         if (sharedPreferences.contains("authToken")) {
             myToken = sharedPreferences.getString("authToken", "");
             username = sharedPreferences.getString("userName","");
             userId = sharedPreferences.getString("userId","");
             refreshToken=sharedPreferences.getString("refreshToken","");
+            worklocation=sharedPreferences.getString("location","");
+            profileimage=sharedPreferences.getString("profileImagePath","");
         }
+        Picasso.with(PostDetailsActivity.this).load(profileimage).into(postprofile, new Callback() {
+            @Override
+            public void onSuccess() {
+                Log.d("success","succes");
+            }
+
+            @Override
+            public void onError() {
+                Log.d("error","error");
+            }
+        });
+        getPostDetails(myToken);
 post.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View v) {
-        allComments = new AllComments("gayathry", commentMsg, "bangalore", "ff", "1 sec");
+        allComments = new AllComments(username, addcomments.getText().toString(), worklocation, profileimage, "just now");
         allpostcomments.add(allComments);
+        if(allpostcomments.size()==1) {
+            postCommentsAdapter = new PostCommentsAdapter(PostDetailsActivity.this, allpostcomments);
+            comments.setLayoutManager(linearLayoutManager1);
+            comments.setAdapter(postCommentsAdapter);
+        }
+        else
         postCommentsAdapter.notifyDataSetChanged();
         callPostComments(myToken);
         addcomments.setText("");
@@ -98,7 +129,7 @@ post.setOnClickListener(new View.OnClickListener() {
 
     }
 });
-        getPostDetails(myToken);
+
         addcomments.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -119,10 +150,20 @@ post.setOnClickListener(new View.OnClickListener() {
             }
         });
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        if(itemId == android.R.id.home){
+            finish();
+        }
+        return true;
+
+        //return super.onOptionsItemSelected(item);
+    }
     private void callPostComments(String accesstoken)
     {
-        MyAppolloClient.getMyAppolloClient("Bearer 0b952f1e04572a8b0af6d577878f2b62b91cec94").mutate
-                (PostComments.builder().postId(postidsaved.getText().toString()).userId("5c370261e716cb72105e5fa1").
+        MyAppolloClient.getMyAppolloClient(accesstoken).mutate
+                (PostComments.builder().postId(postIdinput).userId(userId).
                         comment(addcomments.getText().toString()).build()).
                 enqueue(new ApolloCall.Callback<PostComments.Data>() {
                     @Override
@@ -148,7 +189,9 @@ post.setOnClickListener(new View.OnClickListener() {
     }
     private void getPostDetails(String accesstoken)
     {
-        MyAppolloClient.getMyAppolloClient("Bearer 0b952f1e04572a8b0af6d577878f2b62b91cec94").query(GetPostDetails.builder().postId("5c2f09ccb933eb5114649767").build()).enqueue(new ApolloCall.Callback<GetPostDetails.Data>() {
+        System.out.println("inside post"+postIdinput);
+        Log.d("postid",postIdinput);
+        MyAppolloClient.getMyAppolloClient(accesstoken).query(GetPostDetails.builder().postId(postIdinput).build()).enqueue(new ApolloCall.Callback<GetPostDetails.Data>() {
             @Override
             public void onResponse(@Nonnull Response<GetPostDetails.Data> response) {
                 if (response.data().getPostDetails_Q() != null) {

@@ -171,7 +171,7 @@ public class PasswordRecover extends AppCompatActivity {
                 Log.i("pass in forgot pass",password.getText().toString());
 
                 progressdialog.show();
-                MyAppolloClient.getMyAppolloClient("").mutate(ForgotPasswordValidation.builder().email(emailId).oTP(otp.getText().toString()).newPassword(password.getText().toString()).confirmPassword(cnfPassword.getText().toString()).build()).enqueue(new ApolloCall.Callback<ForgotPasswordValidation.Data>() {
+                MyAppolloClient.getMyAppolloClient(" ").mutate(ForgotPasswordValidation.builder().email(emailId).otp(otp.getText().toString()).newPassword(password.getText().toString()).confirmPassword(cnfPassword.getText().toString()).build()).enqueue(new ApolloCall.Callback<ForgotPasswordValidation.Data>() {
                     @Override
                     public void onResponse(@Nonnull Response<ForgotPasswordValidation.Data> response) {
                         String status = response.data().forgotPasswordValidation_M().status();

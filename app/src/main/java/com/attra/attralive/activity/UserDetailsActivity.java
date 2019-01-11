@@ -180,7 +180,7 @@ public class UserDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //uploadProfileImage();
-               // startActivityForResult(getPickImageChooserIntent(v), IMAGE_RESULT);
+               //startActivityForResult(getPickImageChooserIntent(v), IMAGE_RESULT);
                 // multipartImageUpload();
                 onSelectImageClick(v);
 
@@ -196,18 +196,18 @@ public class UserDetailsActivity extends AppCompatActivity {
 
 
                 designation = userDesign.getText().toString();
-                // workLoc = location.getSelectedItem().toString();
-                // userBu = bu.getSelectedItem().toString();
+                workLoc = location.getSelectedItem().toString();
+                userBu = bu.getSelectedItem().toString();
                 mobile = phNo.getText().toString();
                 employeeId = empId.getText().toString();
                 String userName = "Awnish";
                 //String userId = "asd";
 
-                String designation = userDesign.getText().toString();
+               /* String designation = userDesign.getText().toString();
                 String workLoc = location.getSelectedItem().toString();
                 String userBu = bu.getSelectedItem().toString();
                 String mobile = phNo.getText().toString();
-                String employeeId = empId.getText().toString();
+                String employeeId = empId.getText().toString();*/
 
                 if (employeeId.trim().equals("")) {
                     empId.setError("Employee Id is required");
@@ -235,9 +235,9 @@ public class UserDetailsActivity extends AppCompatActivity {
 
                 }
 
-                MyAppolloClient.getMyAppolloClient(myToken).mutate(
+                /*MyAppolloClient.getMyAppolloClient(myToken).mutate(
                         UserDetailsUpdate.builder().userId(userId).name(userName).designation(designation).empId(employeeId).location(workLoc)
-                                .bu(userBu).mobileNumber(mobile).profileImagePath("asdasd")
+                                .bu(userBu).mobileNumber(mobile).profileImagePath(path)
                                 .build()).enqueue(
                         new ApolloCall.Callback<UserDetailsUpdate.Data>() {
                             @Override
@@ -268,7 +268,7 @@ public class UserDetailsActivity extends AppCompatActivity {
                             public void onFailure(@Nonnull ApolloException e) {
                             }
                         }
-                );
+                );*/
 
             }
         });
@@ -325,7 +325,7 @@ public class UserDetailsActivity extends AppCompatActivity {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
-                ((ImageView) findViewById(R.id.iv_qrCode)).setImageURI(result.getUri());
+                ((ImageView) findViewById(R.id.im_profileimage)).setImageURI(result.getUri());
                 Toast.makeText(this, "Cropping successful, Sample: " + result.getSampleSize(), Toast.LENGTH_LONG).show();
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Toast.makeText(this, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG).show();
@@ -489,7 +489,7 @@ public class UserDetailsActivity extends AppCompatActivity {
     private void initRetrofitClient() {
         client = new OkHttpClient.Builder().build();
 
-        apiService = new Retrofit.Builder().baseUrl("http://10.200.44.25:4001").client(client).build().create(ApiService.class);
+        apiService = new Retrofit.Builder().baseUrl("http://192.168.1.6:4001").client(client).build().create(ApiService.class);
     }
 
 
@@ -596,6 +596,11 @@ public class UserDetailsActivity extends AppCompatActivity {
                         // Log.d("res_status userDetails", status);
                         if(status.equals("Success")){
                             Log.d("res_message in User", message);
+                             sharedPreferences = getApplicationContext().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, 0);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("location", workLoc);
+                            editor.putString("profileImagePath", path);
+                            editor.commit();
                             Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
                             intent1.putExtra("location",workLoc);
                             startActivity(intent1);

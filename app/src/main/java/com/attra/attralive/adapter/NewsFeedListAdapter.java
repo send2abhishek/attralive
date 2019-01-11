@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,6 +27,7 @@ import com.attra.attralive.Service.MyAppolloClient;
 import com.attra.attralive.activity.ForgotPasswordActivity;
 import com.attra.attralive.activity.NewsFeedPostActivity;
 import com.attra.attralive.activity.PasswordRecover;
+import com.attra.attralive.activity.PostDetailsActivity;
 import com.attra.attralive.model.NewsFeed;
 
 import com.attra.attralive.model.NewsFeedNew;
@@ -78,15 +80,8 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
     public void onBindViewHolder(MyViewHolder holder, int position) {
         newsFeed = newsFeeds.get(position);
         //postId = newsFeed.getPostId();
-        Log.i("post id",postId);
+      //  Log.i("post id",postId);
           // holder.userImage.setImageResource(newsFeed.getImageId());
-
-        holder.title.setText(newsFeed.getTitle());
-        holder.time.setText(newsFeed.getFeedTime());
-        holder.description.setText(newsFeed.getFeedDescription());
-        holder.noOfLikes.setText(newsFeed.getNoOfLikes());
-        holder.noofComments.setText(newsFeed.getNoOfCommenst());
-        holder.postId.setText(newsFeed.getPostId());
 
         holder.likeImg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,24 +127,16 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
         holder.description.setText(newsFeed.getFeedDescription());
         holder.noOfLikes.setText(String.valueOf(newsFeed.getNoOfLikes()));
         holder.noofComments.setText(String.valueOf(newsFeed.getNoOfCommenst()));
-
-        //holder.descriptionImage.setImageResource(newsFeed.getNewsFeedImage());*/
-
-//        Picasso.with(mcontext)
-//               .load(newsFeed.getNewsFeedImage())
-//               .into(holder.descriptionImage);
-
-       // holder.descriptionImage.setImageResource(newsFeed.getNewsFeedImage());
-
-        /* Picasso.with(mcontext)
+        holder.postId.setText(newsFeed.getPostId());
+        Picasso.with(mcontext)
                 .load(newsFeed.getNewsFeedImage())
-                .into(holder.descriptionImage);*/
+                .into(holder.descriptionImage);
 
         holder.optionmenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                String postid = newsFeed.getPostID();
+                String postid = newsFeed.getPostId();
                 String userId = newsFeed.getUserid();
                 String dummy = "nnn";
 
@@ -206,6 +193,7 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
         TextView userName,title,time,description,noOfLikes,noofComments,like,comment,postId;
         ImageView userImage,descriptionImage,likeImg;
         ImageButton optionmenu;
+        AppCompatActivity activity;
         public MyViewHolder(View itemView) {
             super(itemView);
             userName=itemView.findViewById(R.id.tv_username);
@@ -221,6 +209,16 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
             optionmenu= itemView.findViewById(R.id.ib_popup_menu);
             likeImg = itemView.findViewById(R.id.img_like);
             postId = itemView.findViewById(R.id.tv_postId);
+            activity= (AppCompatActivity) itemView.getContext();
+            System.out.println("adpter"+postId.getText().toString());
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+Intent intent=new Intent(activity,PostDetailsActivity.class);
+intent.putExtra("postId",postId.getText().toString());
+activity.startActivity(intent);
+                }
+            });
         }
     }
 

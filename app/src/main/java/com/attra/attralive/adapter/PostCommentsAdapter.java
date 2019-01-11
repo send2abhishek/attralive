@@ -40,7 +40,7 @@ public class PostCommentsAdapter extends RecyclerView.Adapter<PostCommentsAdapte
         myViewHolder.location.setText(allComments.getUserlocation());
         myViewHolder.time.setText(allComments.getCommenttime());
         myViewHolder.comment.setText(allComments.getCommentmsg());
-        Picasso.with(context).load(allComments.getUserimagepath()).into(myViewHolder.userimage);
+//        Picasso.with(context).load(allComments.getUserimagepath()).into(myViewHolder.userimage);
     }
 
     @Override

@@ -270,43 +270,22 @@ Intent intent;
                                         }
                                     });
                                 } else if (status.equals("Failure")) {
-                                    MyAppolloClient.getMyAppolloClient(GetNewRefreshToken.Authorization).query(GetRefreshToken.builder().
-                                            refreshToken(refreshToken).grant_type("refresh_token").build()).enqueue(new ApolloCall.Callback<GetRefreshToken.Data>() {
-                                        @Override
-                                        public void onResponse(@Nonnull Response<GetRefreshToken.Data> response) {
-                                            String status = response.data().getRefreshToken_Q().status();
-                                            if (status.equals("Success")) {
-                                                String accessToken = response.data().getRefreshToken_Q().accessToken();
-                                                // String tokenExpiry = response.data().getRefreshToken_Q().accessTokenExpiresAt();
-                                                String newRefreshToken = response.data().getRefreshToken_Q().RefreshToken();
-                                                //String refreshTokenExpiry = response.data().getRefreshToken_Q().accessTokenExpiresAt();
-                                                // String user = response.data().getRefreshToken_Q().user();
-                                                // String userName = response.data().getRefreshToken_Q().name();
-                                                Log.d("access Token", accessToken);
-                                                String authToken = "Bearer" + " " + accessToken;
-                                                Log.d("brarer token", authToken);
-                                                SharedPreferences preferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, 0);
-                                                SharedPreferences.Editor editor = preferences.edit();
-                                                editor.putString("authToken", authToken);
-                                                editor.putString("refreshToken", newRefreshToken);
-                                                editor.commit();
+                                    if (message.equals("Invalid token: access token is invalid")) {
+
+                                        GetNewRefreshToken.getRefreshtoken(refreshToken, DashboardActivity.this);
+                                        DashboardActivity.this.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
                                                 sharedPreferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
                                                 if (sharedPreferences.contains("authToken")) {
                                                     String myToken = sharedPreferences.getString("authToken", "");
                                                     getProfileDetail(myToken);
                                                     //Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
 
-                                                    // }
                                                 }
                                             }
-                                        }
-
-
-                                        @Override
-                                        public void onFailure(@Nonnull ApolloException e) {
-
-                                        }
-                                    });
+                                        });
+                                    }
                                 }
 
                             }

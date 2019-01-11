@@ -33,12 +33,14 @@ import com.attra.attralive.Service.MyAppolloClient;
 import com.attra.attralive.activity.DashboardActivity;
 import com.attra.attralive.activity.NewsFeedPostActivity;
 import com.attra.attralive.activity.OtpValidationActivity;
+import com.attra.attralive.activity.UserDetailsActivity;
 import com.attra.attralive.adapter.NewsFeedListAdapter;
 import com.attra.attralive.adapter.SliderAdapter;
 import com.attra.attralive.adapter.WidgetAdapter;
 import com.attra.attralive.model.NewsFeed;
 import com.attra.attralive.model.NewsFeedNew;
 import com.attra.attralive.util.GetNewRefreshToken;
+import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -49,6 +51,7 @@ import javax.annotation.Nonnull;
 
 import graphqlandroid.GetEventWidgets;
 import graphqlandroid.GetPosts;
+import okhttp3.OkHttpClient;
 
 //import static com.attra.attralive.activity.OtpValidationActivity.PREFS_AUTH;
 
@@ -64,7 +67,11 @@ public class HomeFragment extends Fragment {
     TextView postFeed;
     ImageView descImage;
     ArrayList<String> Number;
-    String refreshToken,myToken,accesstoken,postId;
+    /*OkHttpClient client=new OkHttpClient();
+    Picasso picasso = new Picasso.Builder(getActivity())
+            .downloader(new OkHttp3Downloader(client))
+            .build();*/
+    String refreshToken,myToken,accesstoken,postId,location,profileimagepath;
 
     SharedPreferences sharedPreferences;
 
@@ -99,6 +106,8 @@ public class HomeFragment extends Fragment {
             username = sharedPreferences.getString("userName","");
             postId = sharedPreferences.getString("postId","");
             refreshToken = sharedPreferences.getString("refreshToken", "");
+            location = sharedPreferences.getString("location","");
+            profileimagepath = sharedPreferences.getString("profileImagePath", "");
             //      Toast.makeText(getApplicationContext(), userId, Toast.LENGTH_LONG).show();
             Log.i("token in dashboard",myToken);
             Log.i("user id in dashboard",userId1);
@@ -110,57 +119,19 @@ public class HomeFragment extends Fragment {
         newsFeedArrayList = new ArrayList<NewsFeed>();
         Number = new ArrayList<>();
         linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-
-        prepareNewsfeed(myToken);
-        sharedPreferences = getActivity().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
-        if (sharedPreferences.contains("authToken")) {
-            myToken = sharedPreferences.getString("authToken", "");
-            //callservice(myToken);
-            Toast.makeText(getActivity(), myToken, Toast.LENGTH_LONG).show();
-
-        }
-        if (sharedPreferences.contains("refreshToken")) {
-            refreshToken = sharedPreferences.getString("refreshToken", "");
-            Toast.makeText(getActivity(), refreshToken, Toast.LENGTH_LONG).show();
-            //callservice(myToken);
-            //Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
-
-        }
-
-
-
-
-       // prepareNewsfeed();
         GetEventWidgetsFromService();
-
         prepareNewsfeed(myToken);
-
         System.out.println("After prepareNewsfeed");
         newsFeedListAdapter = new NewsFeedListAdapter(getActivity(), newsFeedArrayList);
         newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
         newsFeed.setLayoutManager(linearLayoutManager);
         newsFeed.setAdapter(newsFeedListAdapter);
-
-
-       // prepareNewsfeed();
-        GetEventWidgetsFromService();
-        System.out.println("Outside method "+images[0]);
-       // prepareNewsfeed();
-
-        System.out.println("After prepareNewsfeed");
-
         viewPager = view.findViewById(R.id.viewPager);
-
         myCustomPagerAdapter = new SliderAdapter(getActivity(), images);
         viewPager.setAdapter(myCustomPagerAdapter);
         autoScroll();
-
         ImageView imageView = view.findViewById(R.id.imageView);
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.blogreadimage);
-
-
-
-
         postFeed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -193,9 +164,8 @@ public class HomeFragment extends Fragment {
     private void GetEventWidgetsFromService()
     {
         System.out.println("Inside GetEvent method");
-
         MyAppolloClient.getMyAppolloClient(myToken).query(
-               GetEventWidgets.builder().status("A").build()).enqueue(
+               GetEventWidgets.builder().status("A").location(location).build()).enqueue(
                new ApolloCall.Callback<GetEventWidgets.Data>() {
                    @Override
                    public void onResponse(@Nonnull Response<GetEventWidgets.Data> response) {
@@ -262,14 +232,7 @@ public class HomeFragment extends Fragment {
                            {
                                Log.i("Here",response.data().getPosts_Q().posts().get(i).userId()+
                                        response.data().getPosts_Q().posts().get(i).postId()
-                                       +response.data().getPosts_Q().posts().get(i).profileImagePath()+
-                                       response.data().getPosts_Q().posts().get(i).filePath()+
-                                       response.data().getPosts_Q().posts().get(i).name()+
-                                       response.data().getPosts_Q().posts().get(i).location()+
-                                       response.data().getPosts_Q().posts().get(i).timeago()+
-                                       response.data().getPosts_Q().posts().get(i).description()+
-                                       response.data().getPosts_Q().posts().get(i).likesCount()+
-                                       response.data().getPosts_Q().posts().get(i).commentsCount());
+                                       );
 
                               newsFeedList = new NewsFeed(
                                       response.data().getPosts_Q().posts().get(i).userId(),
@@ -304,17 +267,23 @@ public class HomeFragment extends Fragment {
                            }
                        }
                        else
-                           if (message.equals("Invalid token: access token is invalid")) {
-                               Log.d("www",message);
-                               GetNewRefreshToken.getRefreshtoken(refreshToken, getActivity());
-                               sharedPreferences = getActivity().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
-                               if (sharedPreferences.contains("authToken")) {
-                                    accesstoken = sharedPreferences.getString("authToken", "");
-                                   //callservice(myToken);
-                                   //Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
-                               }
-                               prepareNewsfeed(accesstoken);
+                       if(status.equals("Failure")){
+                           if(message.equals("Invalid token: access token is invalid")){
 
+                               GetNewRefreshToken.getRefreshtoken(refreshToken,getActivity());
+                               getActivity().runOnUiThread(new Runnable() {
+                                   @Override
+                                   public void run() {
+                                       sharedPreferences = getActivity().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
+                                       if (sharedPreferences.contains("authToken")) {
+                                           String myToken = sharedPreferences.getString("authToken", "");
+                                           prepareNewsfeed(myToken);
+                                           Toast.makeText(getActivity(), myToken, Toast.LENGTH_LONG).show();
+
+                                       }
+                                   }
+                               });
+                           }
                        }
                    }
 

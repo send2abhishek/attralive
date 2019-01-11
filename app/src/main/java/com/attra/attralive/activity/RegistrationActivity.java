@@ -225,7 +225,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     Toast.makeText(RegistrationActivity.this, R.string.error_checkbox, Toast.LENGTH_SHORT).show();
                 } else {
                     pwd = password.getText().toString();
-                            progressdialog.show();
+                           // progressdialog.show();
                             emailId = email.getText().toString() + attraEmail.getText().toString();
                             MyAppolloClient.getMyAppolloClient(token).mutate(UserRegistration.builder().name(fullname.getText().toString()).
                                     email((email.getText().toString() + attraEmail.getText().toString())).password(password.getText().toString()).build()).
@@ -235,11 +235,13 @@ public class RegistrationActivity extends AppCompatActivity {
 
                                             status = response.data().addUser_M().status();
                                             message = response.data().addUser_M().message();
+                                            Log.d("status",status);
+                                            Log.d("message",message);
                                             RegistrationActivity.this.runOnUiThread(new Runnable() {
                                                 @Override
                                                 public void run() {
                                                     if (status.equals("Success")) {
-                                                        progressdialog.dismiss();
+                                                      //  progressdialog.dismiss();
                                                         linearLayout1.setVisibility(View.GONE);
                                                         linearLayout2.setVisibility(View.GONE);
                                                         Toast.makeText(RegistrationActivity.this, "otp sent to your registered emailid", Toast.LENGTH_LONG).show();

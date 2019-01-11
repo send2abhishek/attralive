@@ -96,72 +96,73 @@ public class EventRegistrationDetailsActivity extends AppCompatActivity {
     private void getEventDetails(String accesstoken)
 {
     MyAppolloClient.getMyAppolloClient(accesstoken).
-            query(GetEventDetails.builder().status("A").location(location).build()).enqueue(new ApolloCall.Callback<GetEventDetails.Data>() {
+            query(GetEventDetails.builder().status("A").location("bangalore").build()).enqueue(new ApolloCall.Callback<GetEventDetails.Data>() {
         @Override
         public void onResponse(@Nonnull Response<GetEventDetails.Data> response) {
-            String Status=response.data().getEventDetails_Q().eventD().get(0).status();
-            String Message=response.data().getEventDetails_Q().eventD().get(0).message();
-           eventpath=response.data().getEventDetails_Q().eventD().get(0).event_image_path();
-            eventtitle=response.data().getEventDetails_Q().eventD().get(0).event_title();
-            description=response.data().getEventDetails_Q().eventD().get(0).Description();
-            venue=response.data().getEventDetails_Q().eventD().get(0).venue();
-            startdate=response.data().getEventDetails_Q().eventD().get(0).Schedule().start_date();
-            starttime=response.data().getEventDetails_Q().eventD().get(0).Schedule().start_time();
-            enddate=response.data().getEventDetails_Q().eventD().get(0).Schedule().end_date();
-            endtime=response.data().getEventDetails_Q().eventD().get(0).Schedule().end_time();
-            eventId=response.data().getEventDetails_Q().eventD().get(0).id();
+            if(response.data().getEventDetails_Q().eventD()!=null){
+            String Status = response.data().getEventDetails_Q().eventD().get(0).status();
+            String Message = response.data().getEventDetails_Q().eventD().get(0).message();
+            eventpath = response.data().getEventDetails_Q().eventD().get(0).event_image_path();
+            eventtitle = response.data().getEventDetails_Q().eventD().get(0).event_title();
+            description = response.data().getEventDetails_Q().eventD().get(0).Description();
+            venue = response.data().getEventDetails_Q().eventD().get(0).venue();
+            startdate = response.data().getEventDetails_Q().eventD().get(0).Schedule().start_date();
+            starttime = response.data().getEventDetails_Q().eventD().get(0).Schedule().start_time();
+            enddate = response.data().getEventDetails_Q().eventD().get(0).Schedule().end_date();
+            endtime = response.data().getEventDetails_Q().eventD().get(0).Schedule().end_time();
+            eventId = response.data().getEventDetails_Q().eventD().get(0).id();
             EventRegistrationDetailsActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     Picasso.with(EventRegistrationDetailsActivity.this).load(eventpath).into(eventposter);
                     adapter = new ViewPagerAdapter(getSupportFragmentManager());
-                    fragment=new EventRegisteredDetailsFragment();
-                    Bundle bundle=new Bundle();
-                    for(int i=0;i<response.data().getEventDetails_Q().eventD().get(0).registeredUsers().size();i++) {
+                    fragment = new EventRegisteredDetailsFragment();
+                    Bundle bundle = new Bundle();
+                    for (int i = 0; i < response.data().getEventDetails_Q().eventD().get(0).registeredUsers().size(); i++) {
                         reguserId = response.data().getEventDetails_Q().eventD().get(0).registeredUsers().get(i).userId();
                         if (reguserId.equals(userId)) {
-                            bundle.putString("RegistrationId",response.data().getEventDetails_Q().eventD().
+                            bundle.putString("RegistrationId", response.data().getEventDetails_Q().eventD().
                                     get(0).registeredUsers().get(i).registrationId());
-                            bundle.putString("QRcodelink",response.data().getEventDetails_Q().eventD().
+                            bundle.putString("QRcodelink", response.data().getEventDetails_Q().eventD().
                                     get(0).registeredUsers().get(i).QRCodeLink());
-                            bundle.putString("isRegistered","true");
-                        }
-                        else
-                            bundle.putString("isRegistered","false");
+                            bundle.putString("isRegistered", "true");
+                            break;
+                        } else
+                            bundle.putString("isRegistered", "false");
                     }
-                    bundle.putString("Venue",venue);
-                    bundle.putString("StartDate",startdate);
-                    bundle.putString("EndDate",enddate);
-                    bundle.putString("StartTime",starttime);
-                    bundle.putString("EndTime",endtime);
-                    bundle.putString("EventId",endtime);
-                    bundle.putString("Location",location);
+                    bundle.putString("Venue", venue);
+                    bundle.putString("StartDate", startdate);
+                    bundle.putString("EndDate", enddate);
+                    bundle.putString("StartTime", starttime);
+                    bundle.putString("EndTime", endtime);
+                    bundle.putString("EventId", endtime);
+                    bundle.putString("Location", location);
                     fragment.setArguments(bundle);
                     adapter.addFragment(fragment, "Details");
-                    faqFragment=new FAQFragment();
-                    Bundle bundle1=new Bundle();
-                    for(int j=0;j<response.data().getEventDetails_Q().eventD().get(0).FAQs().size();j++) {
+                    faqFragment = new FAQFragment();
+                    Bundle bundle1 = new Bundle();
+                    for (int j = 0; j < response.data().getEventDetails_Q().eventD().get(0).FAQs().size(); j++) {
                         bundle1.putString("Question" + j, response.data().getEventDetails_Q().eventD().get(0).FAQs().get(j).Question());
                         bundle1.putString("Answer" + j, response.data().getEventDetails_Q().eventD().get(0).FAQs().get(j).Answer());
                     }
-                    bundle1.putInt("FAQcount",response.data().getEventDetails_Q().eventD().get(0).FAQs().size());
+                    bundle1.putInt("FAQcount", response.data().getEventDetails_Q().eventD().get(0).FAQs().size());
                     fragment.setArguments(bundle1);
                     adapter.addFragment(new FAQFragment(), "FAQ");
                     viewPager.setAdapter(adapter);
                 }
             });
 
-            if(Status.equals("Failure")){
-                if(Message.equals("Invalid token: access token is invalid")){
+            if (Status.equals("Failure")) {
+                if (Message.equals("Invalid token: access token is invalid")) {
 
-                    GetNewRefreshToken.getRefreshtoken(refreshToken,EventRegistrationDetailsActivity.this);
+                    GetNewRefreshToken.getRefreshtoken(refreshToken, EventRegistrationDetailsActivity.this);
                     EventRegistrationDetailsActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             sharedPreferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
                             if (sharedPreferences.contains("authToken")) {
                                 String myToken = sharedPreferences.getString("authToken", "");
-                               getEventDetails(myToken);
+                                getEventDetails(myToken);
                                 Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
 
                             }
@@ -169,6 +170,7 @@ public class EventRegistrationDetailsActivity extends AppCompatActivity {
                     });
                 }
             }
+        }
         }
 
         @Override

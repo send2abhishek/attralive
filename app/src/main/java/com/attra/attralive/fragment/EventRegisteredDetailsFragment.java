@@ -86,9 +86,12 @@ public class EventRegisteredDetailsFragment extends Fragment {
             Qrcodelink=this.getArguments().getString("QRcodelink");
             regdetails.setText("RegistrationId\n"+regId);
             Picasso.with(getActivity()).load(Qrcodelink).into(qrcode);
+            eventvenue.setText(venue);
+            eventdate.setText(startdate+":"+enddate);
+            eventtime.setText(starttime + ":" + endtime);
         }
         System.out.println("loc"+loc);
-        getEventDetails();
+    //    getEventDetails();
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
