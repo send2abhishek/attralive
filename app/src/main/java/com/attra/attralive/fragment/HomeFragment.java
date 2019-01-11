@@ -221,69 +221,75 @@ public class HomeFragment extends Fragment {
                new ApolloCall.Callback<GetPosts.Data>() {
                    @Override
                    public void onResponse(@Nonnull Response<GetPosts.Data> response) {
-                       String status = response.data().getPosts_Q().status();
-                       String message=response.data().getPosts_Q().message();
-                       Log.d("mesa",message);
-                       if(status.equals("Success"))
-                       {
-                           Log.i("","inside success");
+                       if(response.data().getPosts_Q()!=null) {
+                           String status = response.data().getPosts_Q().status();
+                           String message = response.data().getPosts_Q().message();
+                           Log.d("mesa", message);
+                           if (status.equals("Success")) {
+                               Log.i("", "inside success");
 
-                           for(int i =0;i<response.data().getPosts_Q().posts().size();i++)
-                           {
-                               Log.i("Here",response.data().getPosts_Q().posts().get(i).userId()+
-                                       response.data().getPosts_Q().posts().get(i).postId()
-                                       );
+                               for (int i = 0; i < response.data().getPosts_Q().posts().size(); i++) {
+                                   Log.i("Here", response.data().getPosts_Q().posts().get(i).userId() +
+                                           response.data().getPosts_Q().posts().get(i).postId()
+                                   );
 
-                              newsFeedList = new NewsFeed(
-                                      response.data().getPosts_Q().posts().get(i).userId(),
-                                      response.data().getPosts_Q().posts().get(i).postId(),
-                                      response.data().getPosts_Q().posts().get(i).profileImagePath(),
-                                      response.data().getPosts_Q().posts().get(i).filePath(),
-                                      response.data().getPosts_Q().posts().get(i).name(),
-                                      response.data().getPosts_Q().posts().get(i).location(),
-                                      response.data().getPosts_Q().posts().get(i).timeago(),
-                                      response.data().getPosts_Q().posts().get(i).description(),
-                                      response.data().getPosts_Q().posts().get(i).likesCount(),
-                                      response.data().getPosts_Q().posts().get(i).commentsCount());
-
+                                   newsFeedList = new NewsFeed(
+                                           response.data().getPosts_Q().posts().get(i).userId(),
+                                           response.data().getPosts_Q().posts().get(i).postId(),
+                                           response.data().getPosts_Q().posts().get(i).profileImagePath(),
+                                           response.data().getPosts_Q().posts().get(i).filePath(),
+                                           response.data().getPosts_Q().posts().get(i).name(),
+                                           response.data().getPosts_Q().posts().get(i).location(),
+                                           response.data().getPosts_Q().posts().get(i).timeago(),
+                                           response.data().getPosts_Q().posts().get(i).description(),
+                                           response.data().getPosts_Q().posts().get(i).likesCount(),
+                                           response.data().getPosts_Q().posts().get(i).commentsCount());
 
 
+                                   newsFeedArrayList.add(newsFeedList);
 
-                              newsFeedArrayList.add(newsFeedList);
+                                   getActivity().runOnUiThread(new Runnable() {
+                                       @Override
+                                       public void run() {
 
-                              getActivity().runOnUiThread(new Runnable() {
-                                  @Override
-                                  public void run() {
+                                           newsFeedListAdapter = new NewsFeedListAdapter(getActivity(), newsFeedArrayList);
 
-                                      newsFeedListAdapter = new NewsFeedListAdapter(getActivity(), newsFeedArrayList);
+                                           //  newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
 
-                                    //  newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
+                                           // newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
+                                           newsFeed.setLayoutManager(linearLayoutManager);
+                                           newsFeed.setAdapter(newsFeedListAdapter);
+                                       }
+                                   });
+                               }
+                           } else if (status.equals("Failure")) {
+                               if (message.equals("Invalid token: access token is invalid")) {
 
-                                     // newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
-                                      newsFeed.setLayoutManager(linearLayoutManager);
-                                      newsFeed.setAdapter(newsFeedListAdapter);
-                                  }
-                              });
+                                   GetNewRefreshToken.getRefreshtoken(refreshToken, getActivity());
+                                   getActivity().runOnUiThread(new Runnable() {
+                                       @Override
+                                       public void run() {
+                                           sharedPreferences = getActivity().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
+                                           if (sharedPreferences.contains("authToken")) {
+                                               String myToken = sharedPreferences.getString("authToken", "");
+                                               prepareNewsfeed(myToken);
+                                               Toast.makeText(getActivity(), myToken, Toast.LENGTH_LONG).show();
+
+                                           }
+                                       }
+                                   });
+                               }
                            }
                        }
                        else
-                       if(status.equals("Failure")){
-                           if(message.equals("Invalid token: access token is invalid")){
+                       {
+                           getActivity().runOnUiThread(new Runnable() {
+                               @Override
+                               public void run() {
+                                   Toast.makeText(getActivity(), "No posts available to display", Toast.LENGTH_SHORT).show();
+                               }
+                           });
 
-                               GetNewRefreshToken.getRefreshtoken(refreshToken,getActivity());
-                               getActivity().runOnUiThread(new Runnable() {
-                                   @Override
-                                   public void run() {
-                                       sharedPreferences = getActivity().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
-                                       if (sharedPreferences.contains("authToken")) {
-                                           String myToken = sharedPreferences.getString("authToken", "");
-                                           prepareNewsfeed(myToken);
-                                           Toast.makeText(getActivity(), myToken, Toast.LENGTH_LONG).show();
-
-                                       }
-                                   }
-                               });
-                           }
                        }
                    }
 
