@@ -197,8 +197,8 @@
                         app:ms_enableFloatingLabel="true"
                         app:ms_arrowSize="12dp"
                         app:ms_floatingLabelColor="#949c97"
-                        app:ms_floatingLabelText="Select BU"
-                        app:ms_hint="hint"
+                        app:ms_floatingLabelText="Work Location"
+                        app:ms_hint="Select Location"
                         app:ms_multiline="false" />
                 </LinearLayout>
 
@@ -221,8 +221,8 @@
                         app:ms_enableFloatingLabel="true"
                         app:ms_arrowSize="12dp"
                         app:ms_floatingLabelColor="#949c97"
-                        app:ms_floatingLabelText="Select BU"
-                        app:ms_hint="hint"
+                        app:ms_floatingLabelText=" BU"
+                        app:ms_hint="Select BU"
                         app:ms_multiline="false" />
                 </LinearLayout>
 
