@@ -221,7 +221,8 @@ public class LoginActivity extends AppCompatActivity {
                                 // editor.putString("emailId",emailId);
                                 editor.putString("userId", userId);
                                 editor.putString("userName", userName);
-                                editor.commit();
+                                editor.apply();
+                             //   editor.commit();
                                 Intent i = new Intent(LoginActivity.this, DashboardActivity.class);
                                 startActivity(i);
                             } else if ((status.equals("Failure"))) {
