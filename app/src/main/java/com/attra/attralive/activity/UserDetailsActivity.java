@@ -153,8 +153,10 @@ public class UserDetailsActivity extends AppCompatActivity {
 
 
 
+
         sharedPreferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
+            Toast.makeText(this, "Shared pref val "+"sharedPreferences.getString(\"authToken\", \"\")", Toast.LENGTH_SHORT).show();
             myToken = sharedPreferences.getString("authToken", "");
 
             userId = sharedPreferences.getString("userId","");
@@ -276,7 +278,7 @@ public class UserDetailsActivity extends AppCompatActivity {
                                 location.setAdapter(locationAdapter);
                                 location.setSelection(0);
                                 //spinner6.setAdapter(adapter);
-                                location.setHint("Select an item");
+                                /*location.setHint("Select an item");*/
                                 location.setEnableFloatingLabel(true);
                             }
                         });
@@ -294,7 +296,7 @@ public class UserDetailsActivity extends AppCompatActivity {
     private void getUserBU(){
 
 
-        //Log.i("token in user details",myToken);
+        Log.i("token in user details",myToken);
         MyAppolloClient.getMyAppolloClient(myToken).query(
                 GetBusinessUnit.builder()
                         .build()).enqueue(
@@ -319,7 +321,7 @@ public class UserDetailsActivity extends AppCompatActivity {
                                 userBuAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                 bu.setAdapter(userBuAdapter);
                                 bu.setSelection(0);
-                                location.setHint("Select an item");
+                              /*  location.setHint("Select an item");*/
                                 location.setEnableFloatingLabel(true);
                             }
                         });
@@ -375,59 +377,59 @@ public class UserDetailsActivity extends AppCompatActivity {
 
         apiService = new Retrofit.Builder().baseUrl("http://10.200.44.25:4001").client(client).build().create(ApiService.class);
     }
-    public Intent getPickImageChooserIntent() {
-        Log.i("getPickImageChooser","getPickImageChooserIntent");
-        Uri outputFileUri = getCaptureImageOutputUri();
-
-        List<Intent> allIntents = new ArrayList<>();
-        PackageManager packageManager = getPackageManager();
-
-        Intent captureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
-        for (ResolveInfo res : listCam) {
-            Intent intent = new Intent(captureIntent);
-            intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-            intent.setPackage(res.activityInfo.packageName);
-            if (outputFileUri != null) {
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-            }
-            allIntents.add(intent);
-        }
-
-        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        galleryIntent.setType("image/*");
-        List<ResolveInfo> listGallery = packageManager.queryIntentActivities(galleryIntent, 0);
-        for (ResolveInfo res : listGallery) {
-            Intent intent = new Intent(galleryIntent);
-            intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-            intent.setPackage(res.activityInfo.packageName);
-            allIntents.add(intent);
-        }
-
-        Intent mainIntent = allIntents.get(allIntents.size() - 1);
-        for (Intent intent : allIntents) {
-            if (intent.getComponent().getClassName().equals("com.android.documentsui.DocumentsActivity")) {
-                mainIntent = intent;
-                break;
-            }
-        }
-        allIntents.remove(mainIntent);
-
-        Intent chooserIntent = Intent.createChooser(mainIntent, "Select source");
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, allIntents.toArray(new Parcelable[allIntents.size()]));
-
-        return chooserIntent;
-    }
-    @RequiresApi(api = Build.VERSION_CODES.FROYO)
-    private Uri getCaptureImageOutputUri() {
-        Log.i("getCaptureImage","getCaptureImageOutputUri");
-        Uri outputFileUri = null;
-        File getImage = getExternalFilesDir("");
-        if (getImage != null) {
-            outputFileUri = Uri.fromFile(new File(getImage.getPath(), "profile.jpeg"));
-        }
-        return outputFileUri;
-    }
+//    public Intent getPickImageChooserIntent() {
+//        Log.i("getPickImageChooser","getPickImageChooserIntent");
+//        Uri outputFileUri = getCaptureImageOutputUri();
+//
+//        List<Intent> allIntents = new ArrayList<>();
+//        PackageManager packageManager = getPackageManager();
+//
+//        Intent captureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+//        List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
+//        for (ResolveInfo res : listCam) {
+//            Intent intent = new Intent(captureIntent);
+//            intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
+//            intent.setPackage(res.activityInfo.packageName);
+//            if (outputFileUri != null) {
+//                intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+//            }
+//            allIntents.add(intent);
+//        }
+//
+//        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+//        galleryIntent.setType("image/*");
+//        List<ResolveInfo> listGallery = packageManager.queryIntentActivities(galleryIntent, 0);
+//        for (ResolveInfo res : listGallery) {
+//            Intent intent = new Intent(galleryIntent);
+//            intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
+//            intent.setPackage(res.activityInfo.packageName);
+//            allIntents.add(intent);
+//        }
+//
+//        Intent mainIntent = allIntents.get(allIntents.size() - 1);
+//        for (Intent intent : allIntents) {
+//            if (intent.getComponent().getClassName().equals("com.android.documentsui.DocumentsActivity")) {
+//                mainIntent = intent;
+//                break;
+//            }
+//        }
+//        allIntents.remove(mainIntent);
+//
+//        Intent chooserIntent = Intent.createChooser(mainIntent, "Select source");
+//        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, allIntents.toArray(new Parcelable[allIntents.size()]));
+//
+//        return chooserIntent;
+//    }
+//    @RequiresApi(api = Build.VERSION_CODES.FROYO)
+//    private Uri getCaptureImageOutputUri() {
+//        Log.i("getCaptureImage","getCaptureImageOutputUri");
+//        Uri outputFileUri = null;
+//        File getImage = getExternalFilesDir("");
+//        if (getImage != null) {
+//            outputFileUri = Uri.fromFile(new File(getImage.getPath(), "profile.jpeg"));
+//        }
+//        return outputFileUri;
+//    }
     @Override
     @SuppressLint("NewApi")
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -453,7 +455,14 @@ public class UserDetailsActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 ((ImageView) findViewById(R.id.profileImage)).setImageURI(result.getUri());
                 Toast.makeText(this, "Cropping successful, Sample: " + result.getSampleSize(), Toast.LENGTH_LONG).show();
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+
+                try {
+                    mBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),result.getUri());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Toast.makeText(this, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG).show();
             }
         }
@@ -473,6 +482,27 @@ public class UserDetailsActivity extends AppCompatActivity {
         else return getPathFromURI(data.getData());
 
     }
+
+    private Uri getCaptureImageOutputUri()
+    {
+        Uri outputFileUri = null;
+        File getImage = getExternalFilesDir("");
+        if(getImage!= null)
+        {
+            outputFileUri = Uri.fromFile(new File(getImage.getPath(),"profile.jpeg"));
+        }
+        return outputFileUri;
+    }
+
+
+    private String getPathFromURI(Uri contentUri) {
+
+    String[] proj = {MediaStore.Audio.Media.DATA};
+    Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
+    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+    cursor.moveToFirst();
+    return cursor.getString(column_index);
+    }
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -486,14 +516,7 @@ public class UserDetailsActivity extends AppCompatActivity {
 
         picUri = savedInstanceState.getParcelable("pic_uri");
     }
-    private String getPathFromURI(Uri contentUri) {
-        Log.i("getPathFromURI","getPathFromURI");
-        String[] proj = {MediaStore.Audio.Media.DATA};
-        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
-    }
+
     private void multipartImageUpload() {
         Log.i("multipartImageUpload","multipartImageUpload");
         try {
@@ -576,7 +599,7 @@ public class UserDetailsActivity extends AppCompatActivity {
         return RequestBody.create(MultipartBody.FORM,data);
     }
     private void CallSubmitDataService() {
-        Log.i("CallSubmitDataService","CallSubmitDataService"+ "  ====  "+path);
+        Log.i("CallSubmitDataService","CallSubmitDataService"+ "  ====  "+path+"   token" +myToken);
         MyAppolloClient.getMyAppolloClient(myToken).mutate(
                 UserDetailsUpdate.builder().userId(userId).name(userName).designation(designation).empId(employeeId).location(workLoc)
                         .bu(userBu).mobileNumber(mobile).profileImagePath(path)
