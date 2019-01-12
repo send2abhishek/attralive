@@ -282,16 +282,24 @@ private void callservice()
                         Log.i("access Token",accessToken);
                         authToken="Bearer"+" "+accessToken;
                         Log.i("brarer token",authToken);
+                        if(status!=null) {
+                            Log.i("otpValidation==>status","OtpValidationActivity==>getToken==>status "+status);
+                        }
+                        else
+                        {
+                            Log.i("otpValidation==>status","OtpValidationActivity==>getToken==>status "+status);
+                        }
                         if(status.equals("Success")){
-
+                            Log.i("otpValidation==>status","OtpValidationActivity==>getToken==>status "+ "inside success");
                           SharedPreferences  preferences = getApplicationContext().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, 0);
-                            SharedPreferences.Editor editor = preferences.edit();
+                          SharedPreferences.Editor editor = preferences.edit();
                             editor.putString("authToken",authToken);
                             editor.putString("refreshToken",refreshToken);
                             editor.putString("emailId",emailId);
                             editor.putString("userId",userId);
                             editor.putString("userName",userName);
-                            editor.commit();
+                            //editor.commit();
+                            editor.apply();
 
                         }else if(status.equals("Failure")){
                             if(message.equals("Invalid token: access token has expired")){
