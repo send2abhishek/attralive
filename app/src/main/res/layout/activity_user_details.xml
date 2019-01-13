@@ -6,245 +6,272 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".activity.UserDetailsActivity">
+        <LinearLayout
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:id="@+id/tv_headimg"
-        android:textSize="20dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:textColor="@color/white"
-        android:background="@drawable/register_password"
-        android:text="@string/please_update_your_details"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        >
-
-        <android.support.v7.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3"
-            android:paddingTop="12dp">
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="7">
 
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2.5"
+                android:scaleType="fitXY"
+                android:src="@drawable/bg2" />
+            <LinearLayout
+                android:layout_marginTop="-184dip"
+                android:layout_weight="0.25"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/backward_arrow"/>
+                <TextView
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="22dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Update Profile"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp"
+                    android:lineHeight="24sp"
+                    android:lineSpacingExtra="0.01sp"/>
+            </LinearLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1.3"
+                android:layout_marginTop="80dip">
 
                 <de.hdodenhof.circleimageview.CircleImageView
-
-
-
+                    android:layout_marginLeft="20dp"
+                    android:id="@+id/profileImage"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/profile"/>
+                <TextView
+                    android:id="@+id/welcomeText"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginLeft="9dp"
+                    android:layout_toRightOf="@id/profileImage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/im_profileimage"
-
-                    android:src="@drawable/ic_account_circle_blue_24dp"
-                    />
+                    android:lineHeight="24sp"
+                    android:text="Welcome"
+                    android:textColor="#f1f5f4"
+                    android:textSize="18sp"
+                    android:lineSpacingExtra="6sp"/>
+                <TextView
+                    android:id="@+id/userName"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="9dp"
+                    android:layout_toRightOf="@+id/profileImage"
+                    android:layout_below="@id/welcomeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:lineHeight="24sp"
+                    android:text="Awnish Kumar"
+                    android:textColor="#f1f5f4"
+                    android:textSize="18sp"
+                    android:lineSpacingExtra="0.01sp"/>
                 <ImageView
+                    android:layout_marginTop="-4dp"
+                    android:layout_marginLeft="-45dp"
+                    android:layout_toRightOf="@+id/profileImage"
+                    android:layout_below="@id/userName"
+                    android:id="@+id/im_profileimage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/iv_qrCode"
-                    android:background="@drawable/ic_account_circle_blue_24dp"/>
-
-
-                <android.support.v7.widget.CardView
-                    android:id="@+id/crd_upload"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:elevation="10dp"
-                    android:layout_centerInParent="true"
-                    android:layout_alignBottom="@+id/im_profileimage"
-                    android:paddingBottom="15dp"
-                    >
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@android:color/transparent">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Upload"
-                            android:textStyle="bold"
-                            android:textSize="12sp"
-                            android:textColor="#8f9290"
-                            android:layout_centerInParent="true"
-                            android:drawableLeft="@drawable/ic_file_upload_black_24dp"/>
-                    </RelativeLayout>
-                </android.support.v7.widget.CardView>
+                    app:srcCompat="@drawable/icon_edit_line" />
             </RelativeLayout>
+
             <LinearLayout
-                android:paddingLeft="8dp"
-                android:layout_width="0dp"
-                android:layout_weight="3"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="4.5"
+                android:layout_marginLeft="33dp"
+                android:layout_marginRight="33dp"
+
                 android:orientation="vertical">
-                <android.support.design.widget.TextInputLayout
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icon_empid_fill"/>
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:layout_marginLeft="16dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:hintEnabled="false"
+                            android:id="@+id/et_empId"
+                            android:hint="Employee ID"
+                            android:lineHeight="17sp"
+                            android:textColorHint="#949c97"
+                            android:textSize="14sp"/>
+                    </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+                    <ImageView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icon_desig_fill"/>
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_marginTop="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+
+                        <android.support.design.widget.TextInputEditText
+                            android:layout_marginLeft="16dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/et_designation"
+                            android:hint="Designation"
+                            android:lineHeight="24sp"
+                            android:drawablePadding="18dp"
+                            android:textColorHint="#949c97"
+                            android:textSize="14sp"/>
+                    </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
+
+                <!--<LinearLayout
+                    android:layout_weight="0.5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <android.support.design.widget.TextInputEditText
-                        android:layout_width="match_parent"
+                    <ImageView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/et_empId"
-                        android:drawableLeft="@drawable/ic_person_black_24dp"
-                        android:hint="@string/emp_Id"
-                        android:drawablePadding="18dp"
-                        android:textColorHint="#949c97"
-                        android:inputType="number"
-                        android:maxLength="6"
-                        android:textSize="14sp"
-                        />
-                </android.support.design.widget.TextInputLayout>
-                <android.support.design.widget.TextInputLayout
+                        android:src="@drawable/icon_wrkloc_line"/>
+                    <fr.ganfra.materialspinner.MaterialSpinner
+                        app:ms_thickness="0.5dp"
+                        android:layout_marginLeft="0dp"
+                        android:id="@+id/sp_userWorkLocation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:ms_arrowColor="#949c97"
+                        app:ms_enableFloatingLabel="true"
+                        app:ms_arrowSize="12dp"
+                        app:ms_floatingLabelColor="#949c97"
+                        app:ms_floatingLabelText="Work Location"
+                        app:ms_hint="hint"
+                        app:ms_multiline="false" />
+                </LinearLayout>-->
+                <LinearLayout
+                    android:layout_weight="0.25"
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp">
-                    <android.support.design.widget.TextInputEditText
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icon_wrkloc_fill"/>
+                    <fr.ganfra.materialspinner.MaterialSpinner
+                        app:ms_thickness="0.5dp"
+                        android:layout_marginLeft="16dp"
+                        android:id="@+id/sp_userWorkLocation"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/et_designation"
-                        android:drawableLeft="@drawable/ic_contact_mail_black_24dp"
-                        android:hint="Designation"
-                        android:drawablePadding="18dp"
-                        android:textColorHint="#949c97"
-                        android:textSize="14sp"/>
-                </android.support.design.widget.TextInputLayout>
+                        app:ms_arrowColor="#949c97"
+                        app:ms_enableFloatingLabel="true"
+                        app:ms_arrowSize="12dp"
+                        app:ms_floatingLabelColor="#949c97"
+                        app:ms_floatingLabelText="Work Location"
+                        app:ms_hint="Select Location"
+                        app:ms_multiline="false" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_weight="0.25"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icon_bu_fill"/>
+                    <fr.ganfra.materialspinner.MaterialSpinner
+                        app:ms_thickness="0.5dp"
+                        android:layout_marginLeft="16dp"
+                        android:id="@+id/sp_selectbu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:ms_arrowColor="#949c97"
+                        app:ms_enableFloatingLabel="true"
+                        app:ms_arrowSize="12dp"
+                        app:ms_floatingLabelColor="#949c97"
+                        app:ms_floatingLabelText=" BU"
+                        app:ms_hint="Select BU"
+                        app:ms_multiline="false" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icon_phone_fill"/>
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:layout_marginLeft="16dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/et_mobilenumber"
+                            android:hint="Phone"
+                            android:lineHeight="17sp"
+                            android:drawablePadding="18dp"
+                            android:textColorHint="#949c97"
+                            android:textSize="14sp"/>
+                    </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
 
             </LinearLayout>
-        </android.support.v7.widget.LinearLayoutCompat>
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="8"
-    android:orientation="vertical">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            style="@style/layoutStyle"
-            android:paddingBottom="13dp"
-            android:layout_marginTop="10dp">
-            <TextView
-                android:layout_width="wrap_content"
-
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:drawableLeft="@drawable/ic_place_black_24dp"
-                android:hint="@string/work_location"
-                android:drawablePadding="18dp"
-                android:textColor="#949c97"
-                android:textSize="14sp"
-                style="@style/InputTextStyle"
-                android:text="@string/work_location"/>
-            <Spinner
-                android:id="@+id/sp_userWorkLocation"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:backgroundTint="#2699fb">
-            </Spinner>
-
-        </LinearLayout>
-        <View
-
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="#8f9290" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            style="@style/layoutStyle"
-            android:paddingBottom="13dp"
-            android:layout_marginTop="10dp">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:drawableLeft="@drawable/ic_business_black_24dp"
-                android:hint="@string/work_location"
-                android:drawablePadding="18dp"
-                android:textColor="#949c97"
-                android:textSize="14sp"
-                style="@style/InputTextStyle"
-                android:text="@string/bu"/>
-            <Spinner
-                android:id="@+id/sp_selectbu"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:backgroundTint="#2699fb">
-            </Spinner>
-
-        </LinearLayout>
-        <View
-
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="#8f9290" />
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
-            <android.support.design.widget.TextInputEditText
+            <Button
+                android:id="@+id/continuebutton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/et_mobilenumber"
-                android:drawableLeft="@drawable/ic_phone_android_black_24dp"
-                android:hint="@string/mobile_no"
-                android:drawablePadding="18dp"
-                android:textColorHint="#949c97"
-                android:paddingBottom="18dp"
-                android:maxLength="11"
-                android:inputType="number"
-                android:textSize="14sp"/>
-        </android.support.design.widget.TextInputLayout>
-        <android.support.v7.widget.CardView
-            android:id="@+id/crd_continuebutton"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_gravity="center_horizontal"
-            android:elevation="10dp"
-            android:layout_marginTop="28dp"
+                android:layout_weight="0.05"
+                android:background="@color/lightBlue"
+                android:textColor="@color/white"
+                android:layout_gravity="center"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="10dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:textSize="18sp"
+                android:text="Submit"
+                android:shadowColor="@color/shadowcolor"
+                android:textAlignment="center"/>
 
-            app:cardCornerRadius="24dp">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/color_gradient_login_btn">
-
-                <TextView
-                    android:id="@+id/btn_submitDetails"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_marginLeft="6dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginRight="99dp"
-                    android:layout_marginBottom="12dp"
-                    android:lineHeight="22sp"
-                    android:lineSpacingExtra="0.9sp"
-                    android:text="SUBMIT"
-                    android:textColor="#fff"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-            </RelativeLayout>
-        </android.support.v7.widget.CardView>
-    </LinearLayout>
-    </LinearLayout>
+        </LinearLayout>
 
 </android.support.v7.widget.LinearLayoutCompat>

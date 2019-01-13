@@ -40,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
     TextInputLayout passwordtil, usernametil;
     CheckBox saveLoginCheckBox;
     String status, message, accessToken, authToken;
-    String myToken, refreshToken, name, userId,userName;
+    String myToken, refreshToken, name, userId, userName;
     private SharedPreferences loginPreferences, sharedPreferences;
     private SharedPreferences.Editor loginPrefsEditor;
     private Boolean saveLogin;
@@ -63,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         loginPrefsEditor = loginPreferences.edit();
         saveLogin = loginPreferences.getBoolean("saveLogin", false);
-       // String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        // String refreshedToken = FirebaseInstanceId.getInstance().getToken();
 //        Log.i("refresh token....",refreshedToken);
         if (saveLogin == true) {
             etusername.setText(loginPreferences.getString("username", ""));
@@ -206,8 +206,8 @@ public class LoginActivity extends AppCompatActivity {
                         String refreshTokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
                         String user = response.data().userLoginAuth_Q().user();
                         String message = response.data().userLoginAuth_Q().message();
-                         userName = response.data().userLoginAuth_Q().name();
-                         userId = response.data().userLoginAuth_Q().user_id();
+                        userName = response.data().userLoginAuth_Q().name();
+                        userId = response.data().userLoginAuth_Q().user_id();
                         String status = response.data().userLoginAuth_Q().status();
                         Log.i("access Token", accessToken);
                         authToken = "Bearer" + " " + accessToken;
@@ -226,15 +226,14 @@ public class LoginActivity extends AppCompatActivity {
                                 // editor.putString("emailId",emailId);
                                 editor.putString("userId", userId);
                                 editor.putString("userName", userName);
-                                editor.commit();
+                                editor.apply();
+                                //   editor.commit();
                                 Intent i = new Intent(LoginActivity.this, DashboardActivity.class);
                                 startActivity(i);
                             } else if ((status.equals("Failure"))) {
-                                if(message.equals("Username or password is incorrect"))
-                                {
+                                if (message.equals("Username or password is incorrect")) {
                                     Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
-                                }
-                               else  if (message.equals("Invalid Username or Password")) {
+                                } else if (message.equals("Invalid Username or Password")) {
                                     Toast.makeText(LoginActivity.this, "Username or password is incorrect", Toast.LENGTH_LONG).show();
                                 } else {
 
@@ -262,6 +261,7 @@ public class LoginActivity extends AppCompatActivity {
                     });
                 }
             }
+
             @Override
             public void onFailure(@Nonnull ApolloException e) {
             }

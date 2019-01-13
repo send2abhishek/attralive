@@ -22,6 +22,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -51,6 +53,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+import fr.ganfra.materialspinner.MaterialSpinner;
+import graphqlandroid.GetBusinessUnit;
+import graphqlandroid.GetLocation;
 import graphqlandroid.GetProfileDetails;
 import graphqlandroid.UserDetailsUpdate;
 import okhttp3.MediaType;
@@ -70,15 +77,18 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
  * A simple {@link Fragment} subclass.
  */
 public class Profile extends Fragment {
-    TextView username, userDesign,DOB,gender,phone,email, submit,empId;
-    Spinner location,bu;
+    TextView username_view,password_view, userDesign,DOB,gender,phone,email, submit,empId;
+    MaterialSpinner location,bu;
     private SharedPreferences sharedPreferences;
     String myToken,userId,userName;
     public static final String PREFS_AUTH = "my_auth";
-    ImageView profilePic,qrCode;
-
+    CircleImageView profilePic;
+    ImageView qrCode;
+    List<String> buList = new ArrayList<String>();
+    List<String> locationList = new ArrayList<String>();
     ApiService apiService;
-
+    ArrayAdapter<String> locationAdapter;
+    ArrayAdapter<String> userBuAdapter;
     OkHttpClient client;
 
 
@@ -95,11 +105,10 @@ public class Profile extends Fragment {
     private final static int PIC_CROP = 2;
     Bitmap mBitmap;
     ImageView upload;
-    CardView submitdata;
+    Button submitdata;
     String status,message,path,refreshToken;
     String emailId, password,userBu,workLoc,mobile,employeeId,designation;
     EditText  phNo;
-    String buValue;
 
     public Profile() {
         // Required empty public constructor
@@ -120,76 +129,108 @@ public class Profile extends Fragment {
         }
 
         // Inflate the layout for this fragment
+
         getActivity().setTitle(R.string.profile);
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         empId = view.findViewById(R.id.et_empId);
-       // username = view.findViewById(R.id.et_entername);
+        // username = view.findViewById(R.id.et_entername);
         userDesign=view.findViewById(R.id.et_designation);
         bu = view.findViewById(R.id.sp_selectbu);
         phone = view.findViewById(R.id.et_mobilenumber);
-  //      email= view.findViewById(R.id.emailId);
-        submit = view.findViewById(R.id.btn_submitDetails);
+        //      email= view.findViewById(R.id.emailId);
+        //  submit = view.findViewById(R.id.btn_submitDetails);
         location = view.findViewById(R.id.sp_userWorkLocation);
-        profilePic = view.findViewById(R.id.civ_profileimage);
-        submitdata=view.findViewById(R.id.crd_continuebutton);
-        qrCode = view.findViewById(R.id.img_qrCode);
+        profilePic = view.findViewById(R.id.profileImage);
+        submitdata=view.findViewById(R.id.editDetailsBtn);
+        username_view=view.findViewById(R.id.et_userName);
+        password_view=view.findViewById(R.id.et_password);
+        //  qrCode = view.findViewById(R.id.img_qrCode);
+        getUserBU();
+        getUserLocation();
         getProfileDetail();
-        askPermissions();
-        initRetrofitClient();
+        // askPermissions();
+        //   initRetrofitClient();
 
-profilePic.setOnClickListener(new View.OnClickListener() {
+/*profilePic.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View v) {
         startActivityForResult(getPickImageChooserIntent(), IMAGE_RESULT);
     }
-});
-submitdata.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-        designation = userDesign.getText().toString();
-         workLoc = location.getSelectedItem().toString();
-        userBu = bu.getSelectedItem().toString();
-        mobile = phNo.getText().toString();
-        employeeId = empId.getText().toString();
+});*/
+        submitdata.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                designation = userDesign.getText().toString();
+                if(location.getSelectedItem()!=null) {
+                    workLoc = location.getSelectedItem().toString();
+                }else
+                {
+                    Log.i("user bu","Proofile==>onEdit loc is null");
+                }
+                if(bu.getSelectedItem()!=null) {
+                    userBu = bu.getSelectedItem().toString();
+                    Log.i("User bu", "Profile==>EditOnclcick  " + bu.getSelectedItem());
+                }
+                else
+                {
+                    Log.i("user bu","Proofile==>onEdit bu is null");
+                }
+                if(phNo!=null) {
+                    mobile = phNo.getText().toString();
+                    Log.i("Phone number","Profile==>editclcick==>phone number "+ mobile);
+                }
+                else
+                {
+                    Log.i("Phone number","Profile==>editclcick==>phone number null ");
+                }
+                if(empId!=null) {
+                    employeeId = empId.getText().toString();
+                }
+                else
+                {
 
+                }
                 /*int sid=radioGroup.getCheckedRadioButtonId();
                 radioButton=findViewById(sid);
                 String gender = radioButton.getText().toString();*/
 
 
-        if (employeeId.trim().equals("")) {
-            empId.setError("Employee Id is required");
-            empId.requestFocus();
-        } else if (designation.trim().equals("")) {
-            userDesign.setError("Designation is required");
-            userDesign.requestFocus();
-        } else if (workLoc.trim().equals("")) {
-            ((TextView) location.getSelectedView()).setError("Select Location");
-            ((TextView) location.getSelectedView()).requestFocus();
-        }  else if (userBu.trim().equals("")) {
-            ((TextView) bu.getSelectedView()).setError("Select BU");
-            ((TextView) bu.getSelectedView()).requestFocus();
-        } else if (mobile.length() < 10) {
-            phNo.setError("Enter valid Contact Number");
-            phNo.requestFocus();
-        } else {
-            if(mBitmap!=null)
-                multipartImageUpload();
-            else
-            {
-                path="https://dsd8ltrb0t82s.cloudfront.net/ProfilePictures/1546848719271-image.jpeg";
-                callSubmiteditData(myToken);
+                if (employeeId.trim().equals("")) {
+                    empId.setError("Employee Id is required");
+                    empId.requestFocus();
+                } else if (designation.trim().equals("")) {
+                    userDesign.setError("Designation is required");
+                    userDesign.requestFocus();
+                } else if (workLoc.trim().equals("")) {
+                    ((TextView) location.getSelectedView()).setError("Select Location");
+                    ((TextView) location.getSelectedView()).requestFocus();
+                }  else if (userBu.trim().equals("")) {
+                    ((TextView) bu.getSelectedView()).setError("Select BU");
+                    ((TextView) bu.getSelectedView()).requestFocus();
+                } else if (mobile.length() < 10) {
+                    phNo.setError("Enter valid Contact Number");
+                    phNo.requestFocus();
+                } else {
+                    if(mBitmap!=null)
+                    {
+
+                    }
+                    //  multipartImageUpload();
+                    else
+                    {
+                        path="https://dsd8ltrb0t82s.cloudfront.net/ProfilePictures/1546848719271-image.jpeg";
+                        // callSubmiteditData(myToken);
+                    }
+                    // Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
+                    // startActivity(intent1);
+
+                }
+
             }
-            // Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
-            // startActivity(intent1);
-
-        }
-
-    }
-});
+        });
         return view;
     }
-    private void callSubmiteditData(String accesstoken)
+    /*private void callSubmiteditData(String accesstoken)
     {
         MyAppolloClient.getMyAppolloClient(accesstoken).mutate(
                 UserDetailsUpdate.builder().userId(userId).name(userName).designation(designation).empId(employeeId).location(workLoc)
@@ -353,54 +394,54 @@ submitdata.setOnClickListener(new View.OnClickListener() {
 
         outState.putParcelable("pic_uri", picUri);
     }
-
-    @Override
+*/
+   /* @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         picUri = savedInstanceState.getParcelable("pic_uri");
     }
+*/
+
+    /* @Override
+     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+         if (resultCode == Activity.RESULT_OK) {
+             //capturedImage = findViewById(R.id.im_profileimage);
+
+             if (requestCode == IMAGE_RESULT) {
 
 
-        if (resultCode == Activity.RESULT_OK) {
-            //capturedImage = findViewById(R.id.im_profileimage);
+                 String filePath = getImageFilePath(data);
+                 //cropImage();
+                 System.out.println("file path"+filePath);
+                 if (filePath != null) {
+                     mBitmap = BitmapFactory.decodeFile(filePath);
+                     profilePic.setImageDrawable(null);
+                     profilePic.setImageBitmap(mBitmap);
 
-            if (requestCode == IMAGE_RESULT) {
+                 }
+             }
+             else if(requestCode==PIC_CROP)
+             {
+                 Bundle extras = data.getExtras();
+                 //get the cropped bitmap
+                 Bitmap thePic = extras.getParcelable("data");
 
-
-                String filePath = getImageFilePath(data);
-                //cropImage();
-                System.out.println("file path"+filePath);
-                if (filePath != null) {
-                    mBitmap = BitmapFactory.decodeFile(filePath);
-                    profilePic.setImageDrawable(null);
-                    profilePic.setImageBitmap(mBitmap);
-
-                }
-            }
-            else if(requestCode==PIC_CROP)
-            {
-                Bundle extras = data.getExtras();
-                //get the cropped bitmap
-                Bitmap thePic = extras.getParcelable("data");
-
-                /*String filePath = getImageFilePath(data);
+                 *//*String filePath = getImageFilePath(data);
                 System.out.println("file path"+filePath);
                 if (filePath != null) {
                     mBitmap = BitmapFactory.decodeFile(filePath);
                     upload.setImageDrawable(null);
                     upload.setImageBitmap(mBitmap);
 
-                }*/
+                }*//*
             }
 
         }
 
-    }
-    private void multipartImageUpload() {
+    }*/
+   /* private void multipartImageUpload() {
 
         try {
             //description = postDescription.getText().toString();
@@ -434,20 +475,20 @@ submitdata.setOnClickListener(new View.OnClickListener() {
             req.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                    System.out.println("homescreenimage response"+ response);
+                    System.out.println("Image response"+ response);
 
                     if (response.code() == 200) {
 //                        successMsg.setText("Uploaded Successfully!");
 //                        successMsg.setTextColor(Color.BLUE);
 //
-                        System.out.println("homescreenimage response"+ response);
+                        System.out.println("Image response"+ response);
 
-                        /*org.json.simple.JSONObject jsonObj = null;
+                        *//*org.json.simple.JSONObject jsonObj = null;
                         try {
 
                         } catch (Exception e) {
                             e.printStackTrace();
-                        }*/
+                        }*//*
 
                         try {
                             String data = response.body().string();
@@ -493,6 +534,85 @@ submitdata.setOnClickListener(new View.OnClickListener() {
     }
     private RequestBody createPartFromString(String data) {
         return RequestBody.create(MultipartBody.FORM,data);
+    }*/
+    private void getUserBU(){
+
+        MyAppolloClient.getMyAppolloClient(myToken).query(
+                GetBusinessUnit.builder()
+                        .build()).enqueue(
+                new ApolloCall.Callback<GetBusinessUnit.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<GetBusinessUnit.Data> response) {
+                        Log.i("res", String.valueOf(response));
+                        if(response.data().getBusinessUnits_Q().businessUnits()!=null) {
+                            for (int loopVar = 0; loopVar < response.data().getBusinessUnits_Q().businessUnits().size(); loopVar++) {
+                                String businessUnitData = response.data().getBusinessUnits_Q().businessUnits().get(loopVar);
+                                buList.add(businessUnitData);
+                                Log.i("location", businessUnitData);
+
+                            }
+                        }
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                userBuAdapter = new ArrayAdapter<>(getActivity(),
+                                        android.R.layout.simple_spinner_item,buList);
+
+                                userBuAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                bu.setAdapter(userBuAdapter);
+                                bu.setSelection(0);
+                                //location.setHint("Select BU");
+                                location.setEnableFloatingLabel(true);
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+                    }
+                }
+        );
+
+    }
+    private void getUserLocation(){
+        MyAppolloClient.getMyAppolloClient(myToken).query(
+                GetLocation.builder()
+                        .build()).enqueue(
+                new ApolloCall.Callback<GetLocation.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<GetLocation.Data> response) {
+                        Log.i("res", String.valueOf(response));
+                        if(response.data().getLocations_Q().locations()!=null)
+                        {
+                            for(int loopVar= 0; loopVar<response.data().getLocations_Q().locations().size(); loopVar++) {
+                                String locationData = response.data().getLocations_Q().locations().get(loopVar);
+                                locationList.add(locationData);
+                                Log.i("location", locationData);
+                            }
+                        }
+
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                locationAdapter = new ArrayAdapter<>(getActivity(),
+                                        android.R.layout.simple_spinner_item,locationList);
+                                locationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                location.setAdapter(locationAdapter);
+                                // location.setSelection(0);
+                                location.setHint("Work Location");
+                                location.setEnableFloatingLabel(true);
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+                    }
+                }
+        );
+
     }
     private void getProfileDetail() {
 
@@ -502,48 +622,74 @@ submitdata.setOnClickListener(new View.OnClickListener() {
                 new ApolloCall.Callback<GetProfileDetails.Data>() {
                     @Override
                     public void onResponse(@Nonnull Response<GetProfileDetails.Data> response) {
-                        Log.i("res", String.valueOf(response));
-                        String message = response.data().getProfileDetails_Q().message();
-                        String status = response.data().getProfileDetails_Q().status();
-                        Log.i("message in profile", message);
-                        Log.i("mstatus in profile", status);
-                        if (response.data().getProfileDetails_Q().name() != null) {
+                        if (response.data() != null && response.data().getProfileDetails_Q() != null)
+                        {
+                            Log.i("res", String.valueOf(response));
+                            String message = response.data().getProfileDetails_Q().message();
+                            String status = response.data().getProfileDetails_Q().status();
+                            Log.i("message in profile", message);
+                            Log.i("mstatus in profile", status);
+                            if (response.data().getProfileDetails_Q().name() != null) {
                            /* String message = response.data().getProfileDetails_Q().message();
                             String status = response.data().getProfileDetails_Q().status();*/
-                            if (status.equals("Success")) {
-                                String username = response.data().getProfileDetails_Q().name();
-                                String emaiId = response.data().getProfileDetails_Q().email();
-                                String design = response.data().getProfileDetails_Q().designation();
-                                String phoneNo= response.data().getProfileDetails_Q().mobileNumber();
-                                String location = response.data().getProfileDetails_Q().location();
-                                String businessUnit = response.data().getProfileDetails_Q().bu();
-                                String imgPath = response.data().getProfileDetails_Q().profileImagePath();
-                                String qrCodePath = response.data().getProfileDetails_Q().userQRCodeLink();
-                                String emplyeeId = response.data().getProfileDetails_Q().empId();
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Picasso.with(getActivity()).load(imgPath).fit().into(profilePic);
-                                        userDesign.setText(design);
-                                        Picasso.with(getActivity()).load(qrCodePath).fit().into(qrCode);
-                                        phone.setText(phoneNo);
-                                        empId.setText(emplyeeId);
+                                if (status.equals("Success")) {
+                                    //String username = response.data().getProfileDetails_Q().name();
+                                    //  String emaiId = response.data().getProfileDetails_Q().email();
+                                    final String password = "Ashwini1";
+                                    final String username = "Nagarathna";
+                                    String design = response.data().getProfileDetails_Q().designation();
+                                    String phoneNo = response.data().getProfileDetails_Q().mobileNumber();
+                                    String loc = response.data().getProfileDetails_Q().location();
+                                    String businessUnit = response.data().getProfileDetails_Q().bu();
+                                    String imgPath = response.data().getProfileDetails_Q().profileImagePath();
+                                    //  String qrCodePath = response.data().getProfileDetails_Q().userQRCodeLink();
+                                    String emplyeeId = response.data().getProfileDetails_Q().empId();
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Picasso.with(getActivity()).load(imgPath).fit().into(profilePic);
+                                            userDesign.setText(design);
+                                            //   Picasso.with(getActivity()).load(qrCodePath).fit().into(qrCode);
+                                            if (username != null) {
+                                                username_view.setText(username);
+                                            }
+                                            if (password != null) {
+                                                password_view.setText(password);
+                                            }
+                                            phone.setText(phoneNo);
+                                            empId.setText(emplyeeId);
+                                            if (userBuAdapter != null && businessUnit != null) {
+                                                bu.setSelection(userBuAdapter.getPosition(businessUnit));
+                                                Toast.makeText(getContext(), "location position is ==" + userBuAdapter.getPosition(loc), Toast.LENGTH_SHORT).show();
+                                            } else
+                                                Toast.makeText(getContext(), "user bu null == ", Toast.LENGTH_SHORT).show();
+                                            //  bu.setSelection(1);
+                                            if (locationAdapter != null && loc != null) {
+                                                Log.i("profile==>loc","profile==>getprofiledetails==>loc"+loc+ "loc position  "+locationAdapter.getPosition(loc));
+                                                location.setSelection(locationAdapter.getPosition(loc));
+                                                Toast.makeText(getContext(), "location position is ==" + locationAdapter.getPosition(loc), Toast.LENGTH_SHORT).show();
+                                            } else
+                                                Toast.makeText(getContext(), "user location null == ", Toast.LENGTH_SHORT).show();
 
 
-                                    }
-                                });
-                            } else if (status.equals("Failure")) {
+                                        }
+                                    });
+                                } else if (status.equals("Failure")) {
+
+                                }
 
                             }
 
+
+                        }else
+                        {
+                            Log.i("Profile","Profile==>getProfileDetails()==>onResponse null");
                         }
-
-
                     }
-
                     @Override
                     public void onFailure(@Nonnull ApolloException e) {
                     }
+
                 }
         );
     }

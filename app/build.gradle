@@ -52,6 +52,8 @@ dependencies {
     compile 'com.theartofdev.edmodo:android-image-cropper:2.3.+'
     compile 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
     implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
+    implementation 'com.github.ganfra:material-spinner:2.0.0'
+
 }
 apply plugin: 'com.google.gms.google-services'
 GoogleServicesPlugin.config.disableVersionCheck = true
