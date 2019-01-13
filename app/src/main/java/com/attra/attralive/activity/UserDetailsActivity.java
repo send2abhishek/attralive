@@ -528,10 +528,10 @@ public class UserDetailsActivity extends AppCompatActivity {
             req.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                    System.out.println("Image response"+ response);
+                    System.out.println("homescreenimage response"+ response);
 
                     if (response.code() == 200) {
-                        System.out.println("Image response"+ response);
+                        System.out.println("homescreenimage response"+ response);
 
                         try {
                             String data = response.body().string();

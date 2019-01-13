@@ -214,18 +214,23 @@ public class HomeFragment extends Fragment {
     }
 
     private void prepareNewsfeed(String myToken) {
-
-
        MyAppolloClient.getMyAppolloClient(myToken).query(
                GetPosts.builder().build()).enqueue(
                new ApolloCall.Callback<GetPosts.Data>() {
                    @Override
                    public void onResponse(@Nonnull Response<GetPosts.Data> response) {
-                       String status = response.data().getPosts_Q().status();
-                       String message=response.data().getPosts_Q().message();
-                       Log.d("mesa",message);
+                       String status ="";
+                       String message="";
+                       if(response.data().getPosts_Q()!=null){
+                           status = (response.data().getPosts_Q().status()==null?"":response.data().getPosts_Q().status());
+                           message = ( response.data().getPosts_Q().message()==null?"":response.data().getPosts_Q().message());
+                       }
+                       Log.d("mesa============",message +"=="+status);
+
                        if(status.equals("Success"))
                        {
+                         //  String message=response.data().getPosts_Q().message()==null?"":response.data().getPosts_Q().message();
+                           Log.d("mesa",message);
                            Log.i("","inside success");
 
                            for(int i =0;i<response.data().getPosts_Q().posts().size();i++)
@@ -268,6 +273,8 @@ public class HomeFragment extends Fragment {
                        }
                        else
                        if(status.equals("Failure")){
+                        //   String message=response.data().getPosts_Q().message();
+                           Log.d("mesa",message);
                            if(message.equals("Invalid token: access token is invalid")){
 
                                GetNewRefreshToken.getRefreshtoken(refreshToken,getActivity());

@@ -434,13 +434,13 @@ submitdata.setOnClickListener(new View.OnClickListener() {
             req.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                    System.out.println("Image response"+ response);
+                    System.out.println("homescreenimage response"+ response);
 
                     if (response.code() == 200) {
 //                        successMsg.setText("Uploaded Successfully!");
 //                        successMsg.setTextColor(Color.BLUE);
 //
-                        System.out.println("Image response"+ response);
+                        System.out.println("homescreenimage response"+ response);
 
                         /*org.json.simple.JSONObject jsonObj = null;
                         try {

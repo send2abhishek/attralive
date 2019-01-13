@@ -73,14 +73,20 @@
     android:name=".activity.NewsFeedPostActivity"
     android:windowSoftInputMode="stateVisible|adjustPan"/>
 
-
-
-
         <activity
             android:name=".activity.SplashScreen"
-
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            >
+            <intent-filter>
+
+                <action android:name="com.google.firebase.MESSAGING_EVENT"></action>
+                <category android:name="android.intent.category.DEFAULT"></category>
+            </intent-filter>
+
+
+        </activity>
+
         <activity android:name=".activity.TermsConditionsActivity" />
         <activity
             android:name=".activity.OtpValidationActivity"

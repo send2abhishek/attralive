@@ -13,7 +13,8 @@ public class MyAppolloClient {
 
 
 
-    private static  final String URL = "http://192.168.1.6:4001/graphql";
+//    private static  final String URL = "http://18.191.196.0:80/graphql";
+    private static  final String URL = "http://10.0.75.1:4001/graphql";
 
 
     private static ApolloClient apolloClient;

@@ -199,6 +199,15 @@ private void callservice()
                                 startActivity(intent1);
                             }
                             else if( (otpStatus.equals("Failure"))) {
+                                if(message.equals("Invalid OTP")){
+                                    Toast.makeText(getApplicationContext(), "Invalid OTP", Toast.LENGTH_LONG).show();
+                                    motpNumber1.setText("");
+                                    motpNumber2.setText("");
+                                    motpNumber3.setText("");
+                                    motpNumber4.setText("");
+                                    motpNumber1.requestFocus();
+
+                                }
 
                                 if (message.equals("Invalid token: access token has expired")) {
                                     GetNewRefreshToken.getRefreshtoken(refreshToken, OtpValidationActivity.this);
