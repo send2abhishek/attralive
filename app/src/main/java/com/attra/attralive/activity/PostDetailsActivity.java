@@ -177,8 +177,8 @@ likeimage.setOnClickListener(new View.OnClickListener() {
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if(itemId == android.R.id.home){
-          finish();
-          startActivity(getIntent());
+          Intent i = new Intent(PostDetailsActivity.this, DashboardActivity.class);
+          startActivity(i);
         }
         return true;
 

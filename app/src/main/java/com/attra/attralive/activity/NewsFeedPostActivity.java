@@ -150,6 +150,7 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
        tvlocation=findViewById(R.id.tv_title);
        imageView = findViewById(R.id.img_userImage);
 
+       Log.i("ProfileImage", profileimage);
        Picasso.with(NewsFeedPostActivity.this)
                .load(profileimage).
                memoryPolicy(MemoryPolicy.NO_CACHE)
