@@ -191,7 +191,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void callLoginservice(String accesstoken) {
 
-        if (isNetworkAvailable(getApplicationContext())) {
+       /* if (isNetworkAvailable(getApplicationContext())) {*/
             MyAppolloClient.getMyAppolloClient(GetNewRefreshToken.Authorization).query(UserLoginAuth.builder().username(username + attraemail.getText().toString().trim()).
                     password(password).build()).enqueue(new ApolloCall.Callback<UserLoginAuth.Data>() {
                 @Override
@@ -269,9 +269,9 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
 
-        } else {
+      /*  } else {
             Toast.makeText(this, "Please check network connectivity", Toast.LENGTH_SHORT).show();
-        }
+        }*/
     }
 
 

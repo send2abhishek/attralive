@@ -45,9 +45,9 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         this.getWindow().setStatusBarColor(Color.TRANSPARENT);
         ProgressDialog progressdialog = new ProgressDialog(ForgotPasswordActivity.this);
         progressdialog.setMessage("Please Wait....");
-        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+  //      String refreshedToken = FirebaseInstanceId.getInstance().getToken();
 //        Log.i("ref token",refreshedToken);
-        emailId.setText(refreshedToken);
+  //      emailId.setText(refreshedToken);
         backtologinbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

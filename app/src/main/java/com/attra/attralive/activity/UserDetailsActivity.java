@@ -313,7 +313,7 @@ public class UserDetailsActivity extends AppCompatActivity {
         Log.i("initRetrofitClient", "initRetrofitClient");
         client = new OkHttpClient.Builder().build();
 
-        apiService = new Retrofit.Builder().baseUrl("http://10.200.44.25:4001").client(client).build().create(ApiService.class);
+        apiService = new Retrofit.Builder().baseUrl("http://13.232.225.201:80").client(client).build().create(ApiService.class);
     }
 
     @Override
@@ -418,11 +418,9 @@ public class UserDetailsActivity extends AppCompatActivity {
             fos.flush();
             fos.close();
 
-
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
             MultipartBody.Part body = MultipartBody.Part.createFormData("imageFile", file.getName(), reqFile);
             Log.i("file.getName()", file.getName());
-
 
             RequestBody newuserId = createPartFromString(userId);
             RequestBody type = createPartFromString("profilePicture");
@@ -477,7 +475,6 @@ public class UserDetailsActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     private RequestBody createPartFromString(String data) {
