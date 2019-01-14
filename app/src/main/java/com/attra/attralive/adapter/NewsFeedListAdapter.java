@@ -90,18 +90,18 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
 
         holder.likeImg.setOnClickListener(v -> {
 
-            if ((int) (holder.likeImg.getTag()) == R.drawable.ic_thumb_up_grey_24dp) {
+            if ((int) (holder.likeImg.getTag()) == R.drawable.ic_thumb_up_greyempty_24dp) {
                 updatedlikes = Integer.parseInt(holder.noOfLikes.getText().toString());
                 holder.noOfLikes.setText(""+(updatedlikes+1));
-                holder.likeImg.setImageResource(R.drawable.ic_thumb_up_color_24dp);
-                holder.likeImg.setTag(R.drawable.ic_thumb_up_color_24dp);
-
-
-            } else if ((int) (holder.likeImg.getTag()) == R.drawable.ic_thumb_up_color_24dp) {
-                updatedlikes = Integer.parseInt(holder.noOfLikes.getText().toString());
-                holder.noOfLikes.setText(""+(updatedlikes-1));
                 holder.likeImg.setImageResource(R.drawable.ic_thumb_up_grey_24dp);
                 holder.likeImg.setTag(R.drawable.ic_thumb_up_grey_24dp);
+
+
+            } else if ((int) (holder.likeImg.getTag()) == R.drawable.ic_thumb_up_grey_24dp) {
+                updatedlikes = Integer.parseInt(holder.noOfLikes.getText().toString());
+                holder.noOfLikes.setText(""+(updatedlikes-1));
+                holder.likeImg.setImageResource(R.drawable.ic_thumb_up_greyempty_24dp);
+                holder.likeImg.setTag(R.drawable.ic_thumb_up_greyempty_24dp);
 
             }
 
@@ -140,13 +140,13 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
 
         if(newsFeed.getlike())
         {
-            holder.likeImg.setImageResource(R.drawable.ic_thumb_up_color_24dp);
-            holder.likeImg.setTag(R.drawable.ic_thumb_up_color_24dp);
+            holder.likeImg.setImageResource(R.drawable.ic_thumb_up_grey_24dp);
+            holder.likeImg.setTag(R.drawable.ic_thumb_up_grey_24dp);
         }
         else
         {
-            holder.likeImg.setImageResource(R.drawable.ic_thumb_up_grey_24dp);
-            holder.likeImg.setTag(R.drawable.ic_thumb_up_grey_24dp);
+            holder.likeImg.setImageResource(R.drawable.ic_thumb_up_greyempty_24dp);
+            holder.likeImg.setTag(R.drawable.ic_thumb_up_greyempty_24dp);
         }
 
         holder.optionmenu.setOnClickListener(new View.OnClickListener() {
@@ -154,9 +154,9 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
             public void onClick(View view) {
 
                 String postid = newsFeed.getPostId();
-                String userId = newsFeed.getUserid();
+                String likedUserId = newsFeed.getUserid();
 
-                String dummy = "nnn";
+
 
 
                 //creating a popup menu
@@ -186,7 +186,10 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
                     }
                 });
                 //displaying the popup
-                if(userId ==dummy )
+                Log.i("loggeduserId",userId);
+                Log.i("likeduserID",likedUserId);
+
+                if(userId.equals(likedUserId))
                 {
                     popup.show();
                 }

@@ -1,6 +1,6 @@
 mutation PostThought(
 $userId:String!,
-$description:String!,
+$description:String,
 $filePath:String){
 addPost_M(userId:$userId,description:$description,filePath:$filePath){
 status
