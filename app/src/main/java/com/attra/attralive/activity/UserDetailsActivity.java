@@ -151,7 +151,6 @@ public class UserDetailsActivity extends AppCompatActivity {
             userName = sharedPreferences.getString("userName", "");
             Log.i("user id in userDtail", userId);
             Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
-            String username = sharedPreferences.getString("userName", "");
 
         }
         getUserBU();
@@ -540,6 +539,11 @@ public class UserDetailsActivity extends AppCompatActivity {
                         // Log.d("res_status userDetails", status);
                         if (status.equals("Success")) {
                             Log.d("res_message in User", message);
+                            sharedPreferences = getApplicationContext().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, 0);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("location", workLoc);
+                            editor.putString("profileImagePath", path);
+                            editor.commit();
                             Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
                             startActivity(intent1);
                         } else if (status.equals("Failure")) {

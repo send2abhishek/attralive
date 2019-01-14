@@ -174,7 +174,8 @@ likeimage.setOnClickListener(new View.OnClickListener() {
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if(itemId == android.R.id.home){
-            finish();
+          finish();
+          startActivity(getIntent());
         }
         return true;
 

@@ -106,9 +106,10 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
     TextView successMsg;
     EditText postDescription;
     TextView Etusername, tvlocation;
+    String refreshToken, worklocation, profileimage;
     ImageView imageView;
     Button post;
-    String status, message, path, description,myToken,username,userID,location;
+    String status, message, path, description="",myToken,username,userID,location;
     public static final String PREFS_AUTH ="my_auth";
     private SharedPreferences sharedPreferences;
     VideoView videoView;
@@ -129,10 +130,10 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
         if (sharedPreferences.contains("authToken")) {
             myToken = sharedPreferences.getString("authToken", "");
             username = sharedPreferences.getString("userName","");
-            /*userId = sharedPreferences.getString("userId","");
+            userID = sharedPreferences.getString("userId","");
             refreshToken=sharedPreferences.getString("refreshToken","");
             worklocation=sharedPreferences.getString("location","");
-            profileimage=sharedPreferences.getString("profileImagePath","");*/
+            profileimage=sharedPreferences.getString("profileImagePath","");
             //username = sharedPreferences.getString("username","");
         }
             userID = sharedPreferences.getString("userId","");
@@ -148,12 +149,12 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
        imageView = findViewById(R.id.img_userImage);
 
        Picasso.with(NewsFeedPostActivity.this)
-               .load("https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546764535169-image.jpeg").
+               .load(profileimage).
                memoryPolicy(MemoryPolicy.NO_CACHE)
                .into(imageView);
 
-       Etusername.setText("Mohseen");
-       tvlocation.setText("Bangalore");
+       Etusername.setText(username);
+       tvlocation.setText(worklocation);
 
 
 
@@ -552,11 +553,17 @@ client         = new OkHttpClient.Builder().build();
 
                description = postDescription.getText().toString();
 
-                if (mBitmap != null)
-                    multipartImageUpload();
+               if(description.equals("") && mBitmap==null)
+               {
+                   Toast.makeText(NewsFeedPostActivity.this,"Please Enter description or image",Toast.LENGTH_LONG).show();
+               }
                 else {
-                    CallPostService();
-                }
+                   if (mBitmap != null)
+                       multipartImageUpload();
+                   else {
+                       CallPostService();
+                   }
+               }
                 break;
 
         }
