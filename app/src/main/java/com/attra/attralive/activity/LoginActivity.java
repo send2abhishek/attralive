@@ -18,18 +18,16 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
 import com.attra.attralive.Service.MyAppolloClient;
 import com.attra.attralive.util.GetNewRefreshToken;
-import com.google.firebase.iid.FirebaseInstanceId;
+
 
 import javax.annotation.Nonnull;
 
-import graphqlandroid.GetRefreshToken;
 import graphqlandroid.UserLoginAuth;
 
 public class LoginActivity extends AppCompatActivity {
@@ -189,7 +187,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void callLoginservice(String accesstoken) {
-        Log.d("accesstoken", accesstoken);
+
+      // Log.d("accesstoken", accesstoken);
         MyAppolloClient.getMyAppolloClient(GetNewRefreshToken.Authorization).query(UserLoginAuth.builder().username(username + attraemail.getText().toString().trim()).
                 password(password).build()).enqueue(new ApolloCall.Callback<UserLoginAuth.Data>() {
             @Override
@@ -268,16 +267,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-/*    public void frgtpsw(View view) {
-        Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
-        startActivity(intent);
-    }
 
-    public void register(View view) {
-        Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
-        startActivity(intent);
-
-    }*/
 }
 
 

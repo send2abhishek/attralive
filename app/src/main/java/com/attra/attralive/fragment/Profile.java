@@ -59,9 +59,7 @@ import fr.ganfra.materialspinner.MaterialSpinner;
 import graphqlandroid.GetBusinessUnit;
 import graphqlandroid.GetLocation;
 import graphqlandroid.GetProfileDetails;
-import graphqlandroid.UserDetailsUpdate;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
+
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -77,8 +75,8 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
  * A simple {@link Fragment} subclass.
  */
 public class Profile extends Fragment {
-    TextView username_view,password_view, userDesign,DOB,gender,phone,email, submit,empId;
-    MaterialSpinner location,bu;
+    TextView username_view,password_view, userDesign,DOB,gender,phone,email, submit,empId,location,bu;
+  //  MaterialSpinner location,bu;
     private SharedPreferences sharedPreferences;
     String myToken,userId,userName;
     public static final String PREFS_AUTH = "my_auth";
@@ -90,12 +88,7 @@ public class Profile extends Fragment {
     ArrayAdapter<String> locationAdapter;
     ArrayAdapter<String> userBuAdapter;
     OkHttpClient client;
-
-
-
     Fragment fragment = null;
-
-
     Uri picUri,outputFileUri;
     private ArrayList<String> permissionsToRequest;
     private ArrayList<String> permissionsRejected = new ArrayList<>();
@@ -135,18 +128,18 @@ public class Profile extends Fragment {
         empId = view.findViewById(R.id.et_empId);
         // username = view.findViewById(R.id.et_entername);
         userDesign=view.findViewById(R.id.et_designation);
-        bu = view.findViewById(R.id.sp_selectbu);
+        bu = view.findViewById(R.id.tv_userBu);
         phone = view.findViewById(R.id.et_mobilenumber);
         //      email= view.findViewById(R.id.emailId);
         //  submit = view.findViewById(R.id.btn_submitDetails);
-        location = view.findViewById(R.id.sp_userWorkLocation);
+        location = view.findViewById(R.id.tv_userWorkLocation);
         profilePic = view.findViewById(R.id.profileImage);
         submitdata=view.findViewById(R.id.editDetailsBtn);
         username_view=view.findViewById(R.id.et_userName);
         password_view=view.findViewById(R.id.et_password);
         //  qrCode = view.findViewById(R.id.img_qrCode);
-        getUserBU();
-        getUserLocation();
+        //getUserBU();
+      //  getUserLocation();
         getProfileDetail();
         // askPermissions();
         //   initRetrofitClient();
@@ -161,22 +154,22 @@ public class Profile extends Fragment {
             @Override
             public void onClick(View v) {
                 designation = userDesign.getText().toString();
-                if(location.getSelectedItem()!=null) {
-                    workLoc = location.getSelectedItem().toString();
+                if(location.getText()!=null) {
+                    workLoc = location.getText().toString();
                 }else
                 {
                     Log.i("user bu","Proofile==>onEdit loc is null");
                 }
-                if(bu.getSelectedItem()!=null) {
-                    userBu = bu.getSelectedItem().toString();
-                    Log.i("User bu", "Profile==>EditOnclcick  " + bu.getSelectedItem());
+                if(bu.getText()!=null) {
+                    userBu = bu.getText().toString();
+                   // Log.i("User bu", "Profile==>EditOnclcick  " + bu.getSelectedItem());
                 }
                 else
                 {
                     Log.i("user bu","Proofile==>onEdit bu is null");
                 }
                 if(phNo!=null) {
-                    mobile = phNo.getText().toString();
+                    mobile = phone.getText().toString();
                     Log.i("Phone number","Profile==>editclcick==>phone number "+ mobile);
                 }
                 else
@@ -202,11 +195,11 @@ public class Profile extends Fragment {
                     userDesign.setError("Designation is required");
                     userDesign.requestFocus();
                 } else if (workLoc.trim().equals("")) {
-                    ((TextView) location.getSelectedView()).setError("Select Location");
-                    ((TextView) location.getSelectedView()).requestFocus();
+                   /* ((TextView) location.getSelectedView()).setError("Select Location");
+                    ((TextView) location.getSelectedView()).requestFocus();*/
                 }  else if (userBu.trim().equals("")) {
-                    ((TextView) bu.getSelectedView()).setError("Select BU");
-                    ((TextView) bu.getSelectedView()).requestFocus();
+                   /* ((TextView) bu.getSelectedView()).setError("Select BU");
+                    ((TextView) bu.getSelectedView()).requestFocus();*/
                 } else if (mobile.length() < 10) {
                     phNo.setError("Enter valid Contact Number");
                     phNo.requestFocus();
@@ -535,7 +528,7 @@ public class Profile extends Fragment {
     private RequestBody createPartFromString(String data) {
         return RequestBody.create(MultipartBody.FORM,data);
     }*/
-    private void getUserBU(){
+   /* private void getUserBU(){
 
         MyAppolloClient.getMyAppolloClient(myToken).query(
                 GetBusinessUnit.builder()
@@ -555,9 +548,7 @@ public class Profile extends Fragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                userBuAdapter = new ArrayAdapter<>(getActivity(),
-                                        android.R.layout.simple_spinner_item,buList);
-
+                                userBuAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item,buList);
                                 userBuAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                 bu.setAdapter(userBuAdapter);
                                 bu.setSelection(0);
@@ -574,8 +565,8 @@ public class Profile extends Fragment {
                 }
         );
 
-    }
-    private void getUserLocation(){
+    }*/
+  /*  private void getUserLocation(){
         MyAppolloClient.getMyAppolloClient(myToken).query(
                 GetLocation.builder()
                         .build()).enqueue(
@@ -613,7 +604,7 @@ public class Profile extends Fragment {
                 }
         );
 
-    }
+    }*/
     private void getProfileDetail() {
 
         MyAppolloClient.getMyAppolloClient(myToken).query(
@@ -658,15 +649,19 @@ public class Profile extends Fragment {
                                             }
                                             phone.setText(phoneNo);
                                             empId.setText(emplyeeId);
+                                            bu.setText(businessUnit);
+                                            location.setText(loc);
                                             if (userBuAdapter != null && businessUnit != null) {
-                                                bu.setSelection(userBuAdapter.getPosition(businessUnit));
+                                                bu.setText(businessUnit);
+                                               // bu.setSelection(userBuAdapter.getPosition(businessUnit));
                                                 Toast.makeText(getContext(), "location position is ==" + userBuAdapter.getPosition(loc), Toast.LENGTH_SHORT).show();
                                             } else
                                                 Toast.makeText(getContext(), "user bu null == ", Toast.LENGTH_SHORT).show();
                                             //  bu.setSelection(1);
                                             if (locationAdapter != null && loc != null) {
+                                                location.setText(loc);
                                                 Log.i("profile==>loc","profile==>getprofiledetails==>loc"+loc+ "loc position  "+locationAdapter.getPosition(loc));
-                                                location.setSelection(locationAdapter.getPosition(loc));
+                                               // location.setSelection(locationAdapter.getPosition(loc));
                                                 Toast.makeText(getContext(), "location position is ==" + locationAdapter.getPosition(loc), Toast.LENGTH_SHORT).show();
                                             } else
                                                 Toast.makeText(getContext(), "user location null == ", Toast.LENGTH_SHORT).show();

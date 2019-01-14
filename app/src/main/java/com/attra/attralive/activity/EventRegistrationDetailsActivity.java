@@ -38,7 +38,7 @@ import graphqlandroid.GetEventDetails;
 public class EventRegistrationDetailsActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    public LinearLayout ll1,ll2;
+    public LinearLayout ll1, ll2;
     private final List<Fragment> mFragmentList = new ArrayList<>();
     private final List<String> mFragmentTitleList = new ArrayList<>();
     ViewPagerAdapter adapter;
@@ -46,24 +46,25 @@ public class EventRegistrationDetailsActivity extends AppCompatActivity {
     FAQFragment faqFragment;
     Intent intent;
     ImageView eventposter;
-    String eventId,reguserId;
+    String eventId, reguserId;
     SharedPreferences sharedPreferences;
-    String location,eventtitle,venue,startdate,enddate,starttime,endtime,description,
-            status,message,eventpath,refreshToken,userId,name,myToken;
+    String location, eventtitle, venue, startdate, enddate, starttime, endtime, description,
+            status, message, eventpath, refreshToken, userId, name, myToken;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_registration_details);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
-        eventposter=findViewById(R.id.im_eventposter);
+        eventposter = findViewById(R.id.im_eventposter);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Attraction 2019");
-        intent=getIntent();
-        location=intent.getStringExtra("location");
+        intent = getIntent();
+        location = intent.getStringExtra("location");
 //       Toast.makeText(getApplicationContext(),intent.getStringExtra("location").toString(),Toast.LENGTH_LONG).show();
-       /* getEventDetails();*/
+        /* getEventDetails();*/
         //setupViewPager(viewPager);
-      //  intent=getIntent();
+        //  intent=getIntent();
 
 //        Toast.makeText(getApplicationContext(),intent.getStringExtra("location").toString(),Toast.LENGTH_LONG).show();
         tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -85,7 +86,7 @@ public class EventRegistrationDetailsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
-        if(itemId == android.R.id.home){
+        if (itemId == android.R.id.home) {
             finish();
         }
         return true;
@@ -93,92 +94,92 @@ public class EventRegistrationDetailsActivity extends AppCompatActivity {
         //return super.onOptionsItemSelected(item);
     }
 
-    private void getEventDetails(String accesstoken)
-{
-    MyAppolloClient.getMyAppolloClient(accesstoken).
-            query(GetEventDetails.builder().status("A").location("bangalore").build()).enqueue(new ApolloCall.Callback<GetEventDetails.Data>() {
-        @Override
-        public void onResponse(@Nonnull Response<GetEventDetails.Data> response) {
-            if(response.data().getEventDetails_Q().eventD()!=null){
-            String Status = response.data().getEventDetails_Q().eventD().get(0).status();
-            String Message = response.data().getEventDetails_Q().eventD().get(0).message();
-            eventpath = response.data().getEventDetails_Q().eventD().get(0).event_image_path();
-            eventtitle = response.data().getEventDetails_Q().eventD().get(0).event_title();
-            description = response.data().getEventDetails_Q().eventD().get(0).Description();
-            venue = response.data().getEventDetails_Q().eventD().get(0).venue();
-            startdate = response.data().getEventDetails_Q().eventD().get(0).Schedule().start_date();
-            starttime = response.data().getEventDetails_Q().eventD().get(0).Schedule().start_time();
-            enddate = response.data().getEventDetails_Q().eventD().get(0).Schedule().end_date();
-            endtime = response.data().getEventDetails_Q().eventD().get(0).Schedule().end_time();
-            eventId = response.data().getEventDetails_Q().eventD().get(0).id();
-            EventRegistrationDetailsActivity.this.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Picasso.with(EventRegistrationDetailsActivity.this).load(eventpath).into(eventposter);
-                    adapter = new ViewPagerAdapter(getSupportFragmentManager());
-                    fragment = new EventRegisteredDetailsFragment();
-                    Bundle bundle = new Bundle();
-                    for (int i = 0; i < response.data().getEventDetails_Q().eventD().get(0).registeredUsers().size(); i++) {
-                        reguserId = response.data().getEventDetails_Q().eventD().get(0).registeredUsers().get(i).userId();
-                        if (reguserId.equals(userId)) {
-                            bundle.putString("RegistrationId", response.data().getEventDetails_Q().eventD().
-                                    get(0).registeredUsers().get(i).registrationId());
-                            bundle.putString("QRcodelink", response.data().getEventDetails_Q().eventD().
-                                    get(0).registeredUsers().get(i).QRCodeLink());
-                            bundle.putString("isRegistered", "true");
-                            break;
-                        } else
-                            bundle.putString("isRegistered", "false");
-                    }
-                    bundle.putString("Venue", venue);
-                    bundle.putString("StartDate", startdate);
-                    bundle.putString("EndDate", enddate);
-                    bundle.putString("StartTime", starttime);
-                    bundle.putString("EndTime", endtime);
-                    bundle.putString("EventId", endtime);
-                    bundle.putString("Location", location);
-                    fragment.setArguments(bundle);
-                    adapter.addFragment(fragment, "Details");
-                    faqFragment = new FAQFragment();
-                    Bundle bundle1 = new Bundle();
-                    for (int j = 0; j < response.data().getEventDetails_Q().eventD().get(0).FAQs().size(); j++) {
-                        bundle1.putString("Question" + j, response.data().getEventDetails_Q().eventD().get(0).FAQs().get(j).Question());
-                        bundle1.putString("Answer" + j, response.data().getEventDetails_Q().eventD().get(0).FAQs().get(j).Answer());
-                    }
-                    bundle1.putInt("FAQcount", response.data().getEventDetails_Q().eventD().get(0).FAQs().size());
-                    fragment.setArguments(bundle1);
-                    adapter.addFragment(new FAQFragment(), "FAQ");
-                    viewPager.setAdapter(adapter);
-                }
-            });
-
-            if (Status.equals("Failure")) {
-                if (Message.equals("Invalid token: access token is invalid")) {
-
-                    GetNewRefreshToken.getRefreshtoken(refreshToken, EventRegistrationDetailsActivity.this);
+    private void getEventDetails(String accesstoken) {
+        MyAppolloClient.getMyAppolloClient(accesstoken).
+                query(GetEventDetails.builder().status("A").location("bangalore").build()).enqueue(new ApolloCall.Callback<GetEventDetails.Data>() {
+            @Override
+            public void onResponse(@Nonnull Response<GetEventDetails.Data> response) {
+                if (response.data().getEventDetails_Q().eventD() != null) {
+                    String Status = response.data().getEventDetails_Q().eventD().get(0).status();
+                    String Message = response.data().getEventDetails_Q().eventD().get(0).message();
+                    eventpath = response.data().getEventDetails_Q().eventD().get(0).event_image_path();
+                    eventtitle = response.data().getEventDetails_Q().eventD().get(0).event_title();
+                    description = response.data().getEventDetails_Q().eventD().get(0).Description();
+                    venue = response.data().getEventDetails_Q().eventD().get(0).venue();
+                    startdate = response.data().getEventDetails_Q().eventD().get(0).Schedule().start_date();
+                    starttime = response.data().getEventDetails_Q().eventD().get(0).Schedule().start_time();
+                    enddate = response.data().getEventDetails_Q().eventD().get(0).Schedule().end_date();
+                    endtime = response.data().getEventDetails_Q().eventD().get(0).Schedule().end_time();
+                    eventId = response.data().getEventDetails_Q().eventD().get(0).id();
                     EventRegistrationDetailsActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            sharedPreferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
-                            if (sharedPreferences.contains("authToken")) {
-                                String myToken = sharedPreferences.getString("authToken", "");
-                                getEventDetails(myToken);
-                                Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
-
+                            Picasso.with(EventRegistrationDetailsActivity.this).load(eventpath).into(eventposter);
+                            adapter = new ViewPagerAdapter(getSupportFragmentManager());
+                            fragment = new EventRegisteredDetailsFragment();
+                            Bundle bundle = new Bundle();
+                            for (int i = 0; i < response.data().getEventDetails_Q().eventD().get(0).registeredUsers().size(); i++) {
+                                reguserId = response.data().getEventDetails_Q().eventD().get(0).registeredUsers().get(i).userId();
+                                if (reguserId.equals(userId)) {
+                                    bundle.putString("RegistrationId", response.data().getEventDetails_Q().eventD().
+                                            get(0).registeredUsers().get(i).registrationId());
+                                    bundle.putString("QRcodelink", response.data().getEventDetails_Q().eventD().
+                                            get(0).registeredUsers().get(i).QRCodeLink());
+                                    bundle.putString("isRegistered", "true");
+                                    break;
+                                } else
+                                    bundle.putString("isRegistered", "false");
                             }
+                            bundle.putString("Venue", venue);
+                            bundle.putString("StartDate", startdate);
+                            bundle.putString("EndDate", enddate);
+                            bundle.putString("StartTime", starttime);
+                            bundle.putString("EndTime", endtime);
+                            bundle.putString("EventId", endtime);
+                            bundle.putString("Location", location);
+                            fragment.setArguments(bundle);
+                            adapter.addFragment(fragment, "Details");
+                            faqFragment = new FAQFragment();
+                            Bundle bundle1 = new Bundle();
+                            for (int j = 0; j < response.data().getEventDetails_Q().eventD().get(0).FAQs().size(); j++) {
+                                bundle1.putString("Question" + j, response.data().getEventDetails_Q().eventD().get(0).FAQs().get(j).Question());
+                                bundle1.putString("Answer" + j, response.data().getEventDetails_Q().eventD().get(0).FAQs().get(j).Answer());
+                            }
+                            bundle1.putInt("FAQcount", response.data().getEventDetails_Q().eventD().get(0).FAQs().size());
+                            fragment.setArguments(bundle1);
+                            adapter.addFragment(new FAQFragment(), "FAQ");
+                            viewPager.setAdapter(adapter);
                         }
                     });
+
+                    if (Status.equals("Failure")) {
+                        if (Message.equals("Invalid token: access token is invalid")) {
+
+                            GetNewRefreshToken.getRefreshtoken(refreshToken, EventRegistrationDetailsActivity.this);
+                            EventRegistrationDetailsActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    sharedPreferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
+                                    if (sharedPreferences.contains("authToken")) {
+                                        String myToken = sharedPreferences.getString("authToken", "");
+                                        getEventDetails(myToken);
+                                        Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
+
+                                    }
+                                }
+                            });
+                        }
+                    }
                 }
             }
-        }
-        }
 
-        @Override
-        public void onFailure(@Nonnull ApolloException e) {
+            @Override
+            public void onFailure(@Nonnull ApolloException e) {
 
-        }
-    });
-}
+            }
+        });
+    }
+
     /*private void setupViewPager(ViewPager viewPager) {
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
         fragment=new EventRegisteredDetailsFragment();

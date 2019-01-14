@@ -1,4 +1,5 @@
 package com.attra.attralive.activity;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -87,7 +88,7 @@ import graphqlandroid.UserDetailsUpdate;
 
 
 public class UserDetailsActivity extends AppCompatActivity {
-    MaterialSpinner  location,bu;
+    MaterialSpinner location, bu;
     Button continueBtn;
 
     TextView dob;
@@ -101,7 +102,6 @@ public class UserDetailsActivity extends AppCompatActivity {
     OkHttpClient client;
 
 
-
     Fragment fragment = null;
 
 
@@ -113,22 +113,20 @@ public class UserDetailsActivity extends AppCompatActivity {
     private final static int IMAGE_RESULT = 200;
 
 
-
     EditText postDescription;
 
-    String status, message, path, description,myToken,username,userId;
+    String status, message, path, description, myToken, username, userId;
     ImageView uploadimage;
 
-    ImageView fabCamera, capturedImage,upload;
+    ImageView fabCamera, capturedImage, upload;
     Bitmap mBitmap;
     TextView successMsg, Description;
     Button post;
 
 
-
-    String emailId, password,userBu,designation,workLoc,mobile,employeeId;
+    String emailId, password, userBu, designation, workLoc, mobile, employeeId;
     EditText empId, phNo, userDesign;
-    String buValue,userName;
+    String buValue, userName;
     private static ApolloClient apolloClient;
 
     private SharedPreferences sharedPreferences;
@@ -141,38 +139,23 @@ public class UserDetailsActivity extends AppCompatActivity {
         bu = findViewById(R.id.sp_selectbu);
         location = findViewById(R.id.sp_userWorkLocation);
         continueBtn = findViewById(R.id.continuebutton);
-
-
         empId = findViewById(R.id.et_empId);
-
-
         phNo = findViewById(R.id.et_mobilenumber);
-
-
         upload = findViewById(R.id.profileImage);
-
-
-
-
         sharedPreferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
-            Toast.makeText(this, "Shared pref val "+"sharedPreferences.getString(\"authToken\", \"\")", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Shared pref val " + "sharedPreferences.getString(\"authToken\", \"\")", Toast.LENGTH_SHORT).show();
             myToken = sharedPreferences.getString("authToken", "");
 
-            userId = sharedPreferences.getString("userId","");
-            userName = sharedPreferences.getString("userName","");
-            Log.i("user id in userDtail",userId);
+            userId = sharedPreferences.getString("userId", "");
+            userName = sharedPreferences.getString("userName", "");
+            Log.i("user id in userDtail", userId);
             Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
-
-            String username = sharedPreferences.getString("userName","");
-
+            String username = sharedPreferences.getString("userName", "");
 
         }
-
         getUserBU();
         getUserLocation();
-
-
         askPermissions();
         initRetrofitClient();
         upload.setOnClickListener(new View.OnClickListener() {
@@ -183,11 +166,9 @@ public class UserDetailsActivity extends AppCompatActivity {
                 onSelectImageClick(v);
 
 
-
-
             }
         });
-        if(continueBtn!=null)
+        if (continueBtn != null)
             continueBtn.setOnClickListener(new View.OnClickListener() {
 
                 @Override
@@ -201,7 +182,6 @@ public class UserDetailsActivity extends AppCompatActivity {
                     employeeId = empId.getText().toString();
 
 
-
                     if (employeeId.trim().equals("")) {
                         empId.setError("Employee Id is required");
                         empId.requestFocus();
@@ -211,19 +191,18 @@ public class UserDetailsActivity extends AppCompatActivity {
                     } else if (workLoc.trim().equals("")) {
                         ((TextView) location.getSelectedView()).setError("Select Location");
                         ((TextView) location.getSelectedView()).requestFocus();
-                    }  else if (userBu.trim().equals("")) {
+                    } else if (userBu.trim().equals("")) {
                         ((TextView) bu.getSelectedView()).setError("Select BU");
                         ((TextView) bu.getSelectedView()).requestFocus();
                     } else if (mobile.length() < 10) {
                         phNo.setError("Enter valid Contact Number");
                         phNo.requestFocus();
                     } else {
-                        if(mBitmap!=null) {
-                            Log.i("mBitmap",mBitmap+"");
+                        if (mBitmap != null) {
+                            Log.i("mBitmap", mBitmap + "");
                             multipartImageUpload();
-                        }else
-                        {
-                            path="https://dsd8ltrb0t82s.cloudfront.net/ProfilePictures/1546848719271-image.jpeg";
+                        } else {
+                            path = "https://dsd8ltrb0t82s.cloudfront.net/ProfilePictures/1546848719271-image.jpeg";
                             CallSubmitDataService();
                         }
 
@@ -232,27 +211,22 @@ public class UserDetailsActivity extends AppCompatActivity {
 
                 }
             });
-
-
-
     }
 
     public void onSelectImageClick(View view) {
-        Log.i("onselectimageclick","onselectimageclick");
+        Log.i("onselectimageclick", "onselectimageclick");
         CropImage.startPickImageActivity(this);
     }
+
     private void startCropImageActivity(Uri imageUri) {
-        Log.i("startCropImageActivity","startCropImageActivity");
+        Log.i("startCropImageActivity", "startCropImageActivity");
         CropImage.activity(imageUri)
                 .setGuidelines(CropImageView.Guidelines.ON)
                 .setMultiTouchEnabled(true)
                 .start(this);
     }
 
-
-
-
-    private void getUserLocation(){
+    private void getUserLocation() {
         MyAppolloClient.getMyAppolloClient(myToken).query(
                 GetLocation.builder()
                         .build()).enqueue(
@@ -260,9 +234,8 @@ public class UserDetailsActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(@Nonnull Response<GetLocation.Data> response) {
                         Log.i("res", String.valueOf(response));
-                        if(response.data().getLocations_Q().locations()!=null)
-                        {
-                            for(int loopVar= 0; loopVar<response.data().getLocations_Q().locations().size(); loopVar++) {
+                        if (response.data().getLocations_Q().locations() != null) {
+                            for (int loopVar = 0; loopVar < response.data().getLocations_Q().locations().size(); loopVar++) {
                                 String locationData = response.data().getLocations_Q().locations().get(loopVar);
                                 locationList.add(locationData);
                                 Log.i("location", locationData);
@@ -273,7 +246,7 @@ public class UserDetailsActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 ArrayAdapter<String> locationAdapter = new ArrayAdapter<>(UserDetailsActivity.this,
-                                        android.R.layout.simple_spinner_item,locationList);
+                                        android.R.layout.simple_spinner_item, locationList);
                                 locationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                 location.setAdapter(locationAdapter);
                                 location.setSelection(0);
@@ -282,7 +255,6 @@ public class UserDetailsActivity extends AppCompatActivity {
                                 location.setEnableFloatingLabel(true);
                             }
                         });
-
                     }
 
                     @Override
@@ -293,10 +265,10 @@ public class UserDetailsActivity extends AppCompatActivity {
 
     }
 
-    private void getUserBU(){
+    private void getUserBU() {
 
 
-        Log.i("token in user details",myToken);
+        Log.i("token in user details", myToken);
         MyAppolloClient.getMyAppolloClient(myToken).query(
                 GetBusinessUnit.builder()
                         .build()).enqueue(
@@ -304,7 +276,7 @@ public class UserDetailsActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(@Nonnull Response<GetBusinessUnit.Data> response) {
                         Log.i("res", String.valueOf(response));
-                        if(response.data().getBusinessUnits_Q().businessUnits()!=null) {
+                        if (response.data().getBusinessUnits_Q().businessUnits() != null) {
                             for (int loopVar = 0; loopVar < response.data().getBusinessUnits_Q().businessUnits().size(); loopVar++) {
                                 String businessUnitData = response.data().getBusinessUnits_Q().businessUnits().get(loopVar);
                                 buList.add(businessUnitData);
@@ -316,12 +288,12 @@ public class UserDetailsActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 ArrayAdapter<String> userBuAdapter = new ArrayAdapter<>(UserDetailsActivity.this,
-                                        android.R.layout.simple_spinner_item,buList);
+                                        android.R.layout.simple_spinner_item, buList);
 
                                 userBuAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                 bu.setAdapter(userBuAdapter);
                                 bu.setSelection(0);
-                              /*  location.setHint("Select an item");*/
+                                /*  location.setHint("Select an item");*/
                                 location.setEnableFloatingLabel(true);
                             }
                         });
@@ -335,6 +307,7 @@ public class UserDetailsActivity extends AppCompatActivity {
         );
 
     }
+
     private void askPermissions() {
         permissions.add(CAMERA);
         permissions.add(WRITE_EXTERNAL_STORAGE);
@@ -349,6 +322,7 @@ public class UserDetailsActivity extends AppCompatActivity {
                 requestPermissions(permissionsToRequest.toArray(new String[permissionsToRequest.size()]), ALL_PERMISSIONS_RESULT);
         }
     }
+
     private ArrayList<String> findUnAskedPermissions(ArrayList<String> wanted) {
         ArrayList<String> result = new ArrayList<String>();
 
@@ -360,6 +334,7 @@ public class UserDetailsActivity extends AppCompatActivity {
 
         return result;
     }
+
     private boolean hasPermission(String permission) {
         if (canMakeSmores()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -368,72 +343,22 @@ public class UserDetailsActivity extends AppCompatActivity {
         }
         return true;
     }
+
     private boolean canMakeSmores() {
         return (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1);
     }
+
     private void initRetrofitClient() {
-        Log.i("initRetrofitClient","initRetrofitClient");
-        client         = new OkHttpClient.Builder().build();
+        Log.i("initRetrofitClient", "initRetrofitClient");
+        client = new OkHttpClient.Builder().build();
 
         apiService = new Retrofit.Builder().baseUrl("http://10.200.44.25:4001").client(client).build().create(ApiService.class);
     }
-//    public Intent getPickImageChooserIntent() {
-//        Log.i("getPickImageChooser","getPickImageChooserIntent");
-//        Uri outputFileUri = getCaptureImageOutputUri();
-//
-//        List<Intent> allIntents = new ArrayList<>();
-//        PackageManager packageManager = getPackageManager();
-//
-//        Intent captureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-//        List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
-//        for (ResolveInfo res : listCam) {
-//            Intent intent = new Intent(captureIntent);
-//            intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-//            intent.setPackage(res.activityInfo.packageName);
-//            if (outputFileUri != null) {
-//                intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-//            }
-//            allIntents.add(intent);
-//        }
-//
-//        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
-//        galleryIntent.setType("image/*");
-//        List<ResolveInfo> listGallery = packageManager.queryIntentActivities(galleryIntent, 0);
-//        for (ResolveInfo res : listGallery) {
-//            Intent intent = new Intent(galleryIntent);
-//            intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-//            intent.setPackage(res.activityInfo.packageName);
-//            allIntents.add(intent);
-//        }
-//
-//        Intent mainIntent = allIntents.get(allIntents.size() - 1);
-//        for (Intent intent : allIntents) {
-//            if (intent.getComponent().getClassName().equals("com.android.documentsui.DocumentsActivity")) {
-//                mainIntent = intent;
-//                break;
-//            }
-//        }
-//        allIntents.remove(mainIntent);
-//
-//        Intent chooserIntent = Intent.createChooser(mainIntent, "Select source");
-//        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, allIntents.toArray(new Parcelable[allIntents.size()]));
-//
-//        return chooserIntent;
-//    }
-//    @RequiresApi(api = Build.VERSION_CODES.FROYO)
-//    private Uri getCaptureImageOutputUri() {
-//        Log.i("getCaptureImage","getCaptureImageOutputUri");
-//        Uri outputFileUri = null;
-//        File getImage = getExternalFilesDir("");
-//        if (getImage != null) {
-//            outputFileUri = Uri.fromFile(new File(getImage.getPath(), "profile.jpeg"));
-//        }
-//        return outputFileUri;
-//    }
+
     @Override
     @SuppressLint("NewApi")
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.i("onActivityResult","onActivityResult");
+        Log.i("onActivityResult", "onActivityResult");
         // handle result of pick image chooser
         if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             Uri imageUri = CropImage.getPickImageResultUri(this, data);
@@ -457,12 +382,11 @@ public class UserDetailsActivity extends AppCompatActivity {
                 Toast.makeText(this, "Cropping successful, Sample: " + result.getSampleSize(), Toast.LENGTH_LONG).show();
 
                 try {
-                    mBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),result.getUri());
+                    mBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), result.getUri());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
-            else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Toast.makeText(this, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG).show();
             }
         }
@@ -471,11 +395,12 @@ public class UserDetailsActivity extends AppCompatActivity {
 
     public String getImageFilePath(Intent data) {
 
-        Log.i("getImageFilePath","getImageFilePath");
+        Log.i("getImageFilePath", "getImageFilePath");
         return getImageFromFilePath(data);
     }
+
     private String getImageFromFilePath(Intent data) {
-        Log.i("getImageFromFilePath","getImageFromFilePath");
+        Log.i("getImageFromFilePath", "getImageFromFilePath");
         boolean isCamera = data == null || data.getData() == null;
 
         if (isCamera) return getCaptureImageOutputUri().getPath();
@@ -483,13 +408,11 @@ public class UserDetailsActivity extends AppCompatActivity {
 
     }
 
-    private Uri getCaptureImageOutputUri()
-    {
+    private Uri getCaptureImageOutputUri() {
         Uri outputFileUri = null;
         File getImage = getExternalFilesDir("");
-        if(getImage!= null)
-        {
-            outputFileUri = Uri.fromFile(new File(getImage.getPath(),"profile.jpeg"));
+        if (getImage != null) {
+            outputFileUri = Uri.fromFile(new File(getImage.getPath(), "profile.jpeg"));
         }
         return outputFileUri;
     }
@@ -497,12 +420,13 @@ public class UserDetailsActivity extends AppCompatActivity {
 
     private String getPathFromURI(Uri contentUri) {
 
-    String[] proj = {MediaStore.Audio.Media.DATA};
-    Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
-    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
-    cursor.moveToFirst();
-    return cursor.getString(column_index);
+        String[] proj = {MediaStore.Audio.Media.DATA};
+        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
     }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -518,12 +442,12 @@ public class UserDetailsActivity extends AppCompatActivity {
     }
 
     private void multipartImageUpload() {
-        Log.i("multipartImageUpload","multipartImageUpload");
+        Log.i("multipartImageUpload", "multipartImageUpload");
         try {
             File filesDir = getApplicationContext().getFilesDir();
             File file = new File(filesDir, "image" + ".jpeg");
-            Log.i("file in multipart",file+"");
-            Log.i("multipartImageUpload","Inside this method");
+            Log.i("file in multipart", file + "");
+            Log.i("multipartImageUpload", "Inside this method");
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             mBitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);
             byte[] bitmapdata = bos.toByteArray();
@@ -536,7 +460,7 @@ public class UserDetailsActivity extends AppCompatActivity {
 
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
             MultipartBody.Part body = MultipartBody.Part.createFormData("imageFile", file.getName(), reqFile);
-            Log.i("file.getName()",file.getName());
+            Log.i("file.getName()", file.getName());
 
 
             RequestBody userId = createPartFromString("5c31e8f07db2e805e077c037");
@@ -549,10 +473,10 @@ public class UserDetailsActivity extends AppCompatActivity {
             req.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                    System.out.println("homescreenimage response"+ response);
+                    System.out.println("homescreenimage response" + response);
 
                     if (response.code() == 200) {
-                        System.out.println("homescreenimage response"+ response);
+                        System.out.println("homescreenimage response" + response);
 
                         try {
                             String data = response.body().string();
@@ -564,7 +488,7 @@ public class UserDetailsActivity extends AppCompatActivity {
                             message = jsonJavaRootObject.get("message").toString();
                             path = jsonJavaRootObject.get("path").toString();
 
-                            System.out.println(status+" " + message+" " + path);
+                            System.out.println(status + " " + message + " " + path);
                             CallSubmitDataService();
 
 
@@ -580,7 +504,7 @@ public class UserDetailsActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Log.i("","Failure body");
+                    Log.i("", "Failure body");
                     Toast.makeText(getApplicationContext(), "Request failed", Toast.LENGTH_LONG).show();
                     t.printStackTrace();
                 }
@@ -594,12 +518,14 @@ public class UserDetailsActivity extends AppCompatActivity {
         }
 
     }
+
     private RequestBody createPartFromString(String data) {
-        Log.i("createPartFromString","createPartFromString");
-        return RequestBody.create(MultipartBody.FORM,data);
+        Log.i("createPartFromString", "createPartFromString");
+        return RequestBody.create(MultipartBody.FORM, data);
     }
+
     private void CallSubmitDataService() {
-        Log.i("CallSubmitDataService","CallSubmitDataService"+ "  ====  "+path+"   token" +myToken);
+        Log.i("CallSubmitDataService", "CallSubmitDataService" + "  ====  " + path + "   token" + myToken);
         MyAppolloClient.getMyAppolloClient(myToken).mutate(
                 UserDetailsUpdate.builder().userId(userId).name(userName).designation(designation).empId(employeeId).location(workLoc)
                         .bu(userBu).mobileNumber(mobile).profileImagePath(path)
@@ -630,7 +556,6 @@ public class UserDetailsActivity extends AppCompatActivity {
                     }
                 }
         );
-
 
 
     }

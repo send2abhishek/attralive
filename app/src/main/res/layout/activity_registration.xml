@@ -374,15 +374,13 @@
                     android:textColor="@color/white" />
             </LinearLayout>
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/crd_regbutton"
+            <LinearLayout
+                android:id="@+id/crd_regButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="12dp"
-                android:elevation="10dp"
-
-                app:cardCornerRadius="24dp">
+                android:elevation="10dp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -406,7 +404,7 @@
                         android:textSize="20sp"
                         android:textStyle="bold" />
                 </RelativeLayout>
-            </android.support.v7.widget.CardView>
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_help"

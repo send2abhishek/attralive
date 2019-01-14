@@ -1,17 +1,14 @@
 package com.attra.attralive.activity;
 
-import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -49,22 +46,16 @@ import com.attra.attralive.fragment.HomeFragment;
 import com.attra.attralive.fragment.LearningD;
 import com.attra.attralive.model.NewsFeed;
 import com.attra.attralive.util.GetNewRefreshToken;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.attra.attralive.util.Config;
 import com.attra.attralive.util.NotificationUtils;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import javax.annotation.Nonnull;
 
-import graphqlandroid.ForgotPassword;
 import graphqlandroid.GetNotificationList;
 import graphqlandroid.GetProfileDetails;
 import graphqlandroid.Logout;
-import graphqlandroid.GetRefreshToken;
 
 import static com.attra.attralive.util.NetworkUtil.isNetworkAvailable;
 //import static com.attra.attralive.activity.OtpValidationActivity.PREFS_AUTH;
@@ -446,7 +437,7 @@ Intent intent;
             mImageLayoutView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(DashboardActivity.this, notificationActivity.class);
+                    Intent intent = new Intent(DashboardActivity.this, NotificationActivity.class);
                     if(notificationSize>0 && notificationList!=null)
                         intent.putExtra("NOTIFICATION_LIST", notificationList);
 
