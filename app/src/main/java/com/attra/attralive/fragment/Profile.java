@@ -1,6 +1,7 @@
 package com.attra.attralive.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -23,6 +24,7 @@ import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
 import com.attra.attralive.Service.ApiService;
 import com.attra.attralive.Service.MyAppolloClient;
+import com.attra.attralive.activity.activity_edit_profile_detail;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -100,12 +102,22 @@ public class Profile extends Fragment {
         submitdata = view.findViewById(R.id.editDetailsBtn);
         username_view = view.findViewById(R.id.et_userName);
         password_view = view.findViewById(R.id.et_password);
+
         //  qrCode = view.findViewById(R.id.img_qrCode);
         //getUserBU();
         //  getUserLocation();
         getProfileDetail();
+        empId.setEnabled(false);
+        userDesign.setEnabled(false);
+        bu.setEnabled(false);
+        phone.setEnabled(false);
+        location.setEnabled(false);
+        profilePic.setEnabled(false);
+        username_view.setEnabled(false);
+        password_view.setEnabled(false);
         // askPermissions();
         //   initRetrofitClient();
+
 
 /*profilePic.setOnClickListener(new View.OnClickListener() {
     @Override
@@ -114,6 +126,13 @@ public class Profile extends Fragment {
     }
 });*/
         submitdata.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1 = new Intent(getContext(),activity_edit_profile_detail.class);
+                startActivity(intent1);
+            }
+        });
+       /* submitdata.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 designation = userDesign.getText().toString();
@@ -139,9 +158,9 @@ public class Profile extends Fragment {
                 } else {
 
                 }
-                /*int sid=radioGroup.getCheckedRadioButtonId();
+                *//*int sid=radioGroup.getCheckedRadioButtonId();
                 radioButton=findViewById(sid);
-                String gender = radioButton.getText().toString();*/
+                String gender = radioButton.getText().toString();*//*
 
 
                 if (employeeId.trim().equals("")) {
@@ -151,11 +170,11 @@ public class Profile extends Fragment {
                     userDesign.setError("Designation is required");
                     userDesign.requestFocus();
                 } else if (workLoc.trim().equals("")) {
-                   /* ((TextView) location.getSelectedView()).setError("Select Location");
-                    ((TextView) location.getSelectedView()).requestFocus();*/
+                   *//* ((TextView) location.getSelectedView()).setError("Select Location");
+                    ((TextView) location.getSelectedView()).requestFocus();*//*
                 } else if (userBu.trim().equals("")) {
-                   /* ((TextView) bu.getSelectedView()).setError("Select BU");
-                    ((TextView) bu.getSelectedView()).requestFocus();*/
+                   *//* ((TextView) bu.getSelectedView()).setError("Select BU");
+                    ((TextView) bu.getSelectedView()).requestFocus();*//*
                 } else if (mobile.length() < 10) {
                     phNo.setError("Enter valid Contact Number");
                     phNo.requestFocus();
@@ -174,9 +193,10 @@ public class Profile extends Fragment {
                 }
 
             }
-        });
+        });*/
         return view;
     }
+
     /*private void callSubmiteditData(String accesstoken)
     {
         MyAppolloClient.getMyAppolloClient(accesstoken).mutate(
