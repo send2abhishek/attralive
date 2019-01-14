@@ -1,6 +1,9 @@
 package com.attra.attralive.activity;
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.Instrumentation;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
@@ -29,6 +32,7 @@ import android.text.TextWatcher;
 import android.util.EventLogTags;
 import android.util.JsonReader;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -78,6 +82,8 @@ import com.google.gson.Gson;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -101,9 +107,12 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
     TextView successMsg;
     EditText postDescription;
     TextView Etusername, tvlocation;
+    String refreshToken, worklocation, profileimage;
     ImageView imageView;
     Button post;
-    String status, message, path, description,myToken,username,userID,location,refreshToken,worklocation,profileimage;
+
+    String status, message, path, description="",myToken,username,userID,location;
+
     public static final String PREFS_AUTH ="my_auth";
     private SharedPreferences sharedPreferences;
     VideoView videoView;
@@ -114,6 +123,9 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         // getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_news_feed_post);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(R.string.post_your_thought);
+
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
         OkHttpClient httpclient=new OkHttpClient();
@@ -128,6 +140,10 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
             refreshToken=sharedPreferences.getString("refreshToken","");
             worklocation=sharedPreferences.getString("location","");
             profileimage=sharedPreferences.getString("profileImagePath","");
+
+
+            //username = sharedPreferences.getString("username","");
+
         }
 
         Etusername = findViewById(R.id.et_username);
@@ -160,6 +176,17 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
 
 
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == android.R.id.home) {
+            finish();
+        }
+        return true;
+
+        //return super.onOptionsItemSelected(item);
     }
 
     public void getNameandLocation()
@@ -214,7 +241,7 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
     private void initRetrofitClient() {
 client         = new OkHttpClient.Builder().build();
 
-        apiService = new Retrofit.Builder().baseUrl("http://10.200.44.25:4001").client(client).build().create(ApiService.class);
+        apiService = new Retrofit.Builder().baseUrl("http://10.200.44.20:4001").client(client).build().create(ApiService.class);
     }
 
     public Intent CallGetVideoMethod()
@@ -228,50 +255,8 @@ client         = new OkHttpClient.Builder().build();
         return intent;
     }
 
-    public Intent getPickImageChooserIntent() {
-
-         outputFileUri = getCaptureImageOutputUri();
-
-        List<Intent> allIntents = new ArrayList<>();
-        PackageManager packageManager = getPackageManager();
-
-        Intent captureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
-        for (ResolveInfo res : listCam) {
-            Intent intent = new Intent(captureIntent);
-            intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-            intent.setPackage(res.activityInfo.packageName);
-            if (outputFileUri != null) {
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-            }
-            allIntents.add(intent);
-        }
-
-        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        galleryIntent.setType("image/*");
-        List<ResolveInfo> listGallery = packageManager.queryIntentActivities(galleryIntent, 0);
-        for (ResolveInfo res : listGallery) {
-            Intent intent = new Intent(galleryIntent);
-            intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-            intent.setPackage(res.activityInfo.packageName);
-            allIntents.add(intent);
-        }
-
-        Intent mainIntent = allIntents.get(allIntents.size() - 1);
-        for (Intent intent : allIntents) {
-            if (intent.getComponent().getClassName().equals("com.android.documentsui.DocumentsActivity")) {
-                mainIntent = intent;
-                break;
-            }
-        }
-        allIntents.remove(mainIntent);
-
-        Intent chooserIntent = Intent.createChooser(mainIntent, "Select source");
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, allIntents.toArray(new Parcelable[allIntents.size()]));
 
 
-        return chooserIntent;
-    }
 
 
 
@@ -285,48 +270,52 @@ client         = new OkHttpClient.Builder().build();
     }
 
     @Override
+    @SuppressLint("NewApi")
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        // handle result of pick image chooser
+        if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            Uri imageUri = CropImage.getPickImageResultUri(this, data);
 
-        if (resultCode == Activity.RESULT_OK) {
-
-            capturedImage = findViewById(R.id.capturedImage);
-
-            if (requestCode == IMAGE_RESULT) {
-
-
-                String filePath = getImageFilePath(data);
-                if (filePath != null) {
-                    mBitmap = BitmapFactory.decodeFile(filePath);
-                   // Bitmap resize = Bitmap.createScaledBitmap(mBitmap, 100,400,true);
-                    capturedImage.setImageBitmap(mBitmap);
-                }
+            // For API >= 23 we need to check specifically that we have permissions to read external storage.
+            if (CropImage.isReadExternalStoragePermissionsRequired(this, imageUri)) {
+                // request permissions and handle the result in onRequestPermissionsResult()
+                picUri = imageUri;
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
+            } else {
+                // no permissions required or already grunted, can start crop image activity
+                startCropImageActivity(imageUri);
             }
-
         }
 
+        // handle result of CropImageActivity
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                // ((ImageView) findViewById(R.id.im_profileimage)).setImageURI(result.getUri());
+                ((ImageView) findViewById(R.id.capturedImage)).setImageURI(result.getUri());
+
+                Toast.makeText(this, "Cropping successful, Sample: " + result.getUri().toString(), Toast.LENGTH_LONG).show();
+
+                Log.i("uri",result.getUri().toString());
+                try {
+                    mBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),result.getUri());
+//                    mBitmap = BitmapFactory.decodeFile(result.getUri().toString());
+//                    capturedImage.setImageBitmap(mBitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Toast.makeText(this, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
 
-    private String getImageFromFilePath(Intent data) {
-        boolean isCamera = data == null || data.getData() == null;
 
-        if (isCamera) return getCaptureImageOutputUri().getPath();
-        else return getPathFromURI(data.getData());
-
-    }
-
-    public String getImageFilePath(Intent data) {
-        return getImageFromFilePath(data);
-    }
-
-    private String getPathFromURI(Uri contentUri) {
-        String[] proj = {MediaStore.Audio.Media.DATA};
-        Cursor cursor = getContentResolver().query(contentUri, proj, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
-    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -549,13 +538,24 @@ client         = new OkHttpClient.Builder().build();
         startActivity(i);
     }
 
+    public void onSelectImageClick(View view) {
+        CropImage.startPickImageActivity(this);
+    }
+    private void startCropImageActivity(Uri imageUri) {
+        CropImage.activity(imageUri)
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setMultiTouchEnabled(true)
+                .start(this);
+    }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.openCameraOptions:
-                startActivityForResult(getPickImageChooserIntent(), IMAGE_RESULT);
+//                startActivityForResult(getPickImageChooserIntent(), IMAGE_RESULT);
+                onSelectImageClick(view);
                 break;
+
 
             case R.id.img_video:
 
@@ -566,11 +566,17 @@ client         = new OkHttpClient.Builder().build();
 
                description = postDescription.getText().toString();
 
-                if (mBitmap != null)
-                    multipartImageUpload();
+               if(description.equals("") && mBitmap==null)
+               {
+                   Toast.makeText(NewsFeedPostActivity.this,"Please Enter description or image",Toast.LENGTH_LONG).show();
+               }
                 else {
-                    CallPostService();
-                }
+                   if (mBitmap != null)
+                       multipartImageUpload();
+                   else {
+                       CallPostService();
+                   }
+               }
                 break;
 
         }

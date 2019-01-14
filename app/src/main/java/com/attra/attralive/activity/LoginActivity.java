@@ -25,13 +25,11 @@ import com.attra.attralive.R;
 import com.attra.attralive.Service.MyAppolloClient;
 import com.attra.attralive.util.GetNewRefreshToken;
 
-
 import javax.annotation.Nonnull;
 
 import graphqlandroid.UserLoginAuth;
 
 public class LoginActivity extends AppCompatActivity {
-    private String username, password;
     CardView loginbutton;
     EditText etusername, userPassword;
     TextView attraemail, forgotpswd, registerHere;
@@ -39,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     CheckBox saveLoginCheckBox;
     String status, message, accessToken, authToken;
     String myToken, refreshToken, name, userId, userName;
+    private String username, password;
     private SharedPreferences loginPreferences, sharedPreferences;
     private SharedPreferences.Editor loginPrefsEditor;
     private Boolean saveLogin;
@@ -193,10 +192,12 @@ public class LoginActivity extends AppCompatActivity {
 
     private void callLoginservice(String accesstoken) {
 
+
       //  Log.d("accesstoken", accesstoken);
 
 
       // Log.d("accesstoken", accesstoken);
+
 
         MyAppolloClient.getMyAppolloClient(GetNewRefreshToken.Authorization).query(UserLoginAuth.builder().username(username + attraemail.getText().toString().trim()).
                 password(password).build()).enqueue(new ApolloCall.Callback<UserLoginAuth.Data>() {

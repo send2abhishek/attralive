@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AttraLive</string>
+    <string name="app_name"><font color="@color/white">Attra</font><font color="#ff0000">LIVE</font></string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Awnish Kumar</string>

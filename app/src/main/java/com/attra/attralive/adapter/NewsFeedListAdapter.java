@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -52,6 +54,7 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
 
     NewsFeed newsFeed;
     String status, message,myToken,postId,userId,username;
+    int updatedlikes;
 
     public NewsFeedListAdapter(Context context, ArrayList<NewsFeed> notificationArrayList) {
         mcontext = context;
@@ -83,39 +86,41 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
       //  Log.i("post id",postId);
           // holder.userImage.setImageResource(newsFeed.getImageId());
 
-        holder.likeImg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MyAppolloClient.getMyAppolloClient(myToken).mutate(LikePost.builder().postId(holder.postId.getText().toString()).userId(userId).build()).enqueue(new ApolloCall.Callback<LikePost.Data>() {
-                    @Override
-                    public void onResponse(@Nonnull Response<LikePost.Data> response) {
-                        status = response.data().postLike_M().status();
-                        message = response.data().postLike_M().message();
-                        Log.i("like post ",status);
-                        Log.i("message",message);
-                        if(status.equals("Success")){
-                            if (message.equals("User Liked this Post")){
-                                holder.likeImg.setImageResource(R.drawable.ic_thumb_up_color_24dp);
 
-                            }
-                        }else if(status.equals("Failure")){
-                            if(message.equals("User Disliked this Post")){
-                                holder.likeImg.setImageResource(R.drawable.ic_thumb_up_grey_24dp);
-                            }
-                        }
 
-                    }
+        holder.likeImg.setOnClickListener(v -> {
 
-                    @Override
-                    public void onFailure(@Nonnull ApolloException e) {
+            if ((int) (holder.likeImg.getTag()) == R.drawable.ic_thumb_up_greyempty_24dp) {
+                updatedlikes = Integer.parseInt(holder.noOfLikes.getText().toString());
+                holder.noOfLikes.setText(""+(updatedlikes+1));
+                holder.likeImg.setImageResource(R.drawable.ic_thumb_up_grey_24dp);
+                holder.likeImg.setTag(R.drawable.ic_thumb_up_grey_24dp);
 
-                    }
-                });
+
+            } else if ((int) (holder.likeImg.getTag()) == R.drawable.ic_thumb_up_grey_24dp) {
+                updatedlikes = Integer.parseInt(holder.noOfLikes.getText().toString());
+                holder.noOfLikes.setText(""+(updatedlikes-1));
+                holder.likeImg.setImageResource(R.drawable.ic_thumb_up_greyempty_24dp);
+                holder.likeImg.setTag(R.drawable.ic_thumb_up_greyempty_24dp);
 
             }
+
+            MyAppolloClient.getMyAppolloClient(myToken).mutate(LikePost.builder().postId(holder.postId.getText().toString()).userId(userId).build()).enqueue(new ApolloCall.Callback<LikePost.Data>() {
+                @Override
+                public void onResponse(@Nonnull Response<LikePost.Data> response) {
+                    status = response.data().postLike_M().status();
+                    message = response.data().postLike_M().message();
+                    Log.i("like post ",status);
+                    Log.i("message",message);
+                }
+
+                @Override
+                public void onFailure(@Nonnull ApolloException e) {
+
+                }
+            });
+
         });
-
-
 
        holder.userName.setText(newsFeed.getUserName());
        Picasso.with(mcontext)
@@ -131,14 +136,27 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
         Picasso.with(mcontext)
                 .load(newsFeed.getNewsFeedImage())
                 .into(holder.descriptionImage);
+       // holder.like.setText((newsFeed.getlike()));
+
+        if(newsFeed.getlike())
+        {
+            holder.likeImg.setImageResource(R.drawable.ic_thumb_up_grey_24dp);
+            holder.likeImg.setTag(R.drawable.ic_thumb_up_grey_24dp);
+        }
+        else
+        {
+            holder.likeImg.setImageResource(R.drawable.ic_thumb_up_greyempty_24dp);
+            holder.likeImg.setTag(R.drawable.ic_thumb_up_greyempty_24dp);
+        }
 
         holder.optionmenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 String postid = newsFeed.getPostId();
-                String userId = newsFeed.getUserid();
-                String dummy = "nnn";
+                String likedUserId = newsFeed.getUserid();
+
+
 
 
                 //creating a popup menu
@@ -168,7 +186,10 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
                     }
                 });
                 //displaying the popup
-                if(userId ==dummy )
+                Log.i("loggeduserId",userId);
+                Log.i("likeduserID",likedUserId);
+
+                if(userId.equals(likedUserId))
                 {
                     popup.show();
                 }
@@ -183,6 +204,7 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
             }
         });
     }
+
 
     @Override
     public int getItemCount() {

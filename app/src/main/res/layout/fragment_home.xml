@@ -9,13 +9,19 @@
     android:background="@color/headerBackground">
 
     <android.support.v4.widget.NestedScrollView
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fillViewport="true">
+        android:layout_marginBottom="40dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/lay_account"
+            android:descendantFocusability="blocksDescendants">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <android.support.v7.widget.LinearLayoutCompat
@@ -74,15 +80,21 @@
                 android:layout_height="177dp"
                 android:layout_marginTop="6dp"
                 android:id="@+id/viewPager"/>
+
+
+
             <android.support.v7.widget.RecyclerView
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scrollbars="none"
+                android:nestedScrollingEnabled="false"
                 android:id="@+id/rv_newsFeed">
             </android.support.v7.widget.RecyclerView>
         </LinearLayout>
 
- </android.support.v4.widget.NestedScrollView>
+        </RelativeLayout>
+
+    </android.support.v4.widget.NestedScrollView>
 
 
 

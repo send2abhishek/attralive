@@ -65,6 +65,7 @@ public class HomeFragment extends Fragment {
     LinearLayoutManager linearLayoutManager;
     NewsFeed newsFeedList;
     TextView postFeed;
+    boolean like = false;
     ImageView descImage;
     ArrayList<String> Number;
     /*OkHttpClient client=new OkHttpClient();
@@ -217,33 +218,50 @@ public class HomeFragment extends Fragment {
 
 
         MyAppolloClient.getMyAppolloClient(myToken).query(
-                GetPosts.builder().build()).enqueue(
-                new ApolloCall.Callback<GetPosts.Data>() {
-                    @Override
-                    public void onResponse(@Nonnull Response<GetPosts.Data> response) {
-                        if(response.data().getPosts_Q()!=null) {
-                            String status = response.data().getPosts_Q().status();
-                            String message = response.data().getPosts_Q().message();
-                            Log.d("mesa", message);
-                            if (status.equals("Success")) {
-                                Log.i("", "inside success");
+               GetPosts.builder().build()).enqueue(
+               new ApolloCall.Callback<GetPosts.Data>() {
+                   @Override
+                   public void onResponse(@Nonnull Response<GetPosts.Data> response) {
 
-                                for (int i = 0; i < response.data().getPosts_Q().posts().size(); i++) {
-                                    Log.i("Here", response.data().getPosts_Q().posts().get(i).userId() +
-                                            response.data().getPosts_Q().posts().get(i).postId()
-                                    );
+                       if(response.data().getPosts_Q()!=null) {
+                           String status = response.data().getPosts_Q().status();
+                           String message = response.data().getPosts_Q().message();
+                           Log.d("mesa", message);
+                           if (status.equals("Success")) {
+                               Log.i("", "inside success");
 
-                                    newsFeedList = new NewsFeed(
-                                            response.data().getPosts_Q().posts().get(i).userId(),
-                                            response.data().getPosts_Q().posts().get(i).postId(),
-                                            response.data().getPosts_Q().posts().get(i).profileImagePath(),
-                                            response.data().getPosts_Q().posts().get(i).filePath(),
-                                            response.data().getPosts_Q().posts().get(i).name(),
-                                            response.data().getPosts_Q().posts().get(i).location(),
-                                            response.data().getPosts_Q().posts().get(i).timeago(),
-                                            response.data().getPosts_Q().posts().get(i).description(),
-                                            response.data().getPosts_Q().posts().get(i).likesCount(),
-                                            response.data().getPosts_Q().posts().get(i).commentsCount());
+                               for (int i = 0; i < response.data().getPosts_Q().posts().size(); i++) {
+                                   Log.i("Here", response.data().getPosts_Q().posts().get(i).userId() +
+                                           response.data().getPosts_Q().posts().get(i).postId()
+                                   );
+like=false;
+//                                   String likedLikedUserId = response.data().getPosts_Q().posts().get(0).likedUsersList().get(0).likedUserId();
+//                                   if(userId1.equals(likedLikedUserId))
+//                                   {
+//                                       like= true;
+//                                   }
+
+                                   for(int j=0;j<response.data().getPosts_Q().posts().get(i).likedUsersList().size();j++)
+                                   {
+                                       String likedUserId = response.data().getPosts_Q().posts().get(i).likedUsersList().get(j).likedUserId();
+                                       if(userId1.equals(likedUserId)) {
+                                           like = true;
+                                           break;
+                                       }
+                                   }
+                                   newsFeedList = new NewsFeed(
+                                           response.data().getPosts_Q().posts().get(i).userId(),
+                                           response.data().getPosts_Q().posts().get(i).postId(),
+                                           response.data().getPosts_Q().posts().get(i).profileImagePath(),
+                                           response.data().getPosts_Q().posts().get(i).filePath(),
+                                           response.data().getPosts_Q().posts().get(i).name(),
+                                           response.data().getPosts_Q().posts().get(i).location(),
+                                           response.data().getPosts_Q().posts().get(i).timeago(),
+                                           response.data().getPosts_Q().posts().get(i).description(),
+                                           response.data().getPosts_Q().posts().get(i).likesCount(),
+                                           response.data().getPosts_Q().posts().get(i).commentsCount(),like);
+
+
 
 
                                     newsFeedArrayList.add(newsFeedList);
@@ -275,20 +293,21 @@ public class HomeFragment extends Fragment {
                                                 prepareNewsfeed(myToken);
                                                 Toast.makeText(getActivity(), myToken, Toast.LENGTH_LONG).show();
 
-                                            }
-                                        }
-                                    });
-                                }
-                            }
-                        }
-                        else
-                        {
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(getActivity(), "No posts available to display", Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                                           }
+                                       }
+                                   });
+                               }
+
+                           }
+                       }
+                       else
+                       {
+                           getActivity().runOnUiThread(new Runnable() {
+                               @Override
+                               public void run() {
+                                   Toast.makeText(getActivity(), "No posts available to display", Toast.LENGTH_SHORT).show();
+                               }
+                           });
 
                         }
                     }
