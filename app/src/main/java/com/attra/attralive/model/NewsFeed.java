@@ -14,6 +14,12 @@ public class NewsFeed {
     String location;
     String userid;
     int  noOfLikes,noOfCommenst;
+    Boolean like;
+
+
+    public Boolean getlike() {return like;}
+
+    public void setLike(Boolean like){this.like = like;}
 
     public String getPostId() {
         return postId;
@@ -98,7 +104,7 @@ public class NewsFeed {
 
 
     public NewsFeed(String  userId, String postId, String image, String newsFeedImage, String userName,
-                    String location, String feedTime, String feedDescription, int noOfLikes, int noOfCommenst) {
+                    String location, String feedTime, String feedDescription, int noOfLikes, int noOfCommenst,Boolean like) {
        this.userid = userId;
         this.postId=postId;
         this.imageId = image;
@@ -109,6 +115,7 @@ public class NewsFeed {
         this.feedDescription = feedDescription;
         this.noOfLikes = noOfLikes;
         this.noOfCommenst = noOfCommenst;
+        this.like = like;
     }
 
 

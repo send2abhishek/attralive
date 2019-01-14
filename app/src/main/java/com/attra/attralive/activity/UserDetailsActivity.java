@@ -88,8 +88,8 @@ import graphqlandroid.UserDetailsUpdate;
 public class UserDetailsActivity extends AppCompatActivity {
     Spinner bu, location;
     CardView continueBtn;
-      List<String> buList = new ArrayList<String>();
-      List<String> locationList = new ArrayList<String>();
+    List<String> buList = new ArrayList<String>();
+    List<String> locationList = new ArrayList<String>();
 
     Fragment fragment = null;
     OkHttpClient client;
@@ -141,7 +141,6 @@ public class UserDetailsActivity extends AppCompatActivity {
 
         phNo = findViewById(R.id.et_mobilenumber);
 
-        uploadimage=findViewById(R.id.crd_upload);
 
         upload = findViewById(R.id.im_profileimage);
 
@@ -158,8 +157,8 @@ public class UserDetailsActivity extends AppCompatActivity {
 
         }
 
-       getUserBU(myToken);
-      getUserLocation(myToken);
+        getUserBU(myToken);
+        getUserLocation(myToken);
         /*sendDeviceToken();*/
 
         //postDescription = findViewById(R.id.descText);
@@ -170,7 +169,7 @@ public class UserDetailsActivity extends AppCompatActivity {
 //        post = findViewById(R.id.btn_postnewsFeed);
         //fabCamera.setOnClickListener(this);
         // post.setOnClickListener(this);
-      //  getUserBU();
+        //  getUserBU();
         //getUserLocation();
 
 
@@ -180,7 +179,7 @@ public class UserDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //uploadProfileImage();
-               //startActivityForResult(getPickImageChooserIntent(v), IMAGE_RESULT);
+                //startActivityForResult(getPickImageChooserIntent(v), IMAGE_RESULT);
                 // multipartImageUpload();
                 onSelectImageClick(v);
 
@@ -325,16 +324,33 @@ public class UserDetailsActivity extends AppCompatActivity {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
+               // ((ImageView) findViewById(R.id.im_profileimage)).setImageURI(result.getUri());
                 ((ImageView) findViewById(R.id.im_profileimage)).setImageURI(result.getUri());
-                Toast.makeText(this, "Cropping successful, Sample: " + result.getSampleSize(), Toast.LENGTH_LONG).show();
 
-                String filePath = getImageFilePath(data);
-                Log.i("data",filePath);
-                if(filePath!=null)
-                {
-                    mBitmap = BitmapFactory.decodeFile(filePath);
-                    upload.setImageBitmap(mBitmap);
+                Toast.makeText(this, "Cropping successful, Sample: " + result.getUri().toString(), Toast.LENGTH_LONG).show();
+
+                Log.i("uri",result.getUri().toString());
+                try {
+                    mBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),result.getUri());
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+
+
+//                mBitmap = BitmapFactory.decodeFile(result.getBitmap().toString());
+//                        upload.setImageBitmap(mBitmap);
+
+//                if(requestCode == IMAGE_RESULT);
+//                {
+//                    String filePath = getImageFilePath(file);
+//                    System.out.println(filePath);
+//                    if(filePath!=null)
+//                    {
+//                        mBitmap = BitmapFactory.decodeFile(filePath);
+//                        upload.setImageBitmap(result.getUri());
+//                    }
+//                }
+
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Toast.makeText(this, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG).show();
             }
@@ -469,7 +485,7 @@ public class UserDetailsActivity extends AppCompatActivity {
                                 bu.setSelection(0);
                             }
                         });
-                         if(Status.equals("Failure")){
+                        if(Status.equals("Failure")){
                             if(Message.equals("Invalid token: access token is invalid")){
 
                                 GetNewRefreshToken.getRefreshtoken(refreshToken,UserDetailsActivity.this);
@@ -535,7 +551,7 @@ public class UserDetailsActivity extends AppCompatActivity {
     private void initRetrofitClient() {
         client = new OkHttpClient.Builder().build();
 
-        apiService = new Retrofit.Builder().baseUrl("http://10.200.44.20:4002").client(client).build().create(ApiService.class);
+        apiService = new Retrofit.Builder().baseUrl("http://10.200.44.20:4001").client(client).build().create(ApiService.class);
     }
 
 
@@ -626,7 +642,7 @@ public class UserDetailsActivity extends AppCompatActivity {
     }
     private void CallSubmitDataService(String accesstoken)
     {
-       // Log.d("accesstoken",accesstoken);
+        // Log.d("accesstoken",accesstoken);
         MyAppolloClient.getMyAppolloClient(accesstoken).mutate(
                 UserDetailsUpdate.builder().userId(userId).name(userName).designation(designation).empId(employeeId).location(workLoc)
                         .bu(userBu).mobileNumber(mobile).profileImagePath(path)
@@ -642,7 +658,7 @@ public class UserDetailsActivity extends AppCompatActivity {
                         // Log.d("res_status userDetails", status);
                         if(status.equals("Success")){
                             Log.d("res_message in User", message);
-                             sharedPreferences = getApplicationContext().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, 0);
+                            sharedPreferences = getApplicationContext().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, 0);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString("location", workLoc);
                             editor.putString("profileImagePath", path);
@@ -651,23 +667,23 @@ public class UserDetailsActivity extends AppCompatActivity {
                             intent1.putExtra("location",workLoc);
                             startActivity(intent1);
                         } else if(status.equals("Failure")){
-                               if(message.equals("Invalid token: access token is invalid")){
+                            if(message.equals("Invalid token: access token is invalid")){
 
-                            GetNewRefreshToken.getRefreshtoken(refreshToken,UserDetailsActivity.this);
-                            UserDetailsActivity.this.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    sharedPreferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
-                                    if (sharedPreferences.contains("authToken")) {
-                                        String myToken = sharedPreferences.getString("authToken", "");
-                                        CallSubmitDataService(myToken);
-                                        Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
+                                GetNewRefreshToken.getRefreshtoken(refreshToken,UserDetailsActivity.this);
+                                UserDetailsActivity.this.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        sharedPreferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
+                                        if (sharedPreferences.contains("authToken")) {
+                                            String myToken = sharedPreferences.getString("authToken", "");
+                                            CallSubmitDataService(myToken);
+                                            Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
 
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            }
                         }
-                    }
 
                     }
 
