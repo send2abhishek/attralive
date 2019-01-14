@@ -1,7 +1,5 @@
 package com.attra.attralive.activity;
 
-import android.app.Activity;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -48,6 +46,7 @@ import com.attra.attralive.fragment.HolidayCalender;
 import com.attra.attralive.fragment.HomeFragment;
 import com.attra.attralive.fragment.LearningD;
 import com.attra.attralive.model.NewsFeed;
+import com.attra.attralive.model.Notification;
 import com.attra.attralive.util.GetNewRefreshToken;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -118,7 +117,7 @@ Intent intent;
 
                     Toast.makeText(getApplicationContext(), "Push notification: " + message, Toast.LENGTH_LONG).show();
 
-                    txtMessage.setText(message);
+                    //txtMessage.setText(message);
                 }
             }
         };
@@ -434,9 +433,12 @@ Intent intent;
                                                 myTextLayoutView.setText(Integer.toString(notificationSize));
 
                                                 for (GetNotificationList.Notification noti : response.data().getUserNotification_Q().notifications()) {
-                                                   /*notificationList.add(
-                                                           new Notification(noti.postType(),"","","", noti.action(),"", noti.userName(),"", noti.postMessage(),"","","Y"));
-                                                           Log.i("notifications", noti.action());*/
+                                                    Notification  noitification= new Notification(noti.postType(), noti.postId(), noti.ownerId(), noti.action(), noti.userId(), noti.userName(), noti
+                                                            .time(), noti.postMessage(),noti.userImage(),noti.readStatus());
+                                                   notificationList.add(
+                                                           noitification);
+                                                          // new Notification(noti.postType(), "", "", "", noti.action(), "", noti.userName(), "", "Y"));
+                                                    Log.i("notifications", noti.action());
                                                 }
                                             }
                                         } else {

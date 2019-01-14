@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,9 +39,10 @@ public class EventRegisteredDetailsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    String eventtitle,venue,startdate,enddate,starttime,endtime,description,status,message,eventId,isRegistered;
+    String eventtitle,venue,startdate,enddate,starttime,endtime,description,status,message,eventId;
+    Boolean isRegistered;
     TextView eventvenue,eventdate,eventtime;
-    CardView register;
+    Button register;
     TextView regdetails;
     ImageView qrcode;
     LinearLayout linearLayout;
@@ -55,10 +57,11 @@ public class EventRegisteredDetailsFragment extends Fragment {
         eventvenue=view.findViewById(R.id.tv_eventvenue);
         eventdate=view.findViewById(R.id.tv_eventdate);
         eventtime=view.findViewById(R.id.tv_eventtime);
-        register=view.findViewById(R.id.crd_regevent);
+        register=view.findViewById(R.id.bt_regbutton);
         regdetails=view.findViewById(R.id.tv_regid);
         qrcode=view.findViewById(R.id.im_qrcode);
         linearLayout=view.findViewById(R.id.ll_qrcode);
+        System.out.println("fragment");
         sharedPreferences = getActivity().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
             myToken = sharedPreferences.getString("authToken", "");
@@ -77,19 +80,22 @@ public class EventRegisteredDetailsFragment extends Fragment {
         starttime=this.getArguments().getString("StartTime");
         endtime=this.getArguments().getString("EndTime");
         eventId=this.getArguments().getString("EventId");
-        isRegistered=this.getArguments().getString("isRegistered");
-        if(isRegistered.equals("true"))
+        isRegistered=this.getArguments().getBoolean("isregisterd");
+        System.out.println("isreddfg"+isRegistered);
+        if(isRegistered==true)
         {
             register.setVisibility(View.GONE);
             linearLayout.setVisibility(View.VISIBLE);
-            regId=this.getArguments().getString("RegistrationId");
-            Qrcodelink=this.getArguments().getString("QRcodelink");
+            regId=this.getArguments().getString("registeredId");
+            Qrcodelink=this.getArguments().getString("Qrcode");
             regdetails.setText("RegistrationId\n"+regId);
+            Log.d("Qrcode in fragment",Qrcodelink);
             Picasso.with(getActivity()).load(Qrcodelink).into(qrcode);
-            eventvenue.setText(venue);
-            eventdate.setText(startdate+":"+enddate);
-            eventtime.setText(starttime + ":" + endtime);
+
         }
+        eventvenue.setText(venue);
+        eventdate.setText(startdate+":"+enddate);
+        eventtime.setText(starttime + ":" + endtime);
         System.out.println("loc"+loc);
     //    getEventDetails();
         register.setOnClickListener(new View.OnClickListener() {

@@ -75,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
             name = sharedPreferences.getString("userName", "");
             Log.i("user id in userDtail", userId);
             Log.i("refresh id in userDtail", refreshToken);
-
+        }
             registerHere.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -125,7 +125,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 @Override
                 public void afterTextChanged(Editable s) {
-
+                    usernametil.setError(null);
                 }
             });
             etusername.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -138,7 +138,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                 }
             });
-        }
+
     }
 
     public void login(View view) {
@@ -184,7 +184,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void callLoginservice(String accesstoken) {
-        Log.d("accesstoken", accesstoken);
+      //  Log.d("accesstoken", accesstoken);
         MyAppolloClient.getMyAppolloClient(GetNewRefreshToken.Authorization).query(UserLoginAuth.builder().username(username + attraemail.getText().toString().trim()).
                 password(password).build()).enqueue(new ApolloCall.Callback<UserLoginAuth.Data>() {
             @Override

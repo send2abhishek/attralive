@@ -193,10 +193,7 @@ private void callservice()
                             if(otpStatus.equals("Success")){
                                 getToken();
                                 sendDeviceToken();
-                                Intent intent1 = new Intent(getApplicationContext(),UserDetailsActivity.class);
-                                intent1.putExtra("emailId",emailId);
-                                intent1.putExtra("password",password);
-                                startActivity(intent1);
+
                             }
                             else if( (otpStatus.equals("Failure"))) {
 
@@ -293,18 +290,33 @@ private void callservice()
                             editor.putString("userName",userName);
                             editor.commit();
 
-                        }else if(status.equals("Failure")){
+                        }
+                        OtpValidationActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent intent1 = new Intent(getApplicationContext(),UserDetailsActivity.class);
+                                intent1.putExtra("emailId",emailId);
+                                intent1.putExtra("password",password);
+                                startActivity(intent1);
+                            }
+                        });/*else if(status.equals("Failure")){
                             if(message.equals("Invalid token: access token has expired")){
 
                                 GetNewRefreshToken.getRefreshtoken(refreshToken,OtpValidationActivity.this);
+                                sharedPreferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
+                                if (sharedPreferences.contains("authToken")) {
+                                    String myToken = sharedPreferences.getString("authToken", "");
+                                    getToken();
+                                    Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
 
+                                }
                                // getNewRefreshToken(refreshToken);
 
-                                /*getNewRefreshToken(refreshToken);*/
+                                *//*getNewRefreshToken(refreshToken);*//*
 
                             }
 
-                        }
+                        }*/
 
                     }
 
