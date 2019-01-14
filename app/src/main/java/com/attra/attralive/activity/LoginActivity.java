@@ -18,6 +18,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
@@ -135,19 +136,17 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
-        etusername.setOnFocusChangeListener(new View.OnFocusChangeListener()
-        {
-        @Override
-        public void onFocusChange (View v,boolean hasFocus){
-        if (!hasFocus)
-            if (etusername.getText().toString().trim().isEmpty()) {
-                usernametil.setError(getString(R.string.emptyusername_text));
+        etusername.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus)
+                    if (etusername.getText().toString().trim().isEmpty()) {
+                        usernametil.setError(getString(R.string.emptyusername_text));
 
+                    }
             }
+        });
     }
-    });
-}
-
 
 
     public void login(View view) {
