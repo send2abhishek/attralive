@@ -1,23 +1,11 @@
 package com.attra.attralive.fragment;
 
-import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.provider.MediaStore;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +14,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,49 +23,25 @@ import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
 import com.attra.attralive.Service.ApiService;
 import com.attra.attralive.Service.MyAppolloClient;
-import com.attra.attralive.activity.DashboardActivity;
-import com.attra.attralive.activity.UserDetailsActivity;
-import com.attra.attralive.util.GetNewRefreshToken;
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Nonnull;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import fr.ganfra.materialspinner.MaterialSpinner;
-import graphqlandroid.GetBusinessUnit;
-import graphqlandroid.GetLocation;
 import graphqlandroid.GetProfileDetails;
-
 import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Retrofit;
-
-import static android.Manifest.permission.CAMERA;
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class Profile extends Fragment {
-    TextView username_view,password_view, userDesign,DOB,gender,phone,email, submit,empId,location,bu;
-  //  MaterialSpinner location,bu;
+    TextView username_view, password_view, userDesign, DOB, gender, phone, email, submit, empId, location, bu;
+    //  MaterialSpinner location,bu;
     private SharedPreferences sharedPreferences;
-    String myToken,userId,userName;
+    String myToken, userId, userName;
     public static final String PREFS_AUTH = "my_auth";
     CircleImageView profilePic;
     ImageView qrCode;
@@ -89,7 +52,7 @@ public class Profile extends Fragment {
     ArrayAdapter<String> userBuAdapter;
     OkHttpClient client;
     Fragment fragment = null;
-    Uri picUri,outputFileUri;
+    Uri picUri, outputFileUri;
     private ArrayList<String> permissionsToRequest;
     private ArrayList<String> permissionsRejected = new ArrayList<>();
     private ArrayList<String> permissions = new ArrayList<>();
@@ -99,9 +62,9 @@ public class Profile extends Fragment {
     Bitmap mBitmap;
     ImageView upload;
     Button submitdata;
-    String status,message,path,refreshToken;
-    String emailId, password,userBu,workLoc,mobile,employeeId,designation;
-    EditText  phNo;
+    String status, message, path, refreshToken;
+    String emailId, password, userBu, workLoc, mobile, employeeId, designation;
+    EditText phNo;
 
     public Profile() {
         // Required empty public constructor
@@ -114,10 +77,10 @@ public class Profile extends Fragment {
         sharedPreferences = getActivity().getSharedPreferences(PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
             myToken = sharedPreferences.getString("authToken", "");
-            userId = sharedPreferences.getString("userId","");
-            userName = sharedPreferences.getString("userName","");
-            refreshToken=sharedPreferences.getString("refreshToken","");
-            Log.i("user id in userDtail",userId);
+            userId = sharedPreferences.getString("userId", "");
+            userName = sharedPreferences.getString("userName", "");
+            refreshToken = sharedPreferences.getString("refreshToken", "");
+            Log.i("user id in userDtail", userId);
 
         }
 
@@ -127,19 +90,19 @@ public class Profile extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         empId = view.findViewById(R.id.et_empId);
         // username = view.findViewById(R.id.et_entername);
-        userDesign=view.findViewById(R.id.et_designation);
+        userDesign = view.findViewById(R.id.et_designation);
         bu = view.findViewById(R.id.tv_userBu);
         phone = view.findViewById(R.id.et_mobilenumber);
         //      email= view.findViewById(R.id.emailId);
         //  submit = view.findViewById(R.id.btn_submitDetails);
         location = view.findViewById(R.id.tv_userWorkLocation);
         profilePic = view.findViewById(R.id.profileImage);
-        submitdata=view.findViewById(R.id.editDetailsBtn);
-        username_view=view.findViewById(R.id.et_userName);
-        password_view=view.findViewById(R.id.et_password);
+        submitdata = view.findViewById(R.id.editDetailsBtn);
+        username_view = view.findViewById(R.id.et_userName);
+        password_view = view.findViewById(R.id.et_password);
         //  qrCode = view.findViewById(R.id.img_qrCode);
         //getUserBU();
-      //  getUserLocation();
+        //  getUserLocation();
         getProfileDetail();
         // askPermissions();
         //   initRetrofitClient();
@@ -154,33 +117,26 @@ public class Profile extends Fragment {
             @Override
             public void onClick(View v) {
                 designation = userDesign.getText().toString();
-                if(location.getText()!=null) {
+                if (location.getText() != null) {
                     workLoc = location.getText().toString();
-                }else
-                {
-                    Log.i("user bu","Proofile==>onEdit loc is null");
+                } else {
+                    Log.i("user bu", "Proofile==>onEdit loc is null");
                 }
-                if(bu.getText()!=null) {
+                if (bu.getText() != null) {
                     userBu = bu.getText().toString();
-                   // Log.i("User bu", "Profile==>EditOnclcick  " + bu.getSelectedItem());
+                    // Log.i("User bu", "Profile==>EditOnclcick  " + bu.getSelectedItem());
+                } else {
+                    Log.i("user bu", "Proofile==>onEdit bu is null");
                 }
-                else
-                {
-                    Log.i("user bu","Proofile==>onEdit bu is null");
-                }
-                if(phNo!=null) {
+                if (phNo != null) {
                     mobile = phone.getText().toString();
-                    Log.i("Phone number","Profile==>editclcick==>phone number "+ mobile);
+                    Log.i("Phone number", "Profile==>editclcick==>phone number " + mobile);
+                } else {
+                    Log.i("Phone number", "Profile==>editclcick==>phone number null ");
                 }
-                else
-                {
-                    Log.i("Phone number","Profile==>editclcick==>phone number null ");
-                }
-                if(empId!=null) {
+                if (empId != null) {
                     employeeId = empId.getText().toString();
-                }
-                else
-                {
+                } else {
 
                 }
                 /*int sid=radioGroup.getCheckedRadioButtonId();
@@ -197,21 +153,19 @@ public class Profile extends Fragment {
                 } else if (workLoc.trim().equals("")) {
                    /* ((TextView) location.getSelectedView()).setError("Select Location");
                     ((TextView) location.getSelectedView()).requestFocus();*/
-                }  else if (userBu.trim().equals("")) {
+                } else if (userBu.trim().equals("")) {
                    /* ((TextView) bu.getSelectedView()).setError("Select BU");
                     ((TextView) bu.getSelectedView()).requestFocus();*/
                 } else if (mobile.length() < 10) {
                     phNo.setError("Enter valid Contact Number");
                     phNo.requestFocus();
                 } else {
-                    if(mBitmap!=null)
-                    {
+                    if (mBitmap != null) {
 
                     }
                     //  multipartImageUpload();
-                    else
-                    {
-                        path="https://dsd8ltrb0t82s.cloudfront.net/ProfilePictures/1546848719271-image.jpeg";
+                    else {
+                        path = "https://dsd8ltrb0t82s.cloudfront.net/ProfilePictures/1546848719271-image.jpeg";
                         // callSubmiteditData(myToken);
                     }
                     // Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
@@ -613,8 +567,7 @@ public class Profile extends Fragment {
                 new ApolloCall.Callback<GetProfileDetails.Data>() {
                     @Override
                     public void onResponse(@Nonnull Response<GetProfileDetails.Data> response) {
-                        if (response.data() != null && response.data().getProfileDetails_Q() != null)
-                        {
+                        if (response.data() != null && response.data().getProfileDetails_Q() != null) {
                             Log.i("res", String.valueOf(response));
                             String message = response.data().getProfileDetails_Q().message();
                             String status = response.data().getProfileDetails_Q().status();
@@ -653,15 +606,15 @@ public class Profile extends Fragment {
                                             location.setText(loc);
                                             if (userBuAdapter != null && businessUnit != null) {
                                                 bu.setText(businessUnit);
-                                               // bu.setSelection(userBuAdapter.getPosition(businessUnit));
+                                                // bu.setSelection(userBuAdapter.getPosition(businessUnit));
                                                 Toast.makeText(getContext(), "location position is ==" + userBuAdapter.getPosition(loc), Toast.LENGTH_SHORT).show();
                                             } else
                                                 Toast.makeText(getContext(), "user bu null == ", Toast.LENGTH_SHORT).show();
                                             //  bu.setSelection(1);
                                             if (locationAdapter != null && loc != null) {
                                                 location.setText(loc);
-                                                Log.i("profile==>loc","profile==>getprofiledetails==>loc"+loc+ "loc position  "+locationAdapter.getPosition(loc));
-                                               // location.setSelection(locationAdapter.getPosition(loc));
+                                                Log.i("profile==>loc", "profile==>getprofiledetails==>loc" + loc + "loc position  " + locationAdapter.getPosition(loc));
+                                                // location.setSelection(locationAdapter.getPosition(loc));
                                                 Toast.makeText(getContext(), "location position is ==" + locationAdapter.getPosition(loc), Toast.LENGTH_SHORT).show();
                                             } else
                                                 Toast.makeText(getContext(), "user location null == ", Toast.LENGTH_SHORT).show();
@@ -676,11 +629,11 @@ public class Profile extends Fragment {
                             }
 
 
-                        }else
-                        {
-                            Log.i("Profile","Profile==>getProfileDetails()==>onResponse null");
+                        } else {
+                            Log.i("Profile", "Profile==>getProfileDetails()==>onResponse null");
                         }
                     }
+
                     @Override
                     public void onFailure(@Nonnull ApolloException e) {
                     }

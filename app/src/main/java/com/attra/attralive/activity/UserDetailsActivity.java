@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +19,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 
@@ -50,6 +52,9 @@ import com.attra.attralive.R;
 import com.attra.attralive.Service.ApiService;
 import com.attra.attralive.Service.MyAppolloClient;
 import com.attra.attralive.util.GetNewRefreshToken;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -142,6 +147,8 @@ public class UserDetailsActivity extends AppCompatActivity {
         empId = findViewById(R.id.et_empId);
         phNo = findViewById(R.id.et_mobilenumber);
         upload = findViewById(R.id.profileImage);
+        ProgressDialog progressdialog = new ProgressDialog(UserDetailsActivity.this);
+        progressdialog.setMessage("Please Wait....");
         sharedPreferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
             Toast.makeText(this, "Shared pref val " + "sharedPreferences.getString(\"authToken\", \"\")", Toast.LENGTH_SHORT).show();
@@ -265,9 +272,7 @@ public class UserDetailsActivity extends AppCompatActivity {
     }
 
     private void getUserBU() {
-
-
-        Log.i("token in user details", myToken);
+//        Log.i("token in user details", myToken);
         MyAppolloClient.getMyAppolloClient(myToken).query(
                 GetBusinessUnit.builder()
                         .build()).enqueue(
@@ -462,11 +467,11 @@ public class UserDetailsActivity extends AppCompatActivity {
             Log.i("file.getName()", file.getName());
 
 
-            RequestBody userId = createPartFromString("5c31e8f07db2e805e077c037");
+            RequestBody newuserId = createPartFromString(userId);
             RequestBody type = createPartFromString("profilePicture");
             RequestBody name = RequestBody.create(MediaType.parse("text/plain"), "profilePicture");
             HashMap<String, RequestBody> map = new HashMap<>();
-            map.put("userId", userId);
+            map.put("userId", newuserId);
             map.put("type", type);
             Call<ResponseBody> req = apiService.postImage(map, body);
             req.enqueue(new Callback<ResponseBody>() {
@@ -524,6 +529,7 @@ public class UserDetailsActivity extends AppCompatActivity {
     }
 
     private void CallSubmitDataService() {
+
         Log.i("CallSubmitDataService", "CallSubmitDataService" + "  ====  " + path + "   token" + myToken);
         MyAppolloClient.getMyAppolloClient(myToken).mutate(
                 UserDetailsUpdate.builder().userId(userId).name(userName).designation(designation).empId(employeeId).location(workLoc)
@@ -538,6 +544,8 @@ public class UserDetailsActivity extends AppCompatActivity {
                         Log.d("res_message in User", message);
                         // Log.d("res_status userDetails", status);
                         if (status.equals("Success")) {
+                            subscribeToTopic(workLoc);
+                            subscribeToTopic("Attra");
                             Log.d("res_message in User", message);
                             sharedPreferences = getApplicationContext().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, 0);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -563,5 +571,23 @@ public class UserDetailsActivity extends AppCompatActivity {
 
 
     }
+    public void subscribeToTopic(String location){
+        FirebaseMessaging.getInstance().subscribeToTopic(location)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String msg = location;
+                        if (!task.isSuccessful()) {
+                            msg = getString(R.string.msg_subscribe_failed);
+                        }
+                        Log.d("topic subscription", msg);
+                      //  Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+    }
+
+
+
 
 }

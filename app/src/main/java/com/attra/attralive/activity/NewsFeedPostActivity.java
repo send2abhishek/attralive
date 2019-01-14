@@ -32,6 +32,7 @@ import android.text.TextWatcher;
 import android.util.EventLogTags;
 import android.util.JsonReader;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -120,6 +121,9 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         // getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_news_feed_post);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(R.string.post_your_thought);
+
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
         OkHttpClient httpclient=new OkHttpClient();
@@ -174,6 +178,17 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
 
 
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == android.R.id.home) {
+            finish();
+        }
+        return true;
+
+        //return super.onOptionsItemSelected(item);
     }
 
     public void getNameandLocation()

@@ -14,15 +14,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -37,21 +37,22 @@ import android.widget.Toast;
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
-import com.attra.attralive.Service.MyAppolloClient;
-import com.attra.attralive.fragment.Profile;
 import com.attra.attralive.R;
+import com.attra.attralive.Service.MyAppolloClient;
 import com.attra.attralive.fragment.AboutUsFragment;
 import com.attra.attralive.fragment.Gallery;
 import com.attra.attralive.fragment.HolidayCalender;
 import com.attra.attralive.fragment.HomeFragment;
 import com.attra.attralive.fragment.LearningD;
+import com.attra.attralive.fragment.Profile;
 import com.attra.attralive.model.NewsFeed;
-import com.attra.attralive.util.GetNewRefreshToken;
 import com.attra.attralive.util.Config;
+import com.attra.attralive.util.GetNewRefreshToken;
 import com.attra.attralive.util.NotificationUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
 import javax.annotation.Nonnull;
 
 import graphqlandroid.GetNotificationList;
@@ -67,19 +68,22 @@ public class DashboardActivity extends AppCompatActivity
     ArrayList<NewsFeed> notificationArrayList;
     LinearLayoutManager linearLayoutManager;
     ImageView profileImage;
-    TextView userName,userEmail;
-    String userId1,username,location;
-    String myToken,refreshToken;
-    int notificationSize=0;
+
+    TextView userName, userEmail;
+    String userId1, username, location;
+    String myToken, refreshToken;
+    int notificationSize = 0;
     ArrayList<com.attra.attralive.model.Notification> notificationList;
+
     private static final String TAG = "DashboardActivity";
-Intent intent;
-    public static String  Authorization= "Basic YXBwbGljYXRpb246c2VjcmV0";
+    Intent intent;
+    public static String Authorization = "Basic YXBwbGljYXRpb246c2VjcmV0";
 
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     private TextView txtRegId, txtMessage;
 
     private SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,13 +91,13 @@ Intent intent;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         this.getWindow().setStatusBarColor(Color.TRANSPARENT);
-        intent=getIntent();
-        location=intent.getStringExtra("location");
+        intent = getIntent();
+        location = intent.getStringExtra("location");
         //subscribeToTopic();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Create channel to show notifications.
-            String channelId  = getString(R.string.default_notification_channel_id);
+            String channelId = getString(R.string.default_notification_channel_id);
             String channelName = getString(R.string.default_notification_channel_name);
             NotificationManager notificationManager =
                     getSystemService(NotificationManager.class);
@@ -121,11 +125,10 @@ Intent intent;
         }
 
 
-
         fragment = new HomeFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_container, fragment).addToBackStack("goBack").commit();
-        notificationArrayList=new ArrayList<NewsFeed>();
-        linearLayoutManager=new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        notificationArrayList = new ArrayList<NewsFeed>();
+        linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         // navigation.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_LABELED);
@@ -139,7 +142,7 @@ Intent intent;
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.getHeaderView(0);
-        userName = headerView.findViewById(R.id.tv_username);
+        userName = headerView.findViewById(R.id.tv_menuUserName);
         userEmail = headerView.findViewById(R.id.tv_email);
         profileImage = headerView.findViewById(R.id.civ_profilePic);
 
@@ -147,30 +150,19 @@ Intent intent;
         if (sharedPreferences.contains("authToken")) {
             myToken = sharedPreferences.getString("authToken", "");
             userId1 = sharedPreferences.getString("userId", "");
-            username = sharedPreferences.getString("userName","");
-            refreshToken=sharedPreferences.getString("refreshToken","");
-      //      Toast.makeText(getApplicationContext(), userId, Toast.LENGTH_LONG).show();
-            Log.i("token in dashboard",myToken);
-            Log.i("user id in dashboard",userId1);
-            Log.i("user name in dashboard",username);
-
+            username = sharedPreferences.getString("userName", "");
+            refreshToken = sharedPreferences.getString("refreshToken", "");
+            //      Toast.makeText(getApplicationContext(), userId, Toast.LENGTH_LONG).show();
+            Log.i("token in dashboard", myToken);
+            Log.i("user id in dashboard", userId1);
+            Log.i("user name in dashboard", username);
+            userName.setText(username);
 
         }
         getProfileDetail(myToken);
 
     }
 
-    private void displayFirebaseRegId() {
-        SharedPreferences pref = getApplicationContext().getSharedPreferences(Config.SHARED_PREF, 0);
-        String regId = pref.getString("regId", null);
-
-        Log.e(TAG, "Firebase reg id: " + regId);
-
-        if (!TextUtils.isEmpty(regId))
-            txtRegId.setText("Firebase Reg Id: " + regId);
-        else
-            txtRegId.setText("Firebase Reg Id is not received yet!");
-    }
 
     protected void onResume() {
         super.onResume();
@@ -215,7 +207,7 @@ Intent intent;
                 });
     }*/
 
-    private void getProfileDetail(String accesstoken){
+    private void getProfileDetail(String accesstoken) {
 
         MyAppolloClient.getMyAppolloClient(accesstoken).query(
                 GetProfileDetails.builder().userId(userId1)
@@ -237,10 +229,11 @@ Intent intent;
                                     String emaiId = response.data().getProfileDetails_Q().email();
                                     String imgPath = response.data().getProfileDetails_Q().profileImagePath();
                                     Log.i("profile image path", imgPath);
+                                    Log.i("username in dashbard", username);
                                     DashboardActivity.this.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            userName.setText(username);
+                                            // userName.setText(username);
                                             userEmail.setText(emaiId);
                                             Picasso.with(getApplicationContext()).load(imgPath).fit().into(profileImage);
 
@@ -269,6 +262,7 @@ Intent intent;
 
                         }
                     }
+
                     @Override
                     public void onFailure(@Nonnull ApolloException e) {
 
@@ -287,8 +281,6 @@ Intent intent;
             super.onBackPressed();
         }
     }
-
-
 
 
     @Override
@@ -320,14 +312,14 @@ Intent intent;
         } else if (id == R.id.nav_facilities) {
            /* fragment = new Gallery();
             loadFragment(fragment);*/
-            Intent intent = new Intent(getApplicationContext(),UserDetailsActivity.class);
+            Intent intent = new Intent(getApplicationContext(), UserDetailsActivity.class);
             startActivity(intent);
 
-        }   else if (id == R.id.nav_about) {
+        } else if (id == R.id.nav_about) {
             fragment = new AboutUsFragment();
             loadFragment(fragment);
 
-        }else if (id == R.id.nav_logout) {
+        } else if (id == R.id.nav_logout) {
             logoutUser();
 
         }
@@ -348,8 +340,8 @@ Intent intent;
                     loadFragment(fragment);
                     return true;
                 case R.id.navigation_event:
-                    Intent i=new Intent(getApplicationContext(),EventRegistrationDetailsActivity.class);
-                    i.putExtra("location",location);
+                    Intent i = new Intent(getApplicationContext(), EventRegistrationDetailsActivity.class);
+                    i.putExtra("location", location);
                     startActivity(i);
                     return true;
                 case R.id.navigation_gallery:
@@ -375,22 +367,23 @@ Intent intent;
     }
 
 
-    @Override public boolean onCreateOptionsMenu(final Menu menu) {
-        ImageView mImageLayoutView=null;
-        TextView myTextView,myTextLayoutView;
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        ImageView mImageLayoutView = null;
+        TextView myTextView, myTextLayoutView;
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.dashboard_toolbar, menu);
         final View actionView = menu.findItem(R.id.menu_item).getActionView();
-        if(actionView!=null)
-        {
+        if (actionView != null) {
             mImageLayoutView = actionView.findViewById(R.id.imageView);
             myTextLayoutView = actionView.findViewById(R.id.textView);
             ((View) actionView.findViewById(R.id.textView)).setVisibility(View.GONE);
 
+
             notificationList= new ArrayList<com.attra.attralive.model.Notification>();
             Log.i("Network availabiltiy",""+isNetworkAvailable(getApplicationContext()));
             if(isNetworkAvailable(getApplicationContext()) )
-            {
+
                 MyAppolloClient.getMyAppolloClient(myToken).query(
                         GetNotificationList.builder().userId(userId1)
                                 .build()).enqueue(
@@ -435,17 +428,15 @@ Intent intent;
                             }
                         }
                 );
-            }else
-            {
+            } else {
                 Toast.makeText(this, "Please check network connectivity", Toast.LENGTH_SHORT).show();
             }
-        }
-        if(mImageLayoutView!=null) {
+        if (mImageLayoutView != null) {
             mImageLayoutView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(DashboardActivity.this, NotificationActivity.class);
-                    if(notificationSize>0 && notificationList!=null)
+                    if (notificationSize > 0 && notificationList != null)
                         intent.putExtra("NOTIFICATION_LIST", notificationList);
 
                     startActivity(intent);
@@ -455,24 +446,26 @@ Intent intent;
             });
         }
         return super.onCreateOptionsMenu(menu);
+
     }
-    private void logoutUser(){
+
+    private void logoutUser() {
         MyAppolloClient.getMyAppolloClient(Authorization).mutate(Logout.builder().userId(userId1).build()).enqueue(new ApolloCall.Callback<Logout.Data>() {
             @Override
             public void onResponse(@Nonnull Response<Logout.Data> response) {
                 String status = response.data().userLogout_M().status();
                 String message = response.data().userLogout_M().message();
-                Log.i("logout status ",status);
-                Log.i(" logout message",message);
+                Log.i("logout status ", status);
+                Log.i(" logout message", message);
                 DashboardActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         if (status.equals("Success")) {
                             Toast.makeText(DashboardActivity.this, "Logout Successfully", Toast.LENGTH_LONG).show();
-                            Intent i=new Intent(DashboardActivity.this,LoginActivity.class);
+                            Intent i = new Intent(DashboardActivity.this, LoginActivity.class);
                             startActivity(i);
                         } else if ((status.equals("Failure")) && (message.equals("Invalid Username or Password"))) {
-                            Toast.makeText(DashboardActivity.this,"Please try again",Toast.LENGTH_LONG).show();
+                            Toast.makeText(DashboardActivity.this, "Please try again", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
