@@ -193,10 +193,7 @@ private void callservice()
                             if(otpStatus.equals("Success")){
                                 getToken();
                                 sendDeviceToken();
-                                Intent intent1 = new Intent(getApplicationContext(),UserDetailsActivity.class);
-                                intent1.putExtra("emailId",emailId);
-                                intent1.putExtra("password",password);
-                                startActivity(intent1);
+
                             }
                             else if( (otpStatus.equals("Failure"))) {
                                 if(message.equals("Invalid OTP")){
@@ -260,7 +257,15 @@ private void callservice()
                     public void onResponse(@Nonnull Response<SendDeviceToken.Data> response) {
                         String message= response.data().registerDeviceId_M().message();
                         final String status = response.data().registerDeviceId_M().status();
-                        Log.i("res_message",message);
+                        if(status.equals("Success")){
+                            Log.i("device token send",status);
+                            Log.i("res_message",message);
+
+                        }else if(status.equals("Failure")){
+                            Log.i("device token send",status);
+                            Log.i("res_message",message);
+                        }
+
 
                     }
 
@@ -298,30 +303,30 @@ private void callservice()
                         {
                             Log.i("otpValidation==>status","OtpValidationActivity==>getToken==>status "+status);
                         }
-                        if(status.equals("Success")){
-                            Log.i("otpValidation==>status","OtpValidationActivity==>getToken==>status "+ "inside success");
-                          SharedPreferences  preferences = getApplicationContext().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, 0);
-                          SharedPreferences.Editor editor = preferences.edit();
-                            editor.putString("authToken",authToken);
-                            editor.putString("refreshToken",refreshToken);
-                            editor.putString("emailId",emailId);
-                            editor.putString("userId",userId);
-                            editor.putString("userName",userName);
+                        if(status.equals("Success")) {
+                            Log.i("otpValidation==>status", "OtpValidationActivity==>getToken==>status " + "inside success");
+                            SharedPreferences preferences = getApplicationContext().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, 0);
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString("authToken", authToken);
+                            editor.putString("refreshToken", refreshToken);
+                            editor.putString("emailId", emailId);
+                            editor.putString("userId", userId);
+                            editor.putString("userName", userName);
                             //editor.commit();
                             editor.apply();
 
-                        }else if(status.equals("Failure")){
-                            if(message.equals("Invalid token: access token has expired")){
 
-                                GetNewRefreshToken.getRefreshtoken(refreshToken,OtpValidationActivity.this);
-
-                               // getNewRefreshToken(refreshToken);
-
-                                /*getNewRefreshToken(refreshToken);*/
-
-                            }
-
+                            OtpValidationActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent intent1 = new Intent(getApplicationContext(),UserDetailsActivity.class);
+                                    intent1.putExtra("emailId",emailId);
+                                    intent1.putExtra("password",password);
+                                    startActivity(intent1);
+                                }
+                            });
                         }
+
 
                     }
 

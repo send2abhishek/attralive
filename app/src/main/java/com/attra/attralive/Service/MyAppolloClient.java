@@ -11,10 +11,8 @@ import okhttp3.logging.HttpLoggingInterceptor;
 public class MyAppolloClient {
 
 
-
-
-//    private static  final String URL = "http://18.191.196.0:80/graphql";
-    private static  final String URL = "http://10.200.44.23:4001/graphql";
+    private static final String URL = "http://13.232.225.201:80/graphql";
+    //   private static  final String URL = "http://10.200.44.23:4001/graphql";
 
 
     private static ApolloClient apolloClient;
