@@ -1,5 +1,4 @@
 package com.attra.attralive.activity;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -314,7 +313,7 @@ public class UserDetailsActivity extends AppCompatActivity {
         Log.i("initRetrofitClient", "initRetrofitClient");
         client = new OkHttpClient.Builder().build();
 
-        apiService = new Retrofit.Builder().baseUrl("http://13.232.225.201:80").client(client).build().create(ApiService.class);
+        apiService = new Retrofit.Builder().baseUrl("http://10.200.44.25:4001").client(client).build().create(ApiService.class);
     }
 
     @Override

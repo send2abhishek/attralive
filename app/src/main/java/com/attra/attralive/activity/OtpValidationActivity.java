@@ -46,7 +46,12 @@ public class OtpValidationActivity extends AppCompatActivity {
     String otpNumber;
     String token = "";
     String opt;
-    String refreshToken, RefreshToken;
+
+    String [] getusername;
+    String userName;
+    String refreshToken,RefreshToken;
+
+
     SharedPreferences sharedPreferences;
     private static String accessToken, authToken;
     public static String Authorization = "Basic YXBwbGljYXRpb246c2VjcmV0";
@@ -66,7 +71,8 @@ public class OtpValidationActivity extends AppCompatActivity {
             password = intent.getStringExtra("pass");
             Log.i("email id", emailId);
         }
-
+        getusername=emailId.split("\\@");
+        userName=getusername[0].replace(".","");
 
         validateOTP = findViewById(R.id.validate);
         motpNumber1 = (EditText) findViewById(R.id.otp_num1);
@@ -290,9 +296,9 @@ public class OtpValidationActivity extends AppCompatActivity {
                         String refreshTokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
                         String user = response.data().userLoginAuth_Q().user();
                         String message = response.data().userLoginAuth_Q().message();
-                        String userName = response.data().userLoginAuth_Q().name();
                         String userId = response.data().userLoginAuth_Q().user_id();
                         String status = response.data().userLoginAuth_Q().status();
+
                         Log.i("access Token", accessToken);
                         authToken = "Bearer" + " " + accessToken;
                         Log.i("brarer token", authToken);
@@ -312,21 +318,26 @@ public class OtpValidationActivity extends AppCompatActivity {
                             editor.putString("userName", userName);
                             //editor.commit();
                             editor.apply();
-                            OtpValidationActivity.this.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Intent intent1 = new Intent(getApplicationContext(), UserDetailsActivity.class);
-                                    intent1.putExtra("emailId", emailId);
-                                    intent1.putExtra("password", password);
-                                    startActivity(intent1);
-                                }
-                            });
-                        }
+
+                        OtpValidationActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent intent1 = new Intent(getApplicationContext(), UserDetailsActivity.class);
+                                intent1.putExtra("emailId", emailId);
+                                intent1.putExtra("password", password);
+                                startActivity(intent1);
+                            }
+                        });
+                    }
                         else if(status.equals("Failure")){
 
                         }
 
-                    }
+                        }
+
+
+
+
 
 
                     @Override
