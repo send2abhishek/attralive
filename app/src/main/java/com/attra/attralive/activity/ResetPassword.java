@@ -74,7 +74,7 @@ public class ResetPassword extends AppCompatActivity {
 
     public void resetPassword(String accesstoken) {
 
-        MyAppolloClient.getMyAppolloClient(accesstoken).mutate(ChangePassword.builder().userId(userId).currentPassword(newPassword.getText().toString()).newPassword(newPassword.getText().toString()).build()).enqueue(new ApolloCall.Callback<ChangePassword.Data>() {
+        MyAppolloClient.getMyAppolloClient(accesstoken).mutate(ChangePassword.builder().userId(userId).currentPassword(currentPassword.getText().toString()).newPassword(newPassword.getText().toString()).build()).enqueue(new ApolloCall.Callback<ChangePassword.Data>() {
             @Override
             public void onResponse(@Nonnull Response<ChangePassword.Data> response) {
                 status = response.data().changePassword_M().status();
@@ -90,8 +90,8 @@ public class ResetPassword extends AppCompatActivity {
                                 Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
                                 startActivity(intent);
                             }
-                            if ((status.equals("Failure")) && (message.equals("Invalid Username or Password"))) {
-                                Toast.makeText(ResetPassword.this, "emial id is incorrect", Toast.LENGTH_LONG).show();
+                            if ((status.equals("Failure")) && (message.equals("Incorrect Current Password"))) {
+                                Toast.makeText(ResetPassword.this, "Incorrect Current Password", Toast.LENGTH_LONG).show();
                             }
                         }
 

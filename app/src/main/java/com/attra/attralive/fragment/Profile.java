@@ -24,7 +24,7 @@ import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
 import com.attra.attralive.Service.ApiService;
 import com.attra.attralive.Service.MyAppolloClient;
-import com.attra.attralive.activity.activity_edit_profile_detail;
+import com.attra.attralive.activity.EditProfile;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -128,7 +128,7 @@ public class Profile extends Fragment {
         submitdata.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent1 = new Intent(getContext(),activity_edit_profile_detail.class);
+                Intent intent1 = new Intent(getContext(),EditProfile.class);
                 startActivity(intent1);
             }
         });
@@ -599,8 +599,8 @@ public class Profile extends Fragment {
                                 if (status.equals("Success")) {
                                     //String username = response.data().getProfileDetails_Q().name();
                                     //  String emaiId = response.data().getProfileDetails_Q().email();
-                                    final String password = "Ashwini1";
-                                    final String username = "Nagarathna";
+                                    final String password = "*********";
+                                    final String username = userName;
                                     String design = response.data().getProfileDetails_Q().designation();
                                     String phoneNo = response.data().getProfileDetails_Q().mobileNumber();
                                     String loc = response.data().getProfileDetails_Q().location();

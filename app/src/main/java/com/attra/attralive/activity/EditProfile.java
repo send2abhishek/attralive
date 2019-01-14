@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -32,6 +33,9 @@ import com.attra.attralive.R;
 import com.attra.attralive.Service.ApiService;
 import com.attra.attralive.Service.MyAppolloClient;
 import com.attra.attralive.util.GetNewRefreshToken;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -67,7 +71,7 @@ import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
-public class activity_edit_profile_detail extends AppCompatActivity {
+public class EditProfile extends AppCompatActivity {
     MaterialSpinner location,bu;
     Button continueBtn,cancelButton;
 
@@ -286,7 +290,7 @@ finish();                }
                                     String imgPath = response.data().getProfileDetails_Q().profileImagePath();
                                     //  String qrCodePath = response.data().getProfileDetails_Q().userQRCodeLink();
                                     String emailId= response.data().getProfileDetails_Q().email();
-                                    activity_edit_profile_detail.this.runOnUiThread(new Runnable() {
+                                    EditProfile.this.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
                                             Picasso.with(getApplicationContext()).load(imgPath).fit().into(upload);
@@ -315,22 +319,22 @@ finish();                }
                                             }
 
                                             /*if(userBuAdapter!=null &&businessUnit!=null) {
-                                                Log.i("BU spinner","activity_edit_profile_detail==>getprofileDetails="+businessUnit);
+                                                Log.i("BU spinner","EditProfile==>getprofileDetails="+businessUnit);
                                                  bu.setAdapter(userBuAdapter);
                                                  bu.setSelection( userBuAdapter.getPosition(businessUnit));
                                             }
                                             else
                                             {
-                                                Log.i("Bu Spinner","activity_edit_profile_detail==>getprofileDetails= either bu or adpater is null");
+                                                Log.i("Bu Spinner","EditProfile==>getprofileDetails= either bu or adpater is null");
                                             }
                                             if(locationAdapter!=null && loc!=null)
                                             {
                                                 location.setAdapter(locationAdapter);
                                                location.setSelection( locationAdapter.getPosition(loc));
-                                                Log.i("Location spinner","activity_edit_profile_detail==>getprofileDetails="+loc);
+                                                Log.i("Location spinner","EditProfile==>getprofileDetails="+loc);
                                             }else
                                             {
-                                                Log.i("Location Spinner","activity_edit_profile_detail==>getprofileDetails= either loc or adpater is null");
+                                                Log.i("Location Spinner","EditProfile==>getprofileDetails= either loc or adpater is null");
                                             }*/
                                             //location.setText(loc);
                                            /* if (userBuAdapter != null && businessUnit != null) {
@@ -417,11 +421,11 @@ finish();                }
                             }
                         }
 
-                        activity_edit_profile_detail.this.runOnUiThread(new Runnable() {
+                        EditProfile.this.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
 
-                                locationAdapter = new ArrayAdapter<>(activity_edit_profile_detail.this,
+                                locationAdapter = new ArrayAdapter<>(EditProfile.this,
                                         android.R.layout.simple_spinner_item,locationList);
                                 locationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                 location.setAdapter(locationAdapter);
@@ -461,11 +465,11 @@ finish();                }
 
                             }
                         }
-                        userBuAdapter = new ArrayAdapter<>(activity_edit_profile_detail.this,
+                        userBuAdapter = new ArrayAdapter<>(EditProfile.this,
                                 android.R.layout.simple_spinner_item,buList);
 
                         userBuAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        activity_edit_profile_detail.this.runOnUiThread(new Runnable() {
+                        EditProfile.this.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                int buPos=userBuAdapter.getPosition(businessUnit)+1;
@@ -765,6 +769,12 @@ finish();                }
                         // Log.d("res_status userDetails", status);
                         if (status.equals("Success")) {
                             Log.d("res_message in User", message);
+                         /*   if(workLoc.equals("Bangalore")){
+
+                            }else if(workLoc.equals("Hydrabad")){
+
+                            }*/
+                            subscribeToTopic(workLoc);
                             Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
                             startActivity(intent1);
                         } else if (status.equals("Failure")) {
@@ -783,6 +793,22 @@ finish();                }
         );
 
 
+
+    }
+
+    public void subscribeToTopic(String location) {
+        FirebaseMessaging.getInstance().subscribeToTopic(location)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String msg = location;
+                        if (!task.isSuccessful()) {
+                            msg = getString(R.string.msg_subscribe_failed);
+                        }
+                        Log.d("topic subscription", msg);
+                        //  Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
 
     }
 

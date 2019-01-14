@@ -25,11 +25,13 @@ import com.attra.attralive.R;
 import com.attra.attralive.Service.MyAppolloClient;
 import com.attra.attralive.util.GetNewRefreshToken;
 
+
 import javax.annotation.Nonnull;
 
 import graphqlandroid.UserLoginAuth;
 
 public class LoginActivity extends AppCompatActivity {
+    private String username, password;
     CardView loginbutton;
     EditText etusername, userPassword;
     TextView attraemail, forgotpswd, registerHere;
@@ -37,7 +39,6 @@ public class LoginActivity extends AppCompatActivity {
     CheckBox saveLoginCheckBox;
     String status, message, accessToken, authToken;
     String myToken, refreshToken, name, userId, userName;
-    private String username, password;
     private SharedPreferences loginPreferences, sharedPreferences;
     private SharedPreferences.Editor loginPrefsEditor;
     private Boolean saveLogin;
@@ -135,16 +136,16 @@ public class LoginActivity extends AppCompatActivity {
 
         etusername.setOnFocusChangeListener(new View.OnFocusChangeListener()
         {
-        @Override
-        public void onFocusChange (View v,boolean hasFocus){
-        if (!hasFocus)
-            if (etusername.getText().toString().trim().isEmpty()) {
-                usernametil.setError(getString(R.string.emptyusername_text));
+            @Override
+            public void onFocusChange (View v,boolean hasFocus){
+                if (!hasFocus)
+                    if (etusername.getText().toString().trim().isEmpty()) {
+                        usernametil.setError(getString(R.string.emptyusername_text));
 
+                    }
             }
+        });
     }
-    });
-}
 
 
 
@@ -192,12 +193,10 @@ public class LoginActivity extends AppCompatActivity {
 
     private void callLoginservice(String accesstoken) {
 
+        //  Log.d("accesstoken", accesstoken);
 
-      //  Log.d("accesstoken", accesstoken);
 
-
-      // Log.d("accesstoken", accesstoken);
-
+        // Log.d("accesstoken", accesstoken);
 
         MyAppolloClient.getMyAppolloClient(GetNewRefreshToken.Authorization).query(UserLoginAuth.builder().username(username + attraemail.getText().toString().trim()).
                 password(password).build()).enqueue(new ApolloCall.Callback<UserLoginAuth.Data>() {
@@ -222,9 +221,9 @@ public class LoginActivity extends AppCompatActivity {
                         authToken = "Bearer" + " " + accessToken;
                         //refreshToken="Bearer"+" "+RefreshToken;
                         Log.i("brarer token", authToken);
-                       userName=username.replace(".","");
-                       Log.d("name",userName);
-                       Log.d("username",username);
+                        userName=username.replace(".","");
+                        Log.d("name",userName);
+                        Log.d("username",username);
                     }
                     LoginActivity.this.runOnUiThread(new Runnable() {
                         @Override

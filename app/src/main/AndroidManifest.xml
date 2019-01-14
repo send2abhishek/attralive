@@ -103,7 +103,7 @@
         <activity android:name=".activity.EventRegistrationDetailsActivity"></activity>
         <activity android:name=".activity.PostDetailsActivity"></activity>
         <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity" />
-        <activity android:name=".activity.activity_edit_profile_detail" />
+        <activity android:name=".activity.EditProfile" />
     </application>
 
 </manifest>
