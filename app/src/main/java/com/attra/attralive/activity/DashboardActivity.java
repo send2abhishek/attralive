@@ -231,8 +231,15 @@ public class DashboardActivity extends AppCompatActivity
                                     String username = response.data().getProfileDetails_Q().name();
                                     String emaiId = response.data().getProfileDetails_Q().email();
                                     String imgPath = response.data().getProfileDetails_Q().profileImagePath();
+                                    String loc = response.data().getProfileDetails_Q().location();
                                     Log.i("profile image path", imgPath);
                                     Log.i("username in dashbard", username);
+                                    sharedPreferences = getApplicationContext().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, 0);
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.putString("location", loc);
+                                    editor.putString("profileImagePath", imgPath);
+                                    editor.putString("userName", username);
+                                    editor.commit();
                                     DashboardActivity.this.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {

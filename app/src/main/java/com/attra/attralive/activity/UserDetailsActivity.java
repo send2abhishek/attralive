@@ -504,11 +504,11 @@ public class UserDetailsActivity extends AppCompatActivity {
                             subscribeToTopic(workLoc);
                             subscribeToTopic("Attra");
                             Log.d("res_message in User", message);
-                            sharedPreferences = getApplicationContext().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, 0);
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString("location", workLoc);
-                            editor.putString("profileImagePath", path);
-                            editor.commit();
+//                            sharedPreferences = getApplicationContext().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, 0);
+//                            SharedPreferences.Editor editor = sharedPreferences.edit();
+//                            editor.putString("location", workLoc);
+//                            editor.putString("profileImagePath", path);
+//                            editor.commit();
                             Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
                             startActivity(intent1);
                         } else if (status.equals("Failure")) {
