@@ -18,7 +18,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
@@ -26,9 +25,9 @@ import com.attra.attralive.R;
 import com.attra.attralive.Service.MyAppolloClient;
 import com.attra.attralive.util.GetNewRefreshToken;
 
+
 import javax.annotation.Nonnull;
 
-import graphqlandroid.GetRefreshToken;
 import graphqlandroid.UserLoginAuth;
 
 public class LoginActivity extends AppCompatActivity {
@@ -39,7 +38,7 @@ public class LoginActivity extends AppCompatActivity {
     TextInputLayout passwordtil, usernametil;
     CheckBox saveLoginCheckBox;
     String status, message, accessToken, authToken;
-    String myToken, refreshToken, name, userId,userName;
+    String myToken, refreshToken, name, userId, userName;
     private SharedPreferences loginPreferences, sharedPreferences;
     private SharedPreferences.Editor loginPrefsEditor;
     private Boolean saveLogin;
@@ -62,6 +61,8 @@ public class LoginActivity extends AppCompatActivity {
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         loginPrefsEditor = loginPreferences.edit();
         saveLogin = loginPreferences.getBoolean("saveLogin", false);
+        // String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+//        Log.i("refresh token....",refreshedToken);
         if (saveLogin == true) {
             etusername.setText(loginPreferences.getString("username", ""));
             userPassword.setText(loginPreferences.getString("password", ""));
@@ -76,70 +77,77 @@ public class LoginActivity extends AppCompatActivity {
             Log.i("user id in userDtail", userId);
             Log.i("refresh id in userDtail", refreshToken);
 
-            registerHere.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getApplicationContext(), RegistrationActivity.class);
-                    startActivity(intent);
-                }
-            });
-
-
-            forgotpswd.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
-                    startActivity(intent);
-                }
-            });
-            userPassword.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    passwordtil.setError(null);
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-
-                }
-            });
-
-            // passwopard.getBackground().setColorFilter(getResources().getColor(R.color.text_coloring_login), PorterDuff.Mode.SRC_ATOP);
-            // password.getBackground().clearColorFilter();
-            etusername.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    usernametil.setError(null);
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-
-                }
-            });
-            etusername.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if (hasFocus == false)
-                        if (etusername.getText().toString().trim().isEmpty()) {
-                            usernametil.setError(getString(R.string.emptyusername_text));
-
-                        }
-                }
-            });
         }
+
+
+        registerHere.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
+        forgotpswd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+                startActivity(intent);
+
+            }
+        });
+        userPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                passwordtil.setError(null);
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        // passwopard.getBackground().setColorFilter(getResources().getColor(R.color.text_coloring_login), PorterDuff.Mode.SRC_ATOP);
+        // password.getBackground().clearColorFilter();
+        etusername.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                usernametil.setError(null);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+
+        etusername.setOnFocusChangeListener(new View.OnFocusChangeListener()
+        {
+        @Override
+        public void onFocusChange (View v,boolean hasFocus){
+        if (!hasFocus)
+            if (etusername.getText().toString().trim().isEmpty()) {
+                usernametil.setError(getString(R.string.emptyusername_text));
+
+            }
     }
+    });
+}
+
+
 
     public void login(View view) {
         if (etusername.getText().toString().trim().isEmpty()) {
@@ -184,7 +192,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void callLoginservice(String accesstoken) {
-        Log.d("accesstoken", accesstoken);
+
+      //  Log.d("accesstoken", accesstoken);
+
+
+      // Log.d("accesstoken", accesstoken);
+
         MyAppolloClient.getMyAppolloClient(GetNewRefreshToken.Authorization).query(UserLoginAuth.builder().username(username + attraemail.getText().toString().trim()).
                 password(password).build()).enqueue(new ApolloCall.Callback<UserLoginAuth.Data>() {
             @Override
@@ -201,8 +214,8 @@ public class LoginActivity extends AppCompatActivity {
                         String refreshTokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
                         String user = response.data().userLoginAuth_Q().user();
                         String message = response.data().userLoginAuth_Q().message();
-                         userName = response.data().userLoginAuth_Q().name();
-                         userId = response.data().userLoginAuth_Q().user_id();
+                        userName = response.data().userLoginAuth_Q().name();
+                        userId = response.data().userLoginAuth_Q().user_id();
                         String status = response.data().userLoginAuth_Q().status();
                         Log.i("access Token", accessToken);
                         authToken = "Bearer" + " " + accessToken;
@@ -221,15 +234,14 @@ public class LoginActivity extends AppCompatActivity {
                                 // editor.putString("emailId",emailId);
                                 editor.putString("userId", userId);
                                 editor.putString("userName", userName);
-                                editor.commit();
+                                editor.apply();
+                                //   editor.commit();
                                 Intent i = new Intent(LoginActivity.this, DashboardActivity.class);
                                 startActivity(i);
                             } else if ((status.equals("Failure"))) {
-                                if(message.equals("Username or password is incorrect"))
-                                {
+                                if (message.equals("Username or password is incorrect")) {
                                     Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
-                                }
-                               else  if (message.equals("Invalid Username or Password")) {
+                                } else if (message.equals("Invalid Username or Password")) {
                                     Toast.makeText(LoginActivity.this, "Username or password is incorrect", Toast.LENGTH_LONG).show();
                                 } else {
 
@@ -257,11 +269,14 @@ public class LoginActivity extends AppCompatActivity {
                     });
                 }
             }
+
             @Override
             public void onFailure(@Nonnull ApolloException e) {
             }
         });
     }
+
+
 }
 
 

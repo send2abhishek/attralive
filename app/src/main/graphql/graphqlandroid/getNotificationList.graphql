@@ -6,15 +6,16 @@ getUserNotification_Q(userId:$userId)
     message
     notifications
   {
-       postType
-       postId
-       ownerId
-       action
-       userId
-       userName
-       time
-       readStatus
-       postMessage
+             userImage
+              postType
+              postId
+              ownerId
+              action
+              userId
+              userName
+              time
+              readStatus
+              postMessage
   }
   }
 }

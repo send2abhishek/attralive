@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,9 +39,10 @@ public class EventRegisteredDetailsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    String eventtitle,venue,startdate,enddate,starttime,endtime,description,status,message,eventId,isRegistered;
+    String eventtitle,venue,startdate,enddate,starttime,endtime,description,status,message,eventId;
+    Boolean isRegistered;
     TextView eventvenue,eventdate,eventtime;
-    CardView register;
+    Button register;
     TextView regdetails;
     ImageView qrcode;
     LinearLayout linearLayout;
@@ -55,10 +57,11 @@ public class EventRegisteredDetailsFragment extends Fragment {
         eventvenue=view.findViewById(R.id.tv_eventvenue);
         eventdate=view.findViewById(R.id.tv_eventdate);
         eventtime=view.findViewById(R.id.tv_eventtime);
-        register=view.findViewById(R.id.crd_regevent);
+        register=view.findViewById(R.id.bt_regbutton);
         regdetails=view.findViewById(R.id.tv_regid);
         qrcode=view.findViewById(R.id.im_qrcode);
         linearLayout=view.findViewById(R.id.ll_qrcode);
+        System.out.println("fragment");
         sharedPreferences = getActivity().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
             myToken = sharedPreferences.getString("authToken", "");
@@ -77,19 +80,22 @@ public class EventRegisteredDetailsFragment extends Fragment {
         starttime=this.getArguments().getString("StartTime");
         endtime=this.getArguments().getString("EndTime");
         eventId=this.getArguments().getString("EventId");
-        isRegistered=this.getArguments().getString("isRegistered");
-        if(isRegistered.equals("true"))
+        isRegistered=this.getArguments().getBoolean("isregisterd");
+        System.out.println("isreddfg"+isRegistered);
+        if(isRegistered==true)
         {
             register.setVisibility(View.GONE);
             linearLayout.setVisibility(View.VISIBLE);
-            regId=this.getArguments().getString("RegistrationId");
-            Qrcodelink=this.getArguments().getString("QRcodelink");
+            regId=this.getArguments().getString("registeredId");
+            Qrcodelink=this.getArguments().getString("Qrcode");
             regdetails.setText("RegistrationId\n"+regId);
+            Log.d("Qrcode in fragment",Qrcodelink);
             Picasso.with(getActivity()).load(Qrcodelink).into(qrcode);
-            eventvenue.setText(venue);
-            eventdate.setText(startdate+":"+enddate);
-            eventtime.setText(starttime + ":" + endtime);
+
         }
+        eventvenue.setText(venue);
+        eventdate.setText(startdate+":"+enddate);
+        eventtime.setText(starttime + ":" + endtime);
         System.out.println("loc"+loc);
     //    getEventDetails();
         register.setOnClickListener(new View.OnClickListener() {
@@ -142,49 +148,6 @@ public class EventRegisteredDetailsFragment extends Fragment {
             }
         });
     }
-    private void getEventDetails()
-    {
-        MyAppolloClient.getMyAppolloClient("Bearer d3b928d44fcacd522f26e829d3fbdb6e483f2d9e").
-                query(GetEventDetails.builder().status("A").location(loc).build()).enqueue(new ApolloCall.Callback<GetEventDetails.Data>() {
-            @Override
-            public void onResponse(@Nonnull Response<GetEventDetails.Data> response) {
 
-            /*eventtitle=response.data().getEventDetails_Q().eventD().get(0).event_title();
-            description=response.data().getEventDetails_Q().eventD().get(0).Description();
-            venue=response.data().getEventDetails_Q().eventD().get(0).venue();
-            startdate=response.data().getEventDetails_Q().eventD().get(0).Schedule().start_date();
-            starttime=response.data().getEventDetails_Q().eventD().get(0).Schedule().start_time();
-            enddate=response.data().getEventDetails_Q().eventD().get(0).Schedule().end_date();
-            endtime=response.data().getEventDetails_Q().eventD().get(0).Schedule().end_time();*/
-            /*
-            }*/
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-
-                    for(int i=0;i<response.data().getEventDetails_Q().eventD().get(0).registeredUsers().size();i++) {
-                        reguserId = response.data().getEventDetails_Q().eventD().get(0).registeredUsers().get(i).userId();
-                        if (reguserId.equals(userId)) {
-                            register.setVisibility(View.GONE);
-                            linearLayout.setVisibility(View.VISIBLE);
-                            //regdetails.setText(response.data().getEventDetails_Q().eventD().get(0).registeredUsers().get(i).
-                            //registrationId());
-                            regdetails.setText("rrrr");
-                           // Picasso.with(getActivity()).load("https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png").into(qrcode);
-                        }
-                   }
-                    eventvenue.setText("asd");
-                    eventdate.setText("gg");
-                    eventtime.setText("oo" + ":" + "nn");
-                }
-            });
-            }
-
-            @Override
-            public void onFailure(@Nonnull ApolloException e) {
-
-            }
-        });
-    }
 
 }

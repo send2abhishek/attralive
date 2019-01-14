@@ -35,12 +35,13 @@ public class PostCommentsAdapter extends RecyclerView.Adapter<PostCommentsAdapte
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
-    allComments=arrayList.get(i);
-    myViewHolder.username.setText(allComments.getCommentdby());
+        System.out.println("inside adapter");
+        allComments=arrayList.get(i);
+        myViewHolder.username.setText(allComments.getCommentdby());
         myViewHolder.location.setText(allComments.getUserlocation());
         myViewHolder.time.setText(allComments.getCommenttime());
         myViewHolder.comment.setText(allComments.getCommentmsg());
-//        Picasso.with(context).load(allComments.getUserimagepath()).into(myViewHolder.userimage);
+       Picasso.with(context).load(allComments.getUserimagepath()).into(myViewHolder.userimage);
     }
 
     @Override

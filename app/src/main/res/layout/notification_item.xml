@@ -15,14 +15,14 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:src="@drawable/ic_thumb_up_black_24dp"
+                android:src="@drawable/ic_thumb_up_greyempty_24dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:layout_centerVertical="true"
                 android:id="@+id/commentNotifyDp"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:padding="4dp"
                />
 
@@ -54,7 +54,16 @@
                 android:text="13.3 Inch, 256 GB"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
         </RelativeLayout>
-
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/tv_notificationid"
+    android:visibility="gone"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_imagepath"
+            android:visibility="gone"/>
     </android.support.v7.widget.CardView>
 
 </LinearLayout>

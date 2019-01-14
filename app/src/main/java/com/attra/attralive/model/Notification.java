@@ -27,14 +27,6 @@ public class Notification implements Serializable {
         this.ownerId = ownerId;
     }
 
-    public String getOwnerName() {
-        return ownerName;
-    }
-
-    public void setOwnerName(String ownerName) {
-        this.ownerName = ownerName;
-    }
-
     public String getAction() {
         return action;
     }
@@ -83,13 +75,7 @@ public class Notification implements Serializable {
         this.userImage = userImage;
     }
 
-    public String getGender() {
-        return gender;
-    }
 
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
 
     /* private int id;
         private String title;
@@ -118,22 +104,23 @@ public class Notification implements Serializable {
    private String postType;
     private String postId;
     private String ownerId;
-    private String   ownerName;
+
     private String action;
     private String     userId;
 
-    public Notification(String postType, String postId, String ownerId, String ownerName, String action, String userId, String userName, String time, String postMessage, String userImage, String gender, String readStatus) {
+    public Notification(String postType, String postId, String ownerId, String action, String userId,
+                        String userName, String time, String postMessage, String userImage,  String readStatus) {
         this.postType = postType;
         this.postId = postId;
         this.ownerId = ownerId;
-        this.ownerName = ownerName;
+
         this.action = action;
         this.userId = userId;
         this.userName = userName;
         this.time = time;
         this.postMessage = postMessage;
         this.userImage = userImage;
-        this.gender = gender;
+
         this.readStatus = readStatus;
     }
 
@@ -141,8 +128,7 @@ public class Notification implements Serializable {
 
     private String   time;
     private String postMessage;
-    private String      userImage;
-    private String gender;
+    private String userImage;
     private String readStatus;
 
     public String getReadStatus() {

@@ -5,7 +5,7 @@
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/im_likeuserimage"
         android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:scaleType="centerCrop" />
 </LinearLayout>
