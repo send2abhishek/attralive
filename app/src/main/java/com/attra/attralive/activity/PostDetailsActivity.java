@@ -13,6 +13,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -145,6 +146,8 @@ likeimage.setOnClickListener(new View.OnClickListener() {
         postCommentsAdapter.notifyDataSetChanged();
         callPostComments(myToken);
         addcomments.setText("");
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         v.setVisibility(View.GONE);
 
     }
@@ -174,8 +177,8 @@ likeimage.setOnClickListener(new View.OnClickListener() {
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if(itemId == android.R.id.home){
-          finish();
-          startActivity(getIntent());
+          Intent i = new Intent(PostDetailsActivity.this, DashboardActivity.class);
+          startActivity(i);
         }
         return true;
 
