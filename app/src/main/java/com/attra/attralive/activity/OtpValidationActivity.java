@@ -6,19 +6,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
@@ -27,7 +27,9 @@ import com.attra.attralive.Service.MyAppolloClient;
 import com.attra.attralive.util.GetNewRefreshToken;
 import com.attra.attralive.util.NetworkUtil;
 import com.google.firebase.iid.FirebaseInstanceId;
+
 import javax.annotation.Nonnull;
+
 import graphqlandroid.OtpValidation;
 import graphqlandroid.ResendOtp;
 import graphqlandroid.SendDeviceToken;
@@ -39,16 +41,17 @@ public class OtpValidationActivity extends AppCompatActivity {
     EditText motpNumber1, motpNumber2, motpNumber3, motpNumber4;
     TextView resendOtp;
     ImageView closeOtp;
-    NetworkUtil networkUtil= null;
-    String emailId,password;
+    NetworkUtil networkUtil = null;
+    String emailId, password;
     String otpNumber;
-    String token="";
+    String token = "";
     String opt;
-    String refreshToken,RefreshToken;
+    String refreshToken, RefreshToken;
     SharedPreferences sharedPreferences;
-    private static String accessToken,authToken;
-    public static String  Authorization= "Basic YXBwbGljYXRpb246c2VjcmV0";
-   // public static final String PREFS_AUTH ="my_auth";
+    private static String accessToken, authToken;
+    public static String Authorization = "Basic YXBwbGljYXRpb246c2VjcmV0";
+
+    // public static final String PREFS_AUTH ="my_auth";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,15 +60,15 @@ public class OtpValidationActivity extends AppCompatActivity {
 
         closeOtp = findViewById(R.id.iv_close_otp);
 
-        Intent intent=this.getIntent();
-        if(intent !=null) {
+        Intent intent = this.getIntent();
+        if (intent != null) {
             emailId = intent.getStringExtra("emailId");
             password = intent.getStringExtra("pass");
-            Log.i("email id",emailId);
+            Log.i("email id", emailId);
         }
 
 
-        validateOTP =  findViewById(R.id.validate);
+        validateOTP = findViewById(R.id.validate);
         motpNumber1 = (EditText) findViewById(R.id.otp_num1);
         motpNumber2 = (EditText) findViewById(R.id.otp_num2);
         motpNumber3 = (EditText) findViewById(R.id.otp_num3);
@@ -83,11 +86,10 @@ public class OtpValidationActivity extends AppCompatActivity {
         closeOtp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent1 = new Intent(getApplicationContext(),RegistrationActivity.class);
+                Intent intent1 = new Intent(getApplicationContext(), RegistrationActivity.class);
                 startActivity(intent1);
             }
         });
-
 
 
         resendOtp.setOnClickListener(new View.OnClickListener() {
@@ -107,11 +109,11 @@ public class OtpValidationActivity extends AppCompatActivity {
                             public void onResponse(@Nonnull Response<ResendOtp.Data> response) {
                                 final String otpStatus = response.data().resendOTP_M().otpstatus();
                                 String message = response.data().resendOTP_M().message();
-                                Log.i("res_message",otpStatus);
+                                Log.i("res_message", otpStatus);
                                 OtpValidationActivity.this.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        if(otpStatus.equals("Success")){
+                                        if (otpStatus.equals("Success")) {
 
                                             Toast.makeText(OtpValidationActivity.this, "OTP has been sent successfully to you registered email id", Toast.LENGTH_SHORT).show();
                                         }
@@ -135,13 +137,13 @@ public class OtpValidationActivity extends AppCompatActivity {
                 String CardNumber3 = motpNumber3.getText().toString();
                 String CardNumber4 = motpNumber4.getText().toString();
 
-                otpNumber = CardNumber1+""+CardNumber2+CardNumber3+CardNumber4;
-                Log.i("otp nuber",otpNumber);
+                otpNumber = CardNumber1 + "" + CardNumber2 + CardNumber3 + CardNumber4;
+                Log.i("otp nuber", otpNumber);
 
-                if(otpNumber.equals("")){
+                if (otpNumber.equals("")) {
                     motpNumber1.setError("Enter OTP number");
                     motpNumber1.requestFocus();
-                } else if(otpNumber !=""){
+                } else if (otpNumber != "") {
                     if (otpNumber.length() != 4) {
                         if (CardNumber1.equals("")) {
                             motpNumber1.setError("Enter OTP number");
@@ -157,8 +159,8 @@ public class OtpValidationActivity extends AppCompatActivity {
                             motpNumber4.requestFocus();
                         }
 
-                    }else{
-                        opt= otpNumber;
+                    } else {
+                        opt = otpNumber;
                         final ProgressDialog loading = ProgressDialog.show(OtpValidationActivity.this, "Authenticating", "Please wait while we check the entered code", false, false);
                         Handler handler = new Handler();
                         handler.postDelayed(new Runnable() {
@@ -174,78 +176,76 @@ public class OtpValidationActivity extends AppCompatActivity {
         });
 
     }
-private void callservice()
-{
-    MyAppolloClient.getMyAppolloClient(token).mutate(
-            OtpValidation.builder().email(emailId)
-                    .otp(opt)
-                    .build()).enqueue(
-            new ApolloCall.Callback<OtpValidation.Data>() {
-                @Override
-                public void onResponse(@Nonnull Response<OtpValidation.Data> response) {
 
-                    String message= response.data().otpValidation_M().message();
-                    final String otpStatus = response.data().otpValidation_M().otpstatus();
-                                                Log.i("res_message",message);
-                    OtpValidationActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(otpStatus.equals("Success")){
-                                getToken();
-                                sendDeviceToken();
+    private void callservice() {
+        MyAppolloClient.getMyAppolloClient(token).mutate(
+                OtpValidation.builder().email(emailId)
+                        .otp(opt)
+                        .build()).enqueue(
+                new ApolloCall.Callback<OtpValidation.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<OtpValidation.Data> response) {
 
-                            }
-                            else if( (otpStatus.equals("Failure"))) {
-                                if(message.equals("Invalid OTP")){
-                                    Toast.makeText(getApplicationContext(), "Invalid OTP", Toast.LENGTH_LONG).show();
+                        String message = response.data().otpValidation_M().message();
+                        final String otpStatus = response.data().otpValidation_M().otpstatus();
+                        Log.i("res_message", message);
+                        OtpValidationActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (otpStatus.equals("Success")) {
+                                    getToken();
+                                    sendDeviceToken();
+
+                                } else if ((otpStatus.equals("Failure"))) {
+                                    if (message.equals("Invalid OTP")) {
+                                        Toast.makeText(getApplicationContext(), "Invalid OTP", Toast.LENGTH_LONG).show();
+                                        motpNumber1.setText("");
+                                        motpNumber2.setText("");
+                                        motpNumber3.setText("");
+                                        motpNumber4.setText("");
+                                        motpNumber1.requestFocus();
+
+                                    }
+
+                                    if (message.equals("Invalid token: access token has expired")) {
+                                        GetNewRefreshToken.getRefreshtoken(refreshToken, OtpValidationActivity.this);
+                                        sharedPreferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
+                                        if (sharedPreferences.contains("authToken")) {
+                                            String myToken = sharedPreferences.getString("authToken", "");
+                                            callservice();
+                                            Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
+
+                                        }
+                                    }
+                                } else {
+                                    new AlertDialog.Builder(OtpValidationActivity.this)
+                                            .setTitle("Wrong OTP")
+                                            .setMessage("The OTP you entered doesn't match. Please re-enter the correct OTP")
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.cancel();
+                                                }
+                                            }).show();
                                     motpNumber1.setText("");
                                     motpNumber2.setText("");
                                     motpNumber3.setText("");
                                     motpNumber4.setText("");
                                     motpNumber1.requestFocus();
-
                                 }
 
-                                if (message.equals("Invalid token: access token has expired")) {
-                                    GetNewRefreshToken.getRefreshtoken(refreshToken, OtpValidationActivity.this);
-                                    sharedPreferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
-                                    if (sharedPreferences.contains("authToken")) {
-                                        String myToken = sharedPreferences.getString("authToken", "");
-                                        callservice();
-                                        Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
 
-                                    }
-                                }
                             }
-                            else {
-                                new AlertDialog.Builder(OtpValidationActivity.this)
-                                        .setTitle("Wrong OTP")
-                                        .setMessage("The OTP you entered doesn't match. Please re-enter the correct OTP")
-                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                dialog.cancel();
-                                            }
-                                        }).show();
-                                motpNumber1.setText("");
-                                motpNumber2.setText("");
-                                motpNumber3.setText("");
-                                motpNumber4.setText("");
-                                motpNumber1.requestFocus();
-                            }
+                        });
+                    }
 
-
-                        }
-                    });
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+                    }
                 }
+        );
+    }
 
-                @Override
-                public void onFailure(@Nonnull ApolloException e) {
-                }
-            }
-    );
-}
-
-    private void sendDeviceToken(){
+    private void sendDeviceToken() {
 
         String deviceToken = FirebaseInstanceId.getInstance().getToken();
         MyAppolloClient.getMyAppolloClient(token).mutate(
@@ -255,15 +255,15 @@ private void callservice()
                 new ApolloCall.Callback<SendDeviceToken.Data>() {
                     @Override
                     public void onResponse(@Nonnull Response<SendDeviceToken.Data> response) {
-                        String message= response.data().registerDeviceId_M().message();
+                        String message = response.data().registerDeviceId_M().message();
                         final String status = response.data().registerDeviceId_M().status();
-                        if(status.equals("Success")){
-                            Log.i("device token send",status);
-                            Log.i("res_message",message);
+                        if (status.equals("Success")) {
+                            Log.i("device token send", status);
+                            Log.i("res_message", message);
 
-                        }else if(status.equals("Failure")){
-                            Log.i("device token send",status);
-                            Log.i("res_message",message);
+                        } else if (status.equals("Failure")) {
+                            Log.i("device token send", status);
+                            Log.i("res_message", message);
                         }
 
 
@@ -277,14 +277,14 @@ private void callservice()
 
     }
 
-    public void getToken(){
+    public void getToken() {
         MyAppolloClient.getMyAppolloClient(Authorization).query(
                 UserLoginAuth.builder().username(emailId).password(password)
                         .build()).enqueue(
                 new ApolloCall.Callback<UserLoginAuth.Data>() {
                     @Override
                     public void onResponse(@Nonnull Response<UserLoginAuth.Data> response) {
-                        accessToken= response.data().userLoginAuth_Q().accessToken();
+                        accessToken = response.data().userLoginAuth_Q().accessToken();
                         String tokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
                         refreshToken = response.data().userLoginAuth_Q().RefreshToken();
                         String refreshTokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
@@ -293,17 +293,15 @@ private void callservice()
                         String userName = response.data().userLoginAuth_Q().name();
                         String userId = response.data().userLoginAuth_Q().user_id();
                         String status = response.data().userLoginAuth_Q().status();
-                        Log.i("access Token",accessToken);
-                        authToken="Bearer"+" "+accessToken;
-                        Log.i("brarer token",authToken);
-                        if(status!=null) {
-                            Log.i("otpValidation==>status","OtpValidationActivity==>getToken==>status "+status);
+                        Log.i("access Token", accessToken);
+                        authToken = "Bearer" + " " + accessToken;
+                        Log.i("brarer token", authToken);
+                        if (status != null) {
+                            Log.i("otpValidation==>status", "OtpValidationActivity==>getToken==>status " + status);
+                        } else {
+                            Log.i("otpValidation==>status", "OtpValidationActivity==>getToken==>status " + status);
                         }
-                        else
-                        {
-                            Log.i("otpValidation==>status","OtpValidationActivity==>getToken==>status "+status);
-                        }
-                        if(status.equals("Success")) {
+                        if (status.equals("Success")) {
                             Log.i("otpValidation==>status", "OtpValidationActivity==>getToken==>status " + "inside success");
                             SharedPreferences preferences = getApplicationContext().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, 0);
                             SharedPreferences.Editor editor = preferences.edit();
@@ -314,21 +312,22 @@ private void callservice()
                             editor.putString("userName", userName);
                             //editor.commit();
                             editor.apply();
-
-
                             OtpValidationActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Intent intent1 = new Intent(getApplicationContext(),UserDetailsActivity.class);
-                                    intent1.putExtra("emailId",emailId);
-                                    intent1.putExtra("password",password);
+                                    Intent intent1 = new Intent(getApplicationContext(), UserDetailsActivity.class);
+                                    intent1.putExtra("emailId", emailId);
+                                    intent1.putExtra("password", password);
                                     startActivity(intent1);
                                 }
                             });
                         }
+                        else if(status.equals("Failure")){
 
+                        }
 
                     }
+
 
                     @Override
                     public void onFailure(@Nonnull ApolloException e) {
@@ -351,7 +350,7 @@ private void callservice()
 
         @Override
         public void afterTextChanged(Editable s) {
-            if (motpNumber1.length() == 1){
+            if (motpNumber1.length() == 1) {
                 motpNumber2.requestFocus();
             }
         }
@@ -369,7 +368,7 @@ private void callservice()
 
         @Override
         public void afterTextChanged(Editable s) {
-            if (motpNumber2.length() == 1){
+            if (motpNumber2.length() == 1) {
                 motpNumber3.requestFocus();
             }
         }
@@ -387,7 +386,7 @@ private void callservice()
 
         @Override
         public void afterTextChanged(Editable s) {
-            if (motpNumber3.length() == 1){
+            if (motpNumber3.length() == 1) {
                 motpNumber4.requestFocus();
             }
         }
@@ -405,7 +404,7 @@ private void callservice()
 
         @Override
         public void afterTextChanged(Editable s) {
-            if (motpNumber4.length() == 1){
+            if (motpNumber4.length() == 1) {
                 validateOTP.requestFocus();
             }
         }

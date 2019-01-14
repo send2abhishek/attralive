@@ -30,7 +30,7 @@ RecyclerView recyclerView;
     ArrayList<FAQ> arrayList;
     FAQ faq;
     FAQAdapter faqAdapter;
-    String question,answer;
+    String [] question,answer;
     int FAQCount;
     LinearLayoutManager linearLayoutManager;
     @Override
@@ -39,12 +39,13 @@ RecyclerView recyclerView;
         // Inflate the layout for this fragment
         View v= inflater.inflate(R.layout.fragment_faq, container, false);
         recyclerView=v.findViewById(R.id.rv_FAQ);
+        question = this.getArguments().getStringArray("question");
+        answer = this.getArguments().getStringArray("answer");
         arrayList=new ArrayList<FAQ>();
-        FAQCount=this.getArguments().getInt("FAQcount");
+        FAQCount=question.length;
         for(int i=0;i<FAQCount;i++) {
-            question = this.getArguments().getString("Question" + i);
-            answer = this.getArguments().getString("Answer" + i);
-            faq=new FAQ(question,answer);
+
+            faq=new FAQ(question[i],answer[i]);
             arrayList.add(faq);
         }
         linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);

@@ -1,10 +1,23 @@
 package com.attra.attralive.activity;
 
+
+import android.content.Intent;
+
 import android.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Gravity;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.apollographql.apollo.ApolloCall;
+import com.apollographql.apollo.api.Response;
+import com.apollographql.apollo.exception.ApolloException;
 import android.view.MenuItem;
 
 import com.attra.attralive.R;
@@ -26,17 +39,22 @@ public class NotificationActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.notifications);
         if(getIntent().getSerializableExtra("NOTIFICATION_LIST")!=null) {
+
             NotificationList = (ArrayList<Notification>)getIntent().getSerializableExtra("NOTIFICATION_LIST");
+            Log.i("notification list size",NotificationList.size()+"");
+        }else
+        {
+            Toast.makeText(this, "notification is null", Toast.LENGTH_SHORT).show();
         }
         setContentView(R.layout.activity_notification);
-        NotificationList=new ArrayList<Notification>();
+        //NotificationList=new ArrayList<Notification>();
         recyclerView=findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(
                 getApplicationContext()
         ));
-        NotificationAdapter adapter = new NotificationAdapter(getApplicationContext(), NotificationList);
+        NotificationAdapter adapter = new NotificationAdapter(NotificationActivity.this, NotificationList);
         recyclerView.setAdapter(adapter);
 /*
         adapter.setItemOnClickListener(new NotificationAdapter.OnItemClickListener() {

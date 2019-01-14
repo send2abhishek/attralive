@@ -133,6 +133,7 @@
                         android:textColorHint="#949c97"
                         android:inputType="number"
                         android:maxLength="6"
+                        android:maxLines="1"
                         android:textSize="14sp"
                         app:hintEnabled="false" />
                 </android.support.design.widget.TextInputLayout>
@@ -161,6 +162,7 @@
                         android:layout_marginLeft="16dp"
                         android:drawablePadding="18dp"
                         android:hint="Designation"
+                        android:maxLines="1"
                         android:lineHeight="24sp"
                         android:textColorHint="#949c97"
                         android:textSize="14sp" />
@@ -266,7 +268,11 @@
                         android:layout_marginLeft="16dp"
                         android:drawablePadding="18dp"
                         android:hint="Phone"
+                        android:maxLines="1"
                         android:lineHeight="17sp"
+                        android:maxLength="13"
+                        android:minLines="10"
+                        android:inputType="phone"
                         android:textColorHint="#949c97"
                         android:textSize="14sp" />
                 </android.support.design.widget.TextInputLayout>

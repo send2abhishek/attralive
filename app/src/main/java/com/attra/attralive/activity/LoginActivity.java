@@ -78,6 +78,7 @@ public class LoginActivity extends AppCompatActivity {
 
         }
 
+
         registerHere.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,7 +119,6 @@ public class LoginActivity extends AppCompatActivity {
         etusername.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
@@ -131,17 +131,22 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
-        etusername.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus)
-                    if (etusername.getText().toString().trim().isEmpty()) {
-                        usernametil.setError(getString(R.string.emptyusername_text));
 
-                    }
+
+        etusername.setOnFocusChangeListener(new View.OnFocusChangeListener()
+        {
+        @Override
+        public void onFocusChange (View v,boolean hasFocus){
+        if (!hasFocus)
+            if (etusername.getText().toString().trim().isEmpty()) {
+                usernametil.setError(getString(R.string.emptyusername_text));
+
             }
-        });
     }
+    });
+}
+
+
 
     public void login(View view) {
         if (etusername.getText().toString().trim().isEmpty()) {
@@ -186,6 +191,14 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void callLoginservice(String accesstoken) {
+
+
+      //  Log.d("accesstoken", accesstoken);
+
+
+      // Log.d("accesstoken", accesstoken);
+
+
         MyAppolloClient.getMyAppolloClient(GetNewRefreshToken.Authorization).query(UserLoginAuth.builder().username(username + attraemail.getText().toString().trim()).
                 password(password).build()).enqueue(new ApolloCall.Callback<UserLoginAuth.Data>() {
             @Override

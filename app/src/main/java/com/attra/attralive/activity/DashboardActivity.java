@@ -1,6 +1,7 @@
 package com.attra.attralive.activity;
 
 import android.app.Notification;
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
@@ -67,11 +68,13 @@ public class DashboardActivity extends AppCompatActivity
     ArrayList<NewsFeed> notificationArrayList;
     LinearLayoutManager linearLayoutManager;
     ImageView profileImage;
+
     TextView userName, userEmail;
     String userId1, username, location;
     String myToken, refreshToken;
     int notificationSize = 0;
-    ArrayList<Notification> notificationList;
+    ArrayList<com.attra.attralive.model.Notification> notificationList;
+
     private static final String TAG = "DashboardActivity";
     Intent intent;
     public static String Authorization = "Basic YXBwbGljYXRpb246c2VjcmV0";
@@ -102,6 +105,8 @@ public class DashboardActivity extends AppCompatActivity
                     channelName, NotificationManager.IMPORTANCE_LOW));
         }
 
+                    //txtMessage.setText(message);
+
         // If a notification message is tapped, any data accompanying the notification
         // message is available in the intent extras. In this sample the launcher
         // intent is fired when the notification is tapped, so any accompanying data would
@@ -115,6 +120,7 @@ public class DashboardActivity extends AppCompatActivity
             for (String key : getIntent().getExtras().keySet()) {
                 Object value = getIntent().getExtras().get(key);
                 Log.d(TAG, "Key: " + key + " Value: " + value);
+
             }
         }
 
@@ -373,9 +379,11 @@ public class DashboardActivity extends AppCompatActivity
             myTextLayoutView = actionView.findViewById(R.id.textView);
             ((View) actionView.findViewById(R.id.textView)).setVisibility(View.GONE);
 
-            notificationList = new ArrayList<Notification>();
-            Log.i("Network availabiltiy", "" + isNetworkAvailable(getApplicationContext()));
-            if (isNetworkAvailable(getApplicationContext())) {
+
+            notificationList= new ArrayList<com.attra.attralive.model.Notification>();
+            Log.i("Network availabiltiy",""+isNetworkAvailable(getApplicationContext()));
+            if(isNetworkAvailable(getApplicationContext()) )
+
                 MyAppolloClient.getMyAppolloClient(myToken).query(
                         GetNotificationList.builder().userId(userId1)
                                 .build()).enqueue(
@@ -396,9 +404,12 @@ public class DashboardActivity extends AppCompatActivity
                                                 myTextLayoutView.setText(Integer.toString(notificationSize));
 
                                                 for (GetNotificationList.Notification noti : response.data().getUserNotification_Q().notifications()) {
-                                                   /*notificationList.add(
-                                                           new Notification(noti.postType(),"","","", noti.action(),"", noti.userName(),"", noti.postMessage(),"","","Y"));
-                                                           Log.i("notifications", noti.action());*/
+                                                    com.attra.attralive.model.Notification noitification= new com.attra.attralive.model.Notification(noti.postType(), noti.postId(), noti.ownerId(), noti.action(), noti.userId(), noti.userName(), noti
+                                                            .time(), noti.postMessage(),noti.userImage(),noti.readStatus());
+                                                   notificationList.add(
+                                                           noitification);
+                                                          // new Notification(noti.postType(), "", "", "", noti.action(), "", noti.userName(), "", "Y"));
+                                                    Log.i("notifications", noti.action());
                                                 }
                                             }
                                         } else {
@@ -420,7 +431,6 @@ public class DashboardActivity extends AppCompatActivity
             } else {
                 Toast.makeText(this, "Please check network connectivity", Toast.LENGTH_SHORT).show();
             }
-        }
         if (mImageLayoutView != null) {
             mImageLayoutView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -436,6 +446,7 @@ public class DashboardActivity extends AppCompatActivity
             });
         }
         return super.onCreateOptionsMenu(menu);
+
     }
 
     private void logoutUser() {

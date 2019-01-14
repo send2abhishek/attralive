@@ -20,7 +20,7 @@ public class FAQAdapter extends RecyclerView.Adapter<FAQAdapter.MyViewHolder> {
     FAQ faq;
     public FAQAdapter(Context activity, ArrayList<FAQ> arrayList) {
         context=activity;
-        arrayList=this.arrayList;
+        this.arrayList=arrayList;
     }
 
     @NonNull
