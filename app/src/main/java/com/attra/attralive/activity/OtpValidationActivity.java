@@ -44,6 +44,8 @@ public class OtpValidationActivity extends AppCompatActivity {
     String otpNumber;
     String token="";
     String opt;
+    String [] getusername;
+    String userName;
     String refreshToken,RefreshToken;
     SharedPreferences sharedPreferences;
     private static String accessToken,authToken;
@@ -63,7 +65,8 @@ public class OtpValidationActivity extends AppCompatActivity {
             password = intent.getStringExtra("pass");
             Log.i("email id",emailId);
         }
-
+        getusername=emailId.split("\\@");
+        userName=getusername[0].replace(".","");
 
         validateOTP =  findViewById(R.id.validate);
         motpNumber1 = (EditText) findViewById(R.id.otp_num1);
@@ -276,65 +279,44 @@ private void callservice()
                 new ApolloCall.Callback<UserLoginAuth.Data>() {
                     @Override
                     public void onResponse(@Nonnull Response<UserLoginAuth.Data> response) {
-                        accessToken= response.data().userLoginAuth_Q().accessToken();
+                        accessToken = response.data().userLoginAuth_Q().accessToken();
                         String tokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
                         refreshToken = response.data().userLoginAuth_Q().RefreshToken();
                         String refreshTokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
                         String user = response.data().userLoginAuth_Q().user();
                         String message = response.data().userLoginAuth_Q().message();
-                        String userName = response.data().userLoginAuth_Q().name();
                         String userId = response.data().userLoginAuth_Q().user_id();
                         String status = response.data().userLoginAuth_Q().status();
-                        Log.i("access Token",accessToken);
-                        authToken="Bearer"+" "+accessToken;
-                        Log.i("brarer token",authToken);
-                        if(status!=null) {
-                            Log.i("otpValidation==>status","OtpValidationActivity==>getToken==>status "+status);
+
+                        Log.i("access Token", accessToken);
+                        authToken = "Bearer" + " " + accessToken;
+                        Log.i("brarer token", authToken);
+                        if (status != null) {
+                            Log.i("otpValidation==>status", "OtpValidationActivity==>getToken==>status " + status);
+                        } else {
+                            Log.i("otpValidation==>status", "OtpValidationActivity==>getToken==>status " + status);
                         }
-                        else
-                        {
-                            Log.i("otpValidation==>status","OtpValidationActivity==>getToken==>status "+status);
-                        }
-                        if(status.equals("Success")){
-                            Log.i("otpValidation==>status","OtpValidationActivity==>getToken==>status "+ "inside success");
-                          SharedPreferences  preferences = getApplicationContext().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, 0);
-                          SharedPreferences.Editor editor = preferences.edit();
-                            editor.putString("authToken",authToken);
-                            editor.putString("refreshToken",refreshToken);
-                            editor.putString("emailId",emailId);
-                            editor.putString("userId",userId);
-                            editor.putString("userName",userName);
+                        if (status.equals("Success")) {
+                            Log.i("otpValidation==>status", "OtpValidationActivity==>getToken==>status " + "inside success");
+                            SharedPreferences preferences = getApplicationContext().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, 0);
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString("authToken", authToken);
+                            editor.putString("refreshToken", refreshToken);
+                            editor.putString("emailId", emailId);
+                            editor.putString("userId", userId);
+                            editor.putString("userName", userName);
                             //editor.commit();
                             editor.apply();
-
-                        }
                         OtpValidationActivity.this.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Intent intent1 = new Intent(getApplicationContext(),UserDetailsActivity.class);
-                                intent1.putExtra("emailId",emailId);
-                                intent1.putExtra("password",password);
+                                Intent intent1 = new Intent(getApplicationContext(), UserDetailsActivity.class);
+                                intent1.putExtra("emailId", emailId);
+                                intent1.putExtra("password", password);
                                 startActivity(intent1);
                             }
-                        });/*else if(status.equals("Failure")){
-                            if(message.equals("Invalid token: access token has expired")){
-
-                                GetNewRefreshToken.getRefreshtoken(refreshToken,OtpValidationActivity.this);
-                                sharedPreferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
-                                if (sharedPreferences.contains("authToken")) {
-                                    String myToken = sharedPreferences.getString("authToken", "");
-                                    getToken();
-                                    Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
-
-                                }
-                               // getNewRefreshToken(refreshToken);
-
-                                *//*getNewRefreshToken(refreshToken);*//*
-
-                            }
-
-                        }*/
-
+                        });
+                    }
                     }
 
                     @Override

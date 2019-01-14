@@ -1,25 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/homescreenimage"
+    android:background="#000"
     android:orientation="vertical"
     tools:context=".activity.LoginActivity">
-
-    <FrameLayout
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight=".5"
-        android:background="#000">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:foreground="@drawable/color_gradient"
-            android:src="@drawable/homescreenimage" />
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:foreground="@drawable/color_gradient"
+        android:src="@drawable/homescreenimage" />
 
         <ImageView
             android:layout_width="100dp"
@@ -234,7 +227,6 @@
                 android:layout_marginLeft="4dp"
                 android:layout_marginRight="12.7dp"
                 android:paddingTop="18dp">
-
                 <CheckBox
                     android:id="@+id/chk_remmebrme"
                     android:layout_width="wrap_content"
@@ -384,5 +376,5 @@
                      android:textSize="20sp"
                      />-
          </RelativeLayout>-->
-    </FrameLayout>
-</LinearLayout>
+
+</FrameLayout>

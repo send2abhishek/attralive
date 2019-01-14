@@ -153,11 +153,8 @@ Intent intent;
             Log.i("token in dashboard",myToken);
             Log.i("user id in dashboard",userId1);
             Log.i("user name in dashboard",username);
-
-
         }
         getProfileDetail(myToken);
-
     }
 
     private void displayFirebaseRegId() {
@@ -355,7 +352,6 @@ Intent intent;
                 case R.id.navigation_gallery:
                     fragment = new Gallery();
                     loadFragment(fragment);
-
                     return true;
                 case R.id.navigation_profile:
                     fragment = new Profile();

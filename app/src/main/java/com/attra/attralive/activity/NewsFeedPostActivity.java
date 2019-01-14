@@ -103,7 +103,7 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
     TextView Etusername, tvlocation;
     ImageView imageView;
     Button post;
-    String status, message, path, description,myToken,username,userID,location;
+    String status, message, path, description,myToken,username,userID,location,refreshToken,worklocation,profileimage;
     public static final String PREFS_AUTH ="my_auth";
     private SharedPreferences sharedPreferences;
     VideoView videoView;
@@ -124,31 +124,23 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
         if (sharedPreferences.contains("authToken")) {
             myToken = sharedPreferences.getString("authToken", "");
             username = sharedPreferences.getString("userName","");
-            /*userId = sharedPreferences.getString("userId","");
+            userID = sharedPreferences.getString("userId","");
             refreshToken=sharedPreferences.getString("refreshToken","");
             worklocation=sharedPreferences.getString("location","");
-            profileimage=sharedPreferences.getString("profileImagePath","");*/
-            //username = sharedPreferences.getString("username","");
+            profileimage=sharedPreferences.getString("profileImagePath","");
         }
-            userID = sharedPreferences.getString("userId","");
-
-            Log.i("rrrrrrrrrrrrrrrrrrr",userID);
-            Log.i("tok",myToken);
-
-            //getNameandLocation();
-
 
         Etusername = findViewById(R.id.et_username);
        tvlocation=findViewById(R.id.tv_title);
        imageView = findViewById(R.id.img_userImage);
 
        Picasso.with(NewsFeedPostActivity.this)
-               .load("https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546764535169-image.jpeg").
+               .load(profileimage).
                memoryPolicy(MemoryPolicy.NO_CACHE)
                .into(imageView);
 
-       Etusername.setText("Mohseen");
-       tvlocation.setText("Bangalore");
+       Etusername.setText(username);
+       tvlocation.setText(worklocation);
 
 
 

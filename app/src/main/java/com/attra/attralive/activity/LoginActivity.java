@@ -214,13 +214,16 @@ public class LoginActivity extends AppCompatActivity {
                         String refreshTokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
                         String user = response.data().userLoginAuth_Q().user();
                         String message = response.data().userLoginAuth_Q().message();
-                        userName = response.data().userLoginAuth_Q().name();
+
                         userId = response.data().userLoginAuth_Q().user_id();
                         String status = response.data().userLoginAuth_Q().status();
                         Log.i("access Token", accessToken);
                         authToken = "Bearer" + " " + accessToken;
                         //refreshToken="Bearer"+" "+RefreshToken;
                         Log.i("brarer token", authToken);
+                       userName=username.replace(".","");
+                       Log.d("name",userName);
+                       Log.d("username",username);
                     }
                     LoginActivity.this.runOnUiThread(new Runnable() {
                         @Override

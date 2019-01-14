@@ -13,6 +13,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -140,11 +141,13 @@ likeimage.setOnClickListener(new View.OnClickListener() {
    post.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View v) {
-        allComments = new AllComments(username, addcomments.getText().toString(), worklocation, "https://dsd8ltrb0t82s.cloudfront.net/ProfilePictures/1546848719271-image.jpeg", "just now");
+        allComments = new AllComments(username, addcomments.getText().toString(), worklocation, profileimage, "just now");
         allpostcomments.add(allComments);
         postCommentsAdapter.notifyDataSetChanged();
         callPostComments(myToken);
         addcomments.setText("");
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         v.setVisibility(View.GONE);
 
     }

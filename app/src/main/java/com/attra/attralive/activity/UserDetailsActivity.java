@@ -1,5 +1,4 @@
 package com.attra.attralive.activity;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -8,7 +7,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
@@ -352,7 +350,7 @@ public class UserDetailsActivity extends AppCompatActivity {
         Log.i("initRetrofitClient", "initRetrofitClient");
         client = new OkHttpClient.Builder().build();
 
-        apiService = new Retrofit.Builder().baseUrl("http://13.232.225.201:80").client(client).build().create(ApiService.class);
+        apiService = new Retrofit.Builder().baseUrl("http://10.200.44.25:4001").client(client).build().create(ApiService.class);
     }
 
     @Override
@@ -540,6 +538,11 @@ public class UserDetailsActivity extends AppCompatActivity {
                         // Log.d("res_status userDetails", status);
                         if (status.equals("Success")) {
                             Log.d("res_message in User", message);
+                            sharedPreferences = getApplicationContext().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, 0);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("location", workLoc);
+                            editor.putString("profileImagePath", path);
+                            editor.commit();
                             Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
                             startActivity(intent1);
                         } else if (status.equals("Failure")) {

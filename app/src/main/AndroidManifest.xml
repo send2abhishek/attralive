@@ -65,8 +65,6 @@
         <activity
             android:name=".activity.DashboardActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
-
         <activity
             android:name=".activity.NewsFeedPostActivity"
             android:windowSoftInputMode="stateVisible|adjustPan" />
