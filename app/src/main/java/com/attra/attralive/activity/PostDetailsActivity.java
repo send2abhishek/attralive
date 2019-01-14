@@ -141,7 +141,7 @@ likeimage.setOnClickListener(new View.OnClickListener() {
    post.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View v) {
-        allComments = new AllComments(username, addcomments.getText().toString(), worklocation, "https://dsd8ltrb0t82s.cloudfront.net/ProfilePictures/1546848719271-image.jpeg", "just now");
+        allComments = new AllComments(username, addcomments.getText().toString(), worklocation, profileimage, "just now");
         allpostcomments.add(allComments);
         postCommentsAdapter.notifyDataSetChanged();
         callPostComments(myToken);

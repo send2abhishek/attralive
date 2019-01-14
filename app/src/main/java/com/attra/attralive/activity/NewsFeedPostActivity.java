@@ -110,7 +110,9 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
     String refreshToken, worklocation, profileimage;
     ImageView imageView;
     Button post;
+
     String status, message, path, description="",myToken,username,userID,location;
+
     public static final String PREFS_AUTH ="my_auth";
     private SharedPreferences sharedPreferences;
     VideoView videoView;
@@ -138,15 +140,11 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
             refreshToken=sharedPreferences.getString("refreshToken","");
             worklocation=sharedPreferences.getString("location","");
             profileimage=sharedPreferences.getString("profileImagePath","");
+
+
             //username = sharedPreferences.getString("username","");
+
         }
-            userID = sharedPreferences.getString("userId","");
-
-            Log.i("rrrrrrrrrrrrrrrrrrr",userID);
-            Log.i("tok",myToken);
-
-            //getNameandLocation();
-
 
         Etusername = findViewById(R.id.et_username);
        tvlocation=findViewById(R.id.tv_title);
@@ -243,7 +241,7 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
     private void initRetrofitClient() {
 client         = new OkHttpClient.Builder().build();
 
-        apiService = new Retrofit.Builder().baseUrl("http://10.200.44.20:4001").client(client).build().create(ApiService.class);
+        apiService = new Retrofit.Builder().baseUrl("http://13.232.225.201:80").client(client).build().create(ApiService.class);
     }
 
     public Intent CallGetVideoMethod()

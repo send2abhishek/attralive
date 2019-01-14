@@ -1,8 +1,8 @@
 package com.attra.attralive.activity;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
+import com.apollographql.apollo.ApolloClient;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
@@ -35,6 +37,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -53,6 +56,7 @@ import javax.annotation.Nonnull;
 import fr.ganfra.materialspinner.MaterialSpinner;
 import graphqlandroid.GetBusinessUnit;
 import graphqlandroid.GetLocation;
+import graphqlandroid.GetProfileDetails;
 import graphqlandroid.UserDetailsUpdate;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -67,15 +71,25 @@ import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
-
-public class UserDetailsActivity extends AppCompatActivity {
+public class EditProfile extends AppCompatActivity {
     MaterialSpinner location, bu;
-    Button continueBtn;
+    Button continueBtn, cancelButton;
+
+    TextView dob, welcomeUserName;
     List<String> buList = new ArrayList<String>();
     List<String> locationList = new ArrayList<String>();
+    ArrayAdapter<String> locationAdapter;
+    ArrayAdapter<String> userBuAdapter;
+
+
     ApiService apiService;
 
     OkHttpClient client;
+
+    TextView userNameView, passwordView, changePassword;
+
+    Fragment fragment = null;
+
 
     Uri picUri;
     private ArrayList<String> permissionsToRequest;
@@ -84,10 +98,15 @@ public class UserDetailsActivity extends AppCompatActivity {
     private final static int ALL_PERMISSIONS_RESULT = 107;
     private final static int IMAGE_RESULT = 200;
 
-    String status, message, path, myToken, username, userId, userBu, designation, workLoc, mobile, employeeId;
 
-    ImageView upload;
+    EditText postDescription;
+
+    String status, message, path, description, myToken, username, userId;
+    ImageView uploadimage;
+
+    ImageView fabCamera, capturedImage, upload;
     Bitmap mBitmap;
+    String password, userBu, designation, workLoc, mobile, employeeId;
     EditText empId, phNo, userDesign;
     String userName;
 
@@ -96,16 +115,29 @@ public class UserDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_details);
+        setContentView(R.layout.activity_edit_profile_detail);
         userDesign = findViewById(R.id.et_designation);
         bu = findViewById(R.id.sp_selectbu);
         location = findViewById(R.id.sp_userWorkLocation);
-        continueBtn = findViewById(R.id.continuebutton);
+        continueBtn = findViewById(R.id.updateBtn);
+
+
         empId = findViewById(R.id.et_empId);
+
+
         phNo = findViewById(R.id.et_mobilenumber);
+
+
         upload = findViewById(R.id.profileImage);
-        ProgressDialog progressdialog = new ProgressDialog(UserDetailsActivity.this);
-        progressdialog.setMessage("Please Wait....");
+
+
+        userNameView = findViewById(R.id.et_username);
+
+        passwordView = findViewById(R.id.et_password);
+        changePassword = findViewById(R.id.changePassword);
+        cancelButton = findViewById(R.id.cancelBtn);
+        welcomeUserName = findViewById(R.id.WelcomeUserName);
+
         sharedPreferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
             Toast.makeText(this, "Shared pref val " + "sharedPreferences.getString(\"authToken\", \"\")", Toast.LENGTH_SHORT).show();
@@ -116,9 +148,23 @@ public class UserDetailsActivity extends AppCompatActivity {
             Log.i("user id in userDtail", userId);
             Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
 
+            String username = sharedPreferences.getString("userName", "");
+
+
         }
-        getUserBU();
-        getUserLocation();
+        if (userName != null) {
+            userNameView.setText(userName);
+        } else {
+            Log.i("userId in shared pref", "UserID in shared pref is null");
+        }
+        //empId.setText("322356");
+        passwordView.setText("**********************");
+        userNameView.setEnabled(false);
+        empId.setEnabled(false);
+        //getUserBU();
+        //  getUserLocation();
+        getProfileDetail();
+
         askPermissions();
         initRetrofitClient();
         upload.setOnClickListener(new View.OnClickListener() {
@@ -131,13 +177,35 @@ public class UserDetailsActivity extends AppCompatActivity {
 
             }
         });
+
+        if (changePassword != null) {
+            changePassword.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent intent = new Intent(getApplicationContext(), ResetPassword.class);
+                    startActivity(intent);
+                }
+            });
+        } else {
+            Toast.makeText(this, "changePassword is null", Toast.LENGTH_SHORT).show();
+        }
+        if (cancelButton != null) {
+            cancelButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                   /* Intent intent = new Intent(getApplicationContext(), Profile.class);
+                    startActivity(intent);*/
+
+                    finish();
+                }
+            });
+        }
         if (continueBtn != null)
             continueBtn.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
-
-                    String userName = "Awnish";
                     designation = userDesign.getText().toString();
                     workLoc = location.getSelectedItem().toString();
                     userBu = bu.getSelectedItem().toString();
@@ -174,6 +242,124 @@ public class UserDetailsActivity extends AppCompatActivity {
 
                 }
             });
+
+
+    }
+
+    private void getProfileDetail() {
+
+        MyAppolloClient.getMyAppolloClient(myToken).query(
+                GetProfileDetails.builder().userId(userId)
+                        .build()).enqueue(
+                new ApolloCall.Callback<GetProfileDetails.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<GetProfileDetails.Data> response) {
+                        if (response.data() != null && response.data().getProfileDetails_Q() != null) {
+
+
+                            Log.i("res", String.valueOf(response));
+                            String message = response.data().getProfileDetails_Q().message();
+                            String status = response.data().getProfileDetails_Q().status();
+                            Log.i("message in profile", message);
+                            Log.i("mstatus in profile", status);
+                            if (response.data().getProfileDetails_Q().name() != null) {
+                                if (status.equals("Success")) {
+                                    String design = response.data().getProfileDetails_Q().designation();
+                                    String phoneNo = response.data().getProfileDetails_Q().mobileNumber();
+                                    String loc = response.data().getProfileDetails_Q().location();
+                                    String businessUnit = response.data().getProfileDetails_Q().bu();
+                                    String imgPath = response.data().getProfileDetails_Q().profileImagePath();
+                                    //  String qrCodePath = response.data().getProfileDetails_Q().userQRCodeLink();
+                                    String emailId = response.data().getProfileDetails_Q().email();
+                                    EditProfile.this.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Picasso.with(getApplicationContext()).load(imgPath).fit().into(upload);
+                                            userDesign.setText(design);
+                                            //   Picasso.with(getActivity()).load(qrCodePath).fit().into(qrCode);
+                                            // String split=emailId.spli
+                                            /*if(userName!=null)
+                                            welcomeUserName.setText(userName);
+                                            else
+                                                welcomeUserName.setText("User!!!!");*/
+                                            welcomeUserName.setText("Awnish Kumar");
+                                            if (emailId != null) {
+                                                userNameView.setText(emailId);
+                                            }
+                                            if (password != null) {
+                                                passwordView.setText("**********");
+                                            }
+                                            phNo.setText(phoneNo);
+                                            if (response.data().getProfileDetails_Q().empId() != null) {
+                                                String emplyeeId = response.data().getProfileDetails_Q().empId();
+                                                empId.setText(emplyeeId);
+                                            } else {
+                                                Log.i("Employee id", "Profile==>getProfileDetails==>Employee id is null");
+                                            }
+
+                                            /*if(userBuAdapter!=null &&businessUnit!=null) {
+                                                Log.i("BU spinner","EditProfile==>getprofileDetails="+businessUnit);
+                                                 bu.setAdapter(userBuAdapter);
+                                                 bu.setSelection( userBuAdapter.getPosition(businessUnit));
+                                            }
+                                            else
+                                            {
+                                                Log.i("Bu Spinner","EditProfile==>getprofileDetails= either bu or adpater is null");
+                                            }
+                                            if(locationAdapter!=null && loc!=null)
+                                            {
+                                                location.setAdapter(locationAdapter);
+                                               location.setSelection( locationAdapter.getPosition(loc));
+                                                Log.i("Location spinner","EditProfile==>getprofileDetails="+loc);
+                                            }else
+                                            {
+                                                Log.i("Location Spinner","EditProfile==>getprofileDetails= either loc or adpater is null");
+                                            }*/
+                                            //location.setText(loc);
+                                           /* if (userBuAdapter != null && businessUnit != null) {
+                                                bu.setText(businessUnit);
+                                                // bu.setSelection(userBuAdapter.getPosition(businessUnit));
+                                                Toast.makeText(getContext(), "location position is ==" + userBuAdapter.getPosition(loc), Toast.LENGTH_SHORT).show();
+                                            } else
+                                                Toast.makeText(getContext(), "user bu null == ", Toast.LENGTH_SHORT).show();
+                                            //  bu.setSelection(1);
+                                            if (locationAdapter != null && loc != null) {
+                                                location.setText(loc);
+                                                Log.i("profile==>loc","profile==>getprofiledetails==>loc"+loc+ "loc position  "+locationAdapter.getPosition(loc));
+                                                // location.setSelection(locationAdapter.getPosition(loc));
+                                                Toast.makeText(getContext(), "location position is ==" + locationAdapter.getPosition(loc), Toast.LENGTH_SHORT).show();
+                                            } else
+                                                Toast.makeText(getContext(), "user location null == ", Toast.LENGTH_SHORT).show();*/
+                                            if (loc != null) {
+                                                getUserLocation(loc);
+                                            } else {
+                                                Log.i("Location edit_ptofile", "location is null");
+                                            }
+                                            if (businessUnit != null) {
+                                                getUserBU(businessUnit);
+                                            } else {
+                                                Log.i("bu edit_ptofile", "bu is null");
+                                            }
+                                        }
+                                    });
+                                } else if (status.equals("Failure")) {
+
+                                }
+
+                            }
+
+
+                        } else {
+                            Log.i("Profile", "Profile==>getProfileDetails()==>onResponse null");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+                    }
+
+                }
+        );
     }
 
     public void onSelectImageClick(View view) {
@@ -189,7 +375,9 @@ public class UserDetailsActivity extends AppCompatActivity {
                 .start(this);
     }
 
-    private void getUserLocation() {
+
+    private void getUserLocation(String loc) {
+        Log.i("locaion", "getUserLocation==>loc " + loc);
         MyAppolloClient.getMyAppolloClient(myToken).query(
                 GetLocation.builder()
                         .build()).enqueue(
@@ -205,19 +393,21 @@ public class UserDetailsActivity extends AppCompatActivity {
                             }
                         }
 
-                        UserDetailsActivity.this.runOnUiThread(new Runnable() {
+                        EditProfile.this.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                ArrayAdapter<String> locationAdapter = new ArrayAdapter<>(UserDetailsActivity.this,
+
+                                locationAdapter = new ArrayAdapter<>(EditProfile.this,
                                         android.R.layout.simple_spinner_item, locationList);
                                 locationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                 location.setAdapter(locationAdapter);
-                                location.setSelection(0);
-                                //spinner6.setAdapter(adapter);
-                                /*location.setHint("Select an item");*/
+                                Log.i("loc position", "" + locationAdapter.getPosition(loc));
+                                int locPos = locationAdapter.getPosition(loc) + 1;
+                                location.setSelection(locPos);
                                 location.setEnableFloatingLabel(true);
                             }
                         });
+
                     }
 
                     @Override
@@ -228,8 +418,10 @@ public class UserDetailsActivity extends AppCompatActivity {
 
     }
 
-    private void getUserBU() {
-//        Log.i("token in user details", myToken);
+    private void getUserBU(String businessUnit) {
+
+
+        Log.i("businessUnit", "getUserBU==>businessUnit " + businessUnit);
         MyAppolloClient.getMyAppolloClient(myToken).query(
                 GetBusinessUnit.builder()
                         .build()).enqueue(
@@ -245,15 +437,17 @@ public class UserDetailsActivity extends AppCompatActivity {
 
                             }
                         }
-                        UserDetailsActivity.this.runOnUiThread(new Runnable() {
+                        userBuAdapter = new ArrayAdapter<>(EditProfile.this,
+                                android.R.layout.simple_spinner_item, buList);
+
+                        userBuAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        EditProfile.this.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                ArrayAdapter<String> userBuAdapter = new ArrayAdapter<>(UserDetailsActivity.this,
-                                        android.R.layout.simple_spinner_item, buList);
-
-                                userBuAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                int buPos = userBuAdapter.getPosition(businessUnit) + 1;
+                                Log.i("bu position", "" + userBuAdapter.getPosition(businessUnit));
                                 bu.setAdapter(userBuAdapter);
-                                bu.setSelection(0);
+                                bu.setSelection(buPos);
                                 /*  location.setHint("Select an item");*/
                                 location.setEnableFloatingLabel(true);
                             }
@@ -316,6 +510,59 @@ public class UserDetailsActivity extends AppCompatActivity {
         apiService = new Retrofit.Builder().baseUrl("http://10.200.44.25:4001").client(client).build().create(ApiService.class);
     }
 
+    //    public Intent getPickImageChooserIntent() {
+//        Log.i("getPickImageChooser","getPickImageChooserIntent");
+//        Uri outputFileUri = getCaptureImageOutputUri();
+//
+//        List<Intent> allIntents = new ArrayList<>();
+//        PackageManager packageManager = getPackageManager();
+//
+//        Intent captureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+//        List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
+//        for (ResolveInfo res : listCam) {
+//            Intent intent = new Intent(captureIntent);
+//            intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
+//            intent.setPackage(res.activityInfo.packageName);
+//            if (outputFileUri != null) {
+//                intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+//            }
+//            allIntents.add(intent);
+//        }
+//
+//        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+//        galleryIntent.setType("image/*");
+//        List<ResolveInfo> listGallery = packageManager.queryIntentActivities(galleryIntent, 0);
+//        for (ResolveInfo res : listGallery) {
+//            Intent intent = new Intent(galleryIntent);
+//            intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
+//            intent.setPackage(res.activityInfo.packageName);
+//            allIntents.add(intent);
+//        }
+//
+//        Intent mainIntent = allIntents.get(allIntents.size() - 1);
+//        for (Intent intent : allIntents) {
+//            if (intent.getComponent().getClassName().equals("com.android.documentsui.DocumentsActivity")) {
+//                mainIntent = intent;
+//                break;
+//            }
+//        }
+//        allIntents.remove(mainIntent);
+//
+//        Intent chooserIntent = Intent.createChooser(mainIntent, "Select source");
+//        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, allIntents.toArray(new Parcelable[allIntents.size()]));
+//
+//        return chooserIntent;
+//    }
+//    @RequiresApi(api = Build.VERSION_CODES.FROYO)
+//    private Uri getCaptureImageOutputUri() {
+//        Log.i("getCaptureImage","getCaptureImageOutputUri");
+//        Uri outputFileUri = null;
+//        File getImage = getExternalFilesDir("");
+//        if (getImage != null) {
+//            outputFileUri = Uri.fromFile(new File(getImage.getPath(), "profile.jpeg"));
+//        }
+//        return outputFileUri;
+//    }
     @Override
     @SuppressLint("NewApi")
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -424,20 +671,20 @@ public class UserDetailsActivity extends AppCompatActivity {
             Log.i("file.getName()", file.getName());
 
 
-            RequestBody newuserId = createPartFromString(userId);
+            RequestBody userId = createPartFromString("5c31e8f07db2e805e077c037");
             RequestBody type = createPartFromString("profilePicture");
             RequestBody name = RequestBody.create(MediaType.parse("text/plain"), "profilePicture");
             HashMap<String, RequestBody> map = new HashMap<>();
-            map.put("userId", newuserId);
+            map.put("userId", userId);
             map.put("type", type);
             Call<ResponseBody> req = apiService.postImage(map, body);
             req.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                    System.out.println("homescreenimage response" + response);
+                    System.out.println("Image response" + response);
 
                     if (response.code() == 200) {
-                        System.out.println("homescreenimage response" + response);
+                        System.out.println("Image response" + response);
 
                         try {
                             String data = response.body().string();
@@ -486,7 +733,6 @@ public class UserDetailsActivity extends AppCompatActivity {
     }
 
     private void CallSubmitDataService() {
-
         Log.i("CallSubmitDataService", "CallSubmitDataService" + "  ====  " + path + "   token" + myToken);
         MyAppolloClient.getMyAppolloClient(myToken).mutate(
                 UserDetailsUpdate.builder().userId(userId).name(userName).designation(designation).empId(employeeId).location(workLoc)
@@ -501,14 +747,13 @@ public class UserDetailsActivity extends AppCompatActivity {
                         Log.d("res_message in User", message);
                         // Log.d("res_status userDetails", status);
                         if (status.equals("Success")) {
-                            subscribeToTopic(workLoc);
-                            subscribeToTopic("Attra");
                             Log.d("res_message in User", message);
-                            sharedPreferences = getApplicationContext().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, 0);
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString("location", workLoc);
-                            editor.putString("profileImagePath", path);
-                            editor.commit();
+                         /*   if(workLoc.equals("Bangalore")){
+
+                            }else if(workLoc.equals("Hydrabad")){
+
+                            }*/
+                            subscribeToTopic(workLoc);
                             Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
                             startActivity(intent1);
                         } else if (status.equals("Failure")) {
@@ -544,6 +789,5 @@ public class UserDetailsActivity extends AppCompatActivity {
                 });
 
     }
-
 
 }

@@ -150,17 +150,20 @@ public class DashboardActivity extends AppCompatActivity
         if (sharedPreferences.contains("authToken")) {
             myToken = sharedPreferences.getString("authToken", "");
             userId1 = sharedPreferences.getString("userId", "");
-            username = sharedPreferences.getString("userName", "");
-            refreshToken = sharedPreferences.getString("refreshToken", "");
-            //      Toast.makeText(getApplicationContext(), userId, Toast.LENGTH_LONG).show();
-            Log.i("token in dashboard", myToken);
-            Log.i("user id in dashboard", userId1);
-            Log.i("user name in dashboard", username);
+
+            username = sharedPreferences.getString("userName","");
+            refreshToken=sharedPreferences.getString("refreshToken","");
+      //      Toast.makeText(getApplicationContext(), userId, Toast.LENGTH_LONG).show();
+            Log.i("token in dashboard",myToken);
+            Log.i("user id in dashboard",userId1);
+            Log.i("user name in dashboard",username);
+
+
             userName.setText(username);
+
 
         }
         getProfileDetail(myToken);
-
     }
 
 
@@ -347,7 +350,6 @@ public class DashboardActivity extends AppCompatActivity
                 case R.id.navigation_gallery:
                     fragment = new Gallery();
                     loadFragment(fragment);
-
                     return true;
                 case R.id.navigation_profile:
                     fragment = new Profile();

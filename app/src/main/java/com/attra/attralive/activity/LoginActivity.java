@@ -18,6 +18,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
@@ -28,6 +29,8 @@ import com.attra.attralive.util.GetNewRefreshToken;
 import javax.annotation.Nonnull;
 
 import graphqlandroid.UserLoginAuth;
+
+import static com.attra.attralive.util.NetworkUtil.isNetworkAvailable;
 
 public class LoginActivity extends AppCompatActivity {
     CardView loginbutton;
@@ -133,19 +136,17 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
-        etusername.setOnFocusChangeListener(new View.OnFocusChangeListener()
-        {
-        @Override
-        public void onFocusChange (View v,boolean hasFocus){
-        if (!hasFocus)
-            if (etusername.getText().toString().trim().isEmpty()) {
-                usernametil.setError(getString(R.string.emptyusername_text));
+        etusername.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus)
+                    if (etusername.getText().toString().trim().isEmpty()) {
+                        usernametil.setError(getString(R.string.emptyusername_text));
 
+                    }
             }
+        });
     }
-    });
-}
-
 
 
     public void login(View view) {
@@ -186,95 +187,91 @@ public class LoginActivity extends AppCompatActivity {
             passwordtil.setError(null);
             callLoginservice(myToken);
         }
-
-
     }
 
     private void callLoginservice(String accesstoken) {
 
+        if (isNetworkAvailable(getApplicationContext())) {
+            MyAppolloClient.getMyAppolloClient(GetNewRefreshToken.Authorization).query(UserLoginAuth.builder().username(username + attraemail.getText().toString().trim()).
+                    password(password).build()).enqueue(new ApolloCall.Callback<UserLoginAuth.Data>() {
+                @Override
+                public void onResponse(@Nonnull Response<UserLoginAuth.Data> response) {
+                    if (response.data().userLoginAuth_Q() != null) {
+                        status = response.data().userLoginAuth_Q().status();
+                        Log.d("status", status);
+                        message = response.data().userLoginAuth_Q().message();
+                        //Log.d("status", message);
+                        if (status.equals("Success")) {
+                            accessToken = response.data().userLoginAuth_Q().accessToken();
+                            String tokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
+                            refreshToken = response.data().userLoginAuth_Q().RefreshToken();
+                            String refreshTokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
+                            String user = response.data().userLoginAuth_Q().user();
+                            String message = response.data().userLoginAuth_Q().message();
+                            userName = response.data().userLoginAuth_Q().name();
+                            userId = response.data().userLoginAuth_Q().user_id();
+                            String status = response.data().userLoginAuth_Q().status();
+                            Log.i("access Token", accessToken);
+                            authToken = "Bearer" + " " + accessToken;
+                            //refreshToken="Bearer"+" "+RefreshToken;
+                            Log.i("brarer token", authToken);
+                        }
+                        LoginActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (status.equals("Success")) {
+                                    Toast.makeText(LoginActivity.this, "Login success", Toast.LENGTH_LONG).show();
+                                    SharedPreferences preferences = getApplicationContext().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, 0);
+                                    SharedPreferences.Editor editor = preferences.edit();
+                                    editor.putString("authToken", authToken);
+                                    editor.putString("refreshToken", refreshToken);
+                                    // editor.putString("emailId",emailId);
+                                    editor.putString("userId", userId);
+                                    editor.putString("userName", userName);
+                                    editor.apply();
+                                    //   editor.commit();
+                                    Intent i = new Intent(LoginActivity.this, DashboardActivity.class);
+                                    startActivity(i);
+                                } else if ((status.equals("Failure"))) {
+                                    if (message.equals("Username or password is incorrect")) {
+                                        Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
+                                    } else if (message.equals("Invalid Username or Password")) {
+                                        Toast.makeText(LoginActivity.this, "Username or password is incorrect", Toast.LENGTH_LONG).show();
+                                    } else {
 
-      //  Log.d("accesstoken", accesstoken);
+                                        if (message.equals("Invalid token: access token is invalid")) {
 
+                                            GetNewRefreshToken.getRefreshtoken(refreshToken, LoginActivity.this);
+                                            LoginActivity.this.runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    sharedPreferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
+                                                    if (sharedPreferences.contains("authToken")) {
+                                                        String myToken = sharedPreferences.getString("authToken", "");
+                                                        callLoginservice(myToken);
+                                                        //Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
 
-      // Log.d("accesstoken", accesstoken);
-
-
-        MyAppolloClient.getMyAppolloClient(GetNewRefreshToken.Authorization).query(UserLoginAuth.builder().username(username + attraemail.getText().toString().trim()).
-                password(password).build()).enqueue(new ApolloCall.Callback<UserLoginAuth.Data>() {
-            @Override
-            public void onResponse(@Nonnull Response<UserLoginAuth.Data> response) {
-                if (response.data().userLoginAuth_Q() != null) {
-                    status = response.data().userLoginAuth_Q().status();
-                    Log.d("status", status);
-                    message = response.data().userLoginAuth_Q().message();
-                    //Log.d("status", message);
-                    if (status.equals("Success")) {
-                        accessToken = response.data().userLoginAuth_Q().accessToken();
-                        String tokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
-                        refreshToken = response.data().userLoginAuth_Q().RefreshToken();
-                        String refreshTokenExpiry = response.data().userLoginAuth_Q().accessTokenExpiresAt();
-                        String user = response.data().userLoginAuth_Q().user();
-                        String message = response.data().userLoginAuth_Q().message();
-                        userName = response.data().userLoginAuth_Q().name();
-                        userId = response.data().userLoginAuth_Q().user_id();
-                        String status = response.data().userLoginAuth_Q().status();
-                        Log.i("access Token", accessToken);
-                        authToken = "Bearer" + " " + accessToken;
-                        //refreshToken="Bearer"+" "+RefreshToken;
-                        Log.i("brarer token", authToken);
-                    }
-                    LoginActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (status.equals("Success")) {
-                                Toast.makeText(LoginActivity.this, "Login success", Toast.LENGTH_LONG).show();
-                                SharedPreferences preferences = getApplicationContext().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, 0);
-                                SharedPreferences.Editor editor = preferences.edit();
-                                editor.putString("authToken", authToken);
-                                editor.putString("refreshToken", refreshToken);
-                                // editor.putString("emailId",emailId);
-                                editor.putString("userId", userId);
-                                editor.putString("userName", userName);
-                                editor.apply();
-                                //   editor.commit();
-                                Intent i = new Intent(LoginActivity.this, DashboardActivity.class);
-                                startActivity(i);
-                            } else if ((status.equals("Failure"))) {
-                                if (message.equals("Username or password is incorrect")) {
-                                    Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
-                                } else if (message.equals("Invalid Username or Password")) {
-                                    Toast.makeText(LoginActivity.this, "Username or password is incorrect", Toast.LENGTH_LONG).show();
-                                } else {
-
-                                    if (message.equals("Invalid token: access token is invalid")) {
-
-                                        GetNewRefreshToken.getRefreshtoken(refreshToken, LoginActivity.this);
-                                        LoginActivity.this.runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                sharedPreferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
-                                                if (sharedPreferences.contains("authToken")) {
-                                                    String myToken = sharedPreferences.getString("authToken", "");
-                                                    callLoginservice(myToken);
-                                                    //Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
-
+                                                    }
                                                 }
-                                            }
-                                        });
-                                    }
+                                            });
+                                        }
 
+                                    }
                                 }
                             }
-                        }
 
-                    });
+                        });
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(@Nonnull ApolloException e) {
-            }
-        });
+                @Override
+                public void onFailure(@Nonnull ApolloException e) {
+                }
+            });
+
+        } else {
+            Toast.makeText(this, "Please check network connectivity", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
