@@ -1,6 +1,9 @@
 package com.attra.attralive.activity;
 
+
 import android.content.Intent;
+
+import android.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,20 +18,16 @@ import android.widget.Toast;
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
+import android.view.MenuItem;
+
 import com.attra.attralive.R;
-import com.attra.attralive.Service.MyAppolloClient;
 import com.attra.attralive.adapter.NotificationAdapter;
 import com.attra.attralive.model.Notification;
 import com.attra.attralive.util.SimpleDividerItemDecoration;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
-import graphqlandroid.GetNotificationList;
-
-public class notificationActivity extends AppCompatActivity {
+public class NotificationActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     NotificationAdapter productAdapter;
@@ -37,6 +36,8 @@ public class notificationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(R.string.notifications);
         if(getIntent().getSerializableExtra("NOTIFICATION_LIST")!=null) {
 
             NotificationList = (ArrayList<Notification>)getIntent().getSerializableExtra("NOTIFICATION_LIST");
@@ -53,7 +54,7 @@ public class notificationActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(
                 getApplicationContext()
         ));
-        NotificationAdapter adapter = new NotificationAdapter(notificationActivity.this, NotificationList);
+        NotificationAdapter adapter = new NotificationAdapter(NotificationActivity.this, NotificationList);
         recyclerView.setAdapter(adapter);
 /*
         adapter.setItemOnClickListener(new NotificationAdapter.OnItemClickListener() {
@@ -65,5 +66,16 @@ public class notificationActivity extends AppCompatActivity {
         });
 */
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == android.R.id.home) {
+            finish();
+        }
+        return true;
+
+        //return super.onOptionsItemSelected(item);
     }
 }

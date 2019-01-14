@@ -18,6 +18,7 @@ import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
 import com.attra.attralive.Service.MyAppolloClient;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import javax.annotation.Nonnull;
 
@@ -44,6 +45,9 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         this.getWindow().setStatusBarColor(Color.TRANSPARENT);
         ProgressDialog progressdialog = new ProgressDialog(ForgotPasswordActivity.this);
         progressdialog.setMessage("Please Wait....");
+        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+//        Log.i("ref token",refreshedToken);
+        emailId.setText(refreshedToken);
         backtologinbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

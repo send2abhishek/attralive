@@ -1,3 +1,5 @@
+import com.google.gms.googleservices.GoogleServicesPlugin
+
 apply plugin: 'com.android.application'
 apply plugin: 'com.apollographql.android'
 
@@ -49,7 +51,9 @@ dependencies {
     compile 'com.google.code.gson:gson:2.6.2'
     compile 'com.theartofdev.edmodo:android-image-cropper:2.3.+'
     compile 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
+    implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
+    implementation 'com.github.ganfra:material-spinner:2.0.0'
 
 }
 apply plugin: 'com.google.gms.google-services'
-com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true
+GoogleServicesPlugin.config.disableVersionCheck = true

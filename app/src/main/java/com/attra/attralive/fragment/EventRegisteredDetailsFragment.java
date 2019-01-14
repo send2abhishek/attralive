@@ -148,49 +148,6 @@ public class EventRegisteredDetailsFragment extends Fragment {
             }
         });
     }
-    private void getEventDetails()
-    {
-        MyAppolloClient.getMyAppolloClient("Bearer d3b928d44fcacd522f26e829d3fbdb6e483f2d9e").
-                query(GetEventDetails.builder().status("A").location(loc).build()).enqueue(new ApolloCall.Callback<GetEventDetails.Data>() {
-            @Override
-            public void onResponse(@Nonnull Response<GetEventDetails.Data> response) {
 
-            /*eventtitle=response.data().getEventDetails_Q().eventD().get(0).event_title();
-            description=response.data().getEventDetails_Q().eventD().get(0).Description();
-            venue=response.data().getEventDetails_Q().eventD().get(0).venue();
-            startdate=response.data().getEventDetails_Q().eventD().get(0).Schedule().start_date();
-            starttime=response.data().getEventDetails_Q().eventD().get(0).Schedule().start_time();
-            enddate=response.data().getEventDetails_Q().eventD().get(0).Schedule().end_date();
-            endtime=response.data().getEventDetails_Q().eventD().get(0).Schedule().end_time();*/
-            /*
-            }*/
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-
-                    for(int i=0;i<response.data().getEventDetails_Q().eventD().get(0).registeredUsers().size();i++) {
-                        reguserId = response.data().getEventDetails_Q().eventD().get(0).registeredUsers().get(i).userId();
-                        if (reguserId.equals(userId)) {
-                            register.setVisibility(View.GONE);
-                            linearLayout.setVisibility(View.VISIBLE);
-                            //regdetails.setText(response.data().getEventDetails_Q().eventD().get(0).registeredUsers().get(i).
-                            //registrationId());
-                            regdetails.setText("rrrr");
-                           // Picasso.with(getActivity()).load("https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png").into(qrcode);
-                        }
-                   }
-                    eventvenue.setText("asd");
-                    eventdate.setText("gg");
-                    eventtime.setText("oo" + ":" + "nn");
-                }
-            });
-            }
-
-            @Override
-            public void onFailure(@Nonnull ApolloException e) {
-
-            }
-        });
-    }
 
 }

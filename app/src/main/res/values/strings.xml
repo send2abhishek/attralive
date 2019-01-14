@@ -28,7 +28,6 @@
     <string name="new_password">New Password</string>
     <string name="cancel">Cancle</string>
 
-
     <!--Dashboard Screen String-->
     <string name="likes">Likes</string>
     <string name="presents">Presents</string>
@@ -79,6 +78,7 @@
     <string name="post">POST</string>
     <string name="msg_subscribe_failed">Failed to subscribe to weather topic</string>
     <string name="fcm_message">FCM Message</string>
+    <string name="notifications">Notifications</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     //Event screen
@@ -124,27 +124,18 @@
     </string>
     <string name="about_us_content">Attraction 2018 is an Attra in-house built application by Digital Practice team, L &amp; D Team and with inputs from Corporate Strategy.\nIt reinstates our focused direction towards \'Attra 3.0 journey\' and thus first time our own in-house customized mobile application has been launched.\nThe application was made within a quick turnaround of approximately only two weeks.\n\nWe will appreciate your feedbacks on this application. Please reach out to <b><u>mobility@attra.com.au</u></b> in case of your feedbacks and suggestions.</string>
 
-    <string name="answer_submitted">Your answers has been submitted.</string>
-    <string name="alert_quiz">Your answers has been submitted already.</string>
-    <string name="alert">Alert</string>
-    <string name="score">Score</string>
-    <string name="score_content"><b>Your score is: </b></string>
-    <string name="quiz_content">Quiz is available for <b>1 time participation only</b> for all employees across locations. For a selected set of users with all <b>right answers in the 1st attempt</b>, will get some surprise gifts. Happy Quizzing !!!</string>
-    <string name="submit_quiz_content">Note: Thanks for participating. The correct answers will be supplied post Attraction 2018. The quiz will be available for multiple Q&amp;A. The intent of the Quiz is to generate interest in Digital Payments. For more details, please refer to Digipedia.</string>
-
-    <string name="error_answer">Please answer all the questions</string>
-    <string name="digiquiz">Digi Quiz</string>
     <string name="okbtn">OK</string>
     <string name="submit_btn">Submit</string>
 
     <string name="helpcontent">
-        1. Employee registers through User Name, Attra Email ID and Password Details.
-        2. Before registration completion, employee has to accept the Terms and conditions.
-        3. A unique one time randomly generated PIN is sent on Attra Email ID for the user once the registration process completed.
-        4. The user has to enter and verify the OTP received to activate account.
-        5. The user has to login using the Attra Email ID and the Password created during registration.
+        1. Employee registers through User Name, Attra Email ID and Password Details.\n
+        2. Before registration completion, employee has to accept the Terms and conditions.\n
+        3. A unique one time randomly generated PIN is sent on Attra Email ID for the user once the registration process completed.\n
+        4. The user has to enter and verify the OTP received to activate account.\n
+        5. User has to fill the mandatory details as part of “User Profile” data.\n
+        6. The user has to login using the Attra Email ID and the Password created during registration.
     </string>
-    <string name="helpbutton">Help for Registration</string>
+    <string name="helpbutton"><u>Help for Registration</u></string>
     <!-- TODO: Remove or change this placeholder text -->
 
     <string name="hello_blank_fragment">EC-Phase II,Hosur road,"\n"
@@ -176,7 +167,6 @@
     <string name="oct_28">28-Oct-19</string>
     <string name="nov_1">1-Nov-19</string>
     <string name="dec_25">25-Dec-19</string>
-
 
     <string name="tuesday">Tuesday</string>
     <string name="monday">Monday</string>

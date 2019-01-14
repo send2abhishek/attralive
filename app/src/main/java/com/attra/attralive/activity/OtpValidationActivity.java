@@ -196,6 +196,15 @@ private void callservice()
 
                             }
                             else if( (otpStatus.equals("Failure"))) {
+                                if(message.equals("Invalid OTP")){
+                                    Toast.makeText(getApplicationContext(), "Invalid OTP", Toast.LENGTH_LONG).show();
+                                    motpNumber1.setText("");
+                                    motpNumber2.setText("");
+                                    motpNumber3.setText("");
+                                    motpNumber4.setText("");
+                                    motpNumber1.requestFocus();
+
+                                }
 
                                 if (message.equals("Invalid token: access token has expired")) {
                                     GetNewRefreshToken.getRefreshtoken(refreshToken, OtpValidationActivity.this);
@@ -279,16 +288,24 @@ private void callservice()
                         Log.i("access Token",accessToken);
                         authToken="Bearer"+" "+accessToken;
                         Log.i("brarer token",authToken);
+                        if(status!=null) {
+                            Log.i("otpValidation==>status","OtpValidationActivity==>getToken==>status "+status);
+                        }
+                        else
+                        {
+                            Log.i("otpValidation==>status","OtpValidationActivity==>getToken==>status "+status);
+                        }
                         if(status.equals("Success")){
-
+                            Log.i("otpValidation==>status","OtpValidationActivity==>getToken==>status "+ "inside success");
                           SharedPreferences  preferences = getApplicationContext().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, 0);
-                            SharedPreferences.Editor editor = preferences.edit();
+                          SharedPreferences.Editor editor = preferences.edit();
                             editor.putString("authToken",authToken);
                             editor.putString("refreshToken",refreshToken);
                             editor.putString("emailId",emailId);
                             editor.putString("userId",userId);
                             editor.putString("userName",userName);
-                            editor.commit();
+                            //editor.commit();
+                            editor.apply();
 
                         }
                         OtpValidationActivity.this.runOnUiThread(new Runnable() {

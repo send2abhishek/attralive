@@ -99,7 +99,7 @@ public class HomeFragment extends Fragment {
 
 
 
-         sharedPreferences =this.getActivity().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
+        sharedPreferences =this.getActivity().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
             myToken = sharedPreferences.getString("authToken", "");
             userId1 = sharedPreferences.getString("userId", "");
@@ -165,50 +165,50 @@ public class HomeFragment extends Fragment {
     {
         System.out.println("Inside GetEvent method");
         MyAppolloClient.getMyAppolloClient(myToken).query(
-               GetEventWidgets.builder().status("A").location(location).build()).enqueue(
-               new ApolloCall.Callback<GetEventWidgets.Data>() {
-                   @Override
-                   public void onResponse(@Nonnull Response<GetEventWidgets.Data> response) {
-                            Log.i("Inside getevent ","inside response method");
-                       String eventWidgetPath = "";
-                       //System.out.println("gg"+response.data().getEventWidget_Q().status());
-                      // System.out.println("WW "+response.data().getEventWidget_Q().widget().get(0).event_widget_path());
-                       //images[0] = eventWidgetPath;
-                      // System.out.println("This is image"+images[0]);
-                       if(response.data().getEventWidget_Q().status().equals("Success"))
+                GetEventWidgets.builder().status("A").location(location).build()).enqueue(
+                new ApolloCall.Callback<GetEventWidgets.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<GetEventWidgets.Data> response) {
+                        Log.i("Inside getevent ","inside response method");
+                        String eventWidgetPath = "";
+                        //System.out.println("gg"+response.data().getEventWidget_Q().status());
+                        // System.out.println("WW "+response.data().getEventWidget_Q().widget().get(0).event_widget_path());
+                        //images[0] = eventWidgetPath;
+                        // System.out.println("This is image"+images[0]);
+                        if(response.data().getEventWidget_Q().status().equals("Success"))
 
-                       {
-                           for(int i =0;i<response.data().getEventWidget_Q().widget().size();i++)
-                           {
+                        {
+                            for(int i =0;i<response.data().getEventWidget_Q().widget().size();i++)
+                            {
 
-                               String eventId = response.data().getEventWidget_Q().widget().get(0).event_id();
-                               eventWidgetPath = response.data().getEventWidget_Q().widget().get(0).event_widget_path();
+                                String eventId = response.data().getEventWidget_Q().widget().get(0).event_id();
+                                eventWidgetPath = response.data().getEventWidget_Q().widget().get(0).event_widget_path();
 
-                               images[i] = eventWidgetPath;
+                                images[i] = eventWidgetPath;
 
-                          }
+                            }
 
-                       }
-                       getActivity().runOnUiThread(new Runnable() {
-                           @Override
-                           public void run() {
-                               myCustomPagerAdapter = new SliderAdapter(getActivity(), images);
-                               viewPager.setAdapter(myCustomPagerAdapter);
+                        }
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                myCustomPagerAdapter = new SliderAdapter(getActivity(), images);
+                                viewPager.setAdapter(myCustomPagerAdapter);
 
-                           }
-                       });
-
-
+                            }
+                        });
 
 
-                   }
 
-                   @Override
-                   public void onFailure(@Nonnull ApolloException e) {
 
-                   }
-               }
-       );
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+
+                    }
+                }
+        );
 
 
     }
@@ -216,83 +216,89 @@ public class HomeFragment extends Fragment {
     private void prepareNewsfeed(String myToken) {
 
 
-       MyAppolloClient.getMyAppolloClient(myToken).query(
-               GetPosts.builder().build()).enqueue(
-               new ApolloCall.Callback<GetPosts.Data>() {
-                   @Override
-                   public void onResponse(@Nonnull Response<GetPosts.Data> response) {
-                       String status = response.data().getPosts_Q().status();
-                       String message=response.data().getPosts_Q().message();
-                       Log.d("mesa",message);
-                       if(status.equals("Success"))
-                       {
-                           Log.i("","inside success");
+        MyAppolloClient.getMyAppolloClient(myToken).query(
+                GetPosts.builder().build()).enqueue(
+                new ApolloCall.Callback<GetPosts.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<GetPosts.Data> response) {
+                        if(response.data().getPosts_Q()!=null) {
+                            String status = response.data().getPosts_Q().status();
+                            String message = response.data().getPosts_Q().message();
+                            Log.d("mesa", message);
+                            if (status.equals("Success")) {
+                                Log.i("", "inside success");
 
-                           for(int i =0;i<response.data().getPosts_Q().posts().size();i++)
-                           {
-                               Log.i("Here",response.data().getPosts_Q().posts().get(i).userId()+
-                                       response.data().getPosts_Q().posts().get(i).postId()
-                                       );
+                                for (int i = 0; i < response.data().getPosts_Q().posts().size(); i++) {
+                                    Log.i("Here", response.data().getPosts_Q().posts().get(i).userId() +
+                                            response.data().getPosts_Q().posts().get(i).postId()
+                                    );
 
-                              newsFeedList = new NewsFeed(
-                                      response.data().getPosts_Q().posts().get(i).userId(),
-                                      response.data().getPosts_Q().posts().get(i).postId(),
-                                      response.data().getPosts_Q().posts().get(i).profileImagePath(),
-                                      response.data().getPosts_Q().posts().get(i).filePath(),
-                                      response.data().getPosts_Q().posts().get(i).name(),
-                                      response.data().getPosts_Q().posts().get(i).location(),
-                                      response.data().getPosts_Q().posts().get(i).timeago(),
-                                      response.data().getPosts_Q().posts().get(i).description(),
-                                      response.data().getPosts_Q().posts().get(i).likesCount(),
-                                      response.data().getPosts_Q().posts().get(i).commentsCount());
-
+                                    newsFeedList = new NewsFeed(
+                                            response.data().getPosts_Q().posts().get(i).userId(),
+                                            response.data().getPosts_Q().posts().get(i).postId(),
+                                            response.data().getPosts_Q().posts().get(i).profileImagePath(),
+                                            response.data().getPosts_Q().posts().get(i).filePath(),
+                                            response.data().getPosts_Q().posts().get(i).name(),
+                                            response.data().getPosts_Q().posts().get(i).location(),
+                                            response.data().getPosts_Q().posts().get(i).timeago(),
+                                            response.data().getPosts_Q().posts().get(i).description(),
+                                            response.data().getPosts_Q().posts().get(i).likesCount(),
+                                            response.data().getPosts_Q().posts().get(i).commentsCount());
 
 
+                                    newsFeedArrayList.add(newsFeedList);
 
-                              newsFeedArrayList.add(newsFeedList);
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
 
-                              getActivity().runOnUiThread(new Runnable() {
-                                  @Override
-                                  public void run() {
+                                            newsFeedListAdapter = new NewsFeedListAdapter(getActivity(), newsFeedArrayList);
 
-                                      newsFeedListAdapter = new NewsFeedListAdapter(getActivity(), newsFeedArrayList);
+                                            //  newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
 
-                                    //  newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
+                                            // newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
+                                            newsFeed.setLayoutManager(linearLayoutManager);
+                                            newsFeed.setAdapter(newsFeedListAdapter);
+                                        }
+                                    });
+                                }
+                            } else if (status.equals("Failure")) {
+                                if (message.equals("Invalid token: access token is invalid")) {
 
-                                     // newsFeed.addItemDecoration(new DividerItemDecoration(newsFeed.getContext(), DividerItemDecoration.VERTICAL));
-                                      newsFeed.setLayoutManager(linearLayoutManager);
-                                      newsFeed.setAdapter(newsFeedListAdapter);
-                                  }
-                              });
-                           }
-                       }
-                       else
-                       if(status.equals("Failure")){
-                           if(message.equals("Invalid token: access token is invalid")){
+                                    GetNewRefreshToken.getRefreshtoken(refreshToken, getActivity());
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            sharedPreferences = getActivity().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
+                                            if (sharedPreferences.contains("authToken")) {
+                                                String myToken = sharedPreferences.getString("authToken", "");
+                                                prepareNewsfeed(myToken);
+                                                Toast.makeText(getActivity(), myToken, Toast.LENGTH_LONG).show();
 
-                               GetNewRefreshToken.getRefreshtoken(refreshToken,getActivity());
-                               getActivity().runOnUiThread(new Runnable() {
-                                   @Override
-                                   public void run() {
-                                       sharedPreferences = getActivity().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
-                                       if (sharedPreferences.contains("authToken")) {
-                                           String myToken = sharedPreferences.getString("authToken", "");
-                                           prepareNewsfeed(myToken);
-                                           Toast.makeText(getActivity(), myToken, Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                        else
+                        {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getActivity(), "No posts available to display", Toast.LENGTH_SHORT).show();
+                                }
+                            });
 
-                                       }
-                                   }
-                               });
-                           }
-                       }
-                   }
+                        }
+                    }
 
-                   @Override
-                   public void onFailure(@Nonnull ApolloException e) {
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
 
-                   }
-               }
-       );
+                    }
+                }
+        );
 
 
     }

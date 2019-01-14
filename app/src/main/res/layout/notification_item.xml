@@ -21,8 +21,8 @@
                 android:layout_marginBottom="10dp"
                 android:layout_centerVertical="true"
                 android:id="@+id/commentNotifyDp"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:padding="4dp"
                />
 

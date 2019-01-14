@@ -108,7 +108,8 @@ public class Notification implements Serializable {
     private String action;
     private String     userId;
 
-    public Notification(String postType, String postId, String ownerId, String action, String userId, String userName, String time, String postMessage, String userImage,  String readStatus) {
+    public Notification(String postType, String postId, String ownerId, String action, String userId,
+                        String userName, String time, String postMessage, String userImage,  String readStatus) {
         this.postType = postType;
         this.postId = postId;
         this.ownerId = ownerId;

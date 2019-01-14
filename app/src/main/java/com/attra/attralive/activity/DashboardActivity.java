@@ -1,15 +1,15 @@
 package com.attra.attralive.activity;
 
+import android.app.Notification;
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -46,24 +46,17 @@ import com.attra.attralive.fragment.HolidayCalender;
 import com.attra.attralive.fragment.HomeFragment;
 import com.attra.attralive.fragment.LearningD;
 import com.attra.attralive.model.NewsFeed;
-import com.attra.attralive.model.Notification;
 import com.attra.attralive.util.GetNewRefreshToken;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.attra.attralive.util.Config;
 import com.attra.attralive.util.NotificationUtils;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import javax.annotation.Nonnull;
 
-import graphqlandroid.ForgotPassword;
 import graphqlandroid.GetNotificationList;
 import graphqlandroid.GetProfileDetails;
 import graphqlandroid.Logout;
-import graphqlandroid.GetRefreshToken;
 
 import static com.attra.attralive.util.NetworkUtil.isNetworkAvailable;
 //import static com.attra.attralive.activity.OtpValidationActivity.PREFS_AUTH;
@@ -78,7 +71,7 @@ public class DashboardActivity extends AppCompatActivity
     String userId1,username,location;
     String myToken,refreshToken;
     int notificationSize=0;
-    ArrayList<Notification> notificationList;
+    ArrayList<com.attra.attralive.model.Notification> notificationList;
     private static final String TAG = "DashboardActivity";
 Intent intent;
     public static String  Authorization= "Basic YXBwbGljYXRpb246c2VjcmV0";
@@ -98,29 +91,34 @@ Intent intent;
         location=intent.getStringExtra("location");
         //subscribeToTopic();
 
-        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-
-                // checking for type intent filter
-                if (intent.getAction().equals(Config.REGISTRATION_COMPLETE)) {
-                    // gcm successfully registered
-                    // now subscribe to `global` topic to receive app wide notifications
-                    FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
-
-                    displayFirebaseRegId();
-
-                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
-                    // new push notification is received
-
-                    String message = intent.getStringExtra("message");
-
-                    Toast.makeText(getApplicationContext(), "Push notification: " + message, Toast.LENGTH_LONG).show();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Create channel to show notifications.
+            String channelId  = getString(R.string.default_notification_channel_id);
+            String channelName = getString(R.string.default_notification_channel_name);
+            NotificationManager notificationManager =
+                    getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(new NotificationChannel(channelId,
+                    channelName, NotificationManager.IMPORTANCE_LOW));
+        }
 
                     //txtMessage.setText(message);
-                }
+
+        // If a notification message is tapped, any data accompanying the notification
+        // message is available in the intent extras. In this sample the launcher
+        // intent is fired when the notification is tapped, so any accompanying data would
+        // be handled here. If you want a different intent fired, set the click_action
+        // field of the notification message to the desired intent. The launcher intent
+        // is used when no click_action is specified.
+        //
+        // Handle possible data accompanying notification message.
+        // [START handle_data_extras]
+        if (getIntent().getExtras() != null) {
+            for (String key : getIntent().getExtras().keySet()) {
+                Object value = getIntent().getExtras().get(key);
+                Log.d(TAG, "Key: " + key + " Value: " + value);
+
             }
-        };
+        }
 
 
 
@@ -159,26 +157,6 @@ Intent intent;
 
         }
         getProfileDetail(myToken);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Create channel to show notifications.
-            String channelId  = getString(R.string.default_notification_channel_id);
-            String channelName = getString(R.string.default_notification_channel_name);
-            NotificationManager notificationManager =
-                    getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(new NotificationChannel(channelId,
-                    channelName, NotificationManager.IMPORTANCE_LOW));
-        }
-
-
-        if (getIntent().getExtras() != null) {
-            for (String key : getIntent().getExtras().keySet()) {
-                Object value = getIntent().getExtras().get(key);
-                Log.d(TAG, "Key: " + key + " Value: " + value);
-            }
-        }
-        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d(TAG, "Refreshed token: " + refreshedToken);
-        // TODO: Implement this method to send any registration to your app's servers.
 
     }
 
@@ -409,7 +387,7 @@ Intent intent;
             myTextLayoutView = actionView.findViewById(R.id.textView);
             ((View) actionView.findViewById(R.id.textView)).setVisibility(View.GONE);
 
-            notificationList= new ArrayList<Notification>();
+            notificationList= new ArrayList<com.attra.attralive.model.Notification>();
             Log.i("Network availabiltiy",""+isNetworkAvailable(getApplicationContext()));
             if(isNetworkAvailable(getApplicationContext()) )
             {
@@ -433,7 +411,7 @@ Intent intent;
                                                 myTextLayoutView.setText(Integer.toString(notificationSize));
 
                                                 for (GetNotificationList.Notification noti : response.data().getUserNotification_Q().notifications()) {
-                                                    Notification  noitification= new Notification(noti.postType(), noti.postId(), noti.ownerId(), noti.action(), noti.userId(), noti.userName(), noti
+                                                    com.attra.attralive.model.Notification noitification= new com.attra.attralive.model.Notification(noti.postType(), noti.postId(), noti.ownerId(), noti.action(), noti.userId(), noti.userName(), noti
                                                             .time(), noti.postMessage(),noti.userImage(),noti.readStatus());
                                                    notificationList.add(
                                                            noitification);
@@ -466,7 +444,7 @@ Intent intent;
             mImageLayoutView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(DashboardActivity.this, notificationActivity.class);
+                    Intent intent = new Intent(DashboardActivity.this, NotificationActivity.class);
                     if(notificationSize>0 && notificationList!=null)
                         intent.putExtra("NOTIFICATION_LIST", notificationList);
 
