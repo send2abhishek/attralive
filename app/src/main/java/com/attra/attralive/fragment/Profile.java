@@ -40,7 +40,7 @@ import okhttp3.OkHttpClient;
  * A simple {@link Fragment} subclass.
  */
 public class Profile extends Fragment {
-    TextView username_view, password_view, userDesign, DOB, gender, phone, email, submit, empId, location, bu;
+    TextView username_view, password_view, userDesign, DOB, gender, phone, email, submit, empId, location, bu,welcomeUser;
     //  MaterialSpinner location,bu;
     private SharedPreferences sharedPreferences;
     String myToken, userId, userName;
@@ -102,7 +102,11 @@ public class Profile extends Fragment {
         submitdata = view.findViewById(R.id.editDetailsBtn);
         username_view = view.findViewById(R.id.et_userName);
         password_view = view.findViewById(R.id.et_password);
-
+       welcomeUser=view.findViewById(R.id.userName);
+       if(userName!=null)
+        welcomeUser.setText(userName);
+       else
+           welcomeUser.setText("USER!!");
         //  qrCode = view.findViewById(R.id.img_qrCode);
         //getUserBU();
         //  getUserLocation();
@@ -598,7 +602,7 @@ public class Profile extends Fragment {
                             String status = response.data().getProfileDetails_Q().status();*/
                                 if (status.equals("Success")) {
                                     //String username = response.data().getProfileDetails_Q().name();
-                                    //  String emaiId = response.data().getProfileDetails_Q().email();
+                                     String emaiId = response.data().getProfileDetails_Q().email();
                                     final String password = "*********";
                                     final String username = userName;
                                     String design = response.data().getProfileDetails_Q().designation();
@@ -614,8 +618,8 @@ public class Profile extends Fragment {
                                             Picasso.with(getActivity()).load(imgPath).fit().into(profilePic);
                                             userDesign.setText(design);
                                             //   Picasso.with(getActivity()).load(qrCodePath).fit().into(qrCode);
-                                            if (username != null) {
-                                                username_view.setText(username);
+                                            if (emaiId != null) {
+                                                username_view.setText(emaiId);
                                             }
                                             if (password != null) {
                                                 password_view.setText(password);

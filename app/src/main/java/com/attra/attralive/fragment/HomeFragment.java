@@ -65,6 +65,7 @@ public class HomeFragment extends Fragment {
     LinearLayoutManager linearLayoutManager;
     NewsFeed newsFeedList;
     TextView postFeed;
+    String eventWidgetPath = "";
     boolean like = false;
     ImageView descImage;
     ArrayList<String> Number;
@@ -78,7 +79,7 @@ public class HomeFragment extends Fragment {
 
     ViewPager viewPager;
 
-    String images[] = {"https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png","https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png","https://dsd8ltrb0t82s.cloudfront.net/EventsQRCodes/Att_5c2353c4daea021e34431842.png"};
+    String images[] = {"https://dsd8ltrb0t82s.cloudfront.net/Banner/thankyou.PNG","https://dsd8ltrb0t82s.cloudfront.net/Banner/sankranti.PNG"};
 
     //String[] images= new String[1];
     //String images[] = {"https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png","https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png"};
@@ -171,7 +172,7 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onResponse(@Nonnull Response<GetEventWidgets.Data> response) {
                         Log.i("Inside getevent ","inside response method");
-                        String eventWidgetPath = "";
+
                         //System.out.println("gg"+response.data().getEventWidget_Q().status());
                         // System.out.println("WW "+response.data().getEventWidget_Q().widget().get(0).event_widget_path());
                         //images[0] = eventWidgetPath;

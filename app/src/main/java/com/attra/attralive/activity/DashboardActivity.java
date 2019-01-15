@@ -232,6 +232,8 @@ public class DashboardActivity extends AppCompatActivity
                                     String emaiId = response.data().getProfileDetails_Q().email();
                                     String imgPath = response.data().getProfileDetails_Q().profileImagePath();
                                     String loc = response.data().getProfileDetails_Q().location();
+                                    Log.i("this user name", username);
+
                                     Log.i("profile image path", imgPath);
                                     Log.i("username in dashbard", username);
                                     sharedPreferences = getApplicationContext().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, 0);

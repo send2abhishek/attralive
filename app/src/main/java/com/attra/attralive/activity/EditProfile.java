@@ -278,11 +278,11 @@ public class EditProfile extends AppCompatActivity {
                                             userDesign.setText(design);
                                             //   Picasso.with(getActivity()).load(qrCodePath).fit().into(qrCode);
                                             // String split=emailId.spli
-                                            /*if(userName!=null)
+                                            if(userName!=null)
                                             welcomeUserName.setText(userName);
                                             else
-                                                welcomeUserName.setText("User!!!!");*/
-                                            welcomeUserName.setText("Awnish Kumar");
+                                                welcomeUserName.setText("User!!!!");
+                                          //  welcomeUserName.setText("Awnish Kumar");
                                             if (emailId != null) {
                                                 userNameView.setText(emailId);
                                             }
@@ -507,7 +507,7 @@ public class EditProfile extends AppCompatActivity {
         Log.i("initRetrofitClient", "initRetrofitClient");
         client = new OkHttpClient.Builder().build();
 
-        apiService = new Retrofit.Builder().baseUrl("http://10.200.44.25:4001").client(client).build().create(ApiService.class);
+        apiService = new Retrofit.Builder().baseUrl("http://10.200.23.107:4001").client(client).build().create(ApiService.class);
     }
 
     //    public Intent getPickImageChooserIntent() {
