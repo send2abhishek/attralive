@@ -1,4 +1,5 @@
 package com.attra.attralive.fragment;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,33 +15,23 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
 import com.attra.attralive.Service.MyAppolloClient;
-import com.attra.attralive.activity.DashboardActivity;
 import com.attra.attralive.activity.NewsFeedPostActivity;
-import com.attra.attralive.activity.OtpValidationActivity;
-import com.attra.attralive.activity.UserDetailsActivity;
 import com.attra.attralive.adapter.NewsFeedListAdapter;
 import com.attra.attralive.adapter.SliderAdapter;
-import com.attra.attralive.adapter.WidgetAdapter;
 import com.attra.attralive.model.NewsFeed;
-import com.attra.attralive.model.NewsFeedNew;
 import com.attra.attralive.util.GetNewRefreshToken;
-import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -51,7 +42,6 @@ import javax.annotation.Nonnull;
 
 import graphqlandroid.GetEventWidgets;
 import graphqlandroid.GetPosts;
-import okhttp3.OkHttpClient;
 
 //import static com.attra.attralive.activity.OtpValidationActivity.PREFS_AUTH;
 
@@ -72,20 +62,20 @@ public class HomeFragment extends Fragment {
     Picasso picasso = new Picasso.Builder(getActivity())
             .downloader(new OkHttp3Downloader(client))
             .build();*/
-    String refreshToken,myToken,accesstoken,postId,location,profileimagepath;
+    String refreshToken, myToken, accesstoken, postId, location, profileimagepath;
 
     SharedPreferences sharedPreferences;
 
     ViewPager viewPager;
 
-    String images[] = {"https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png","https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png","https://dsd8ltrb0t82s.cloudfront.net/EventsQRCodes/Att_5c2353c4daea021e34431842.png"};
+    String images[] = {"https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png", "https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png", "https://dsd8ltrb0t82s.cloudfront.net/EventsQRCodes/Att_5c2353c4daea021e34431842.png"};
 
     //String[] images= new String[1];
     //String images[] = {"https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png","https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png"};
     SliderAdapter myCustomPagerAdapter;
 
     private static int currentPage = 0;
-    String userId1,username;
+    String userId1, username;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -98,20 +88,18 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-
-
-        sharedPreferences =this.getActivity().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
+        sharedPreferences = this.getActivity().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
             myToken = sharedPreferences.getString("authToken", "");
             userId1 = sharedPreferences.getString("userId", "");
-            username = sharedPreferences.getString("userName","");
-            postId = sharedPreferences.getString("postId","");
+            username = sharedPreferences.getString("userName", "");
+            postId = sharedPreferences.getString("postId", "");
             refreshToken = sharedPreferences.getString("refreshToken", "");
-            location = sharedPreferences.getString("location","");
+            location = sharedPreferences.getString("location", "");
             profileimagepath = sharedPreferences.getString("profileImagePath", "");
             //      Toast.makeText(getApplicationContext(), userId, Toast.LENGTH_LONG).show();
-            Log.i("token in dashboard",myToken);
-            Log.i("user id in dashboard",userId1);
+            Log.i("token in dashboard", myToken);
+            Log.i("user id in dashboard", userId1);
 
         }
 
@@ -162,25 +150,23 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private void GetEventWidgetsFromService()
-    {
+    private void GetEventWidgetsFromService() {
         System.out.println("Inside GetEvent method");
         MyAppolloClient.getMyAppolloClient(myToken).query(
                 GetEventWidgets.builder().status("A").location(location).build()).enqueue(
                 new ApolloCall.Callback<GetEventWidgets.Data>() {
                     @Override
                     public void onResponse(@Nonnull Response<GetEventWidgets.Data> response) {
-                        Log.i("Inside getevent ","inside response method");
+                        Log.i("Inside getevent ", "inside response method");
                         String eventWidgetPath = "";
                         //System.out.println("gg"+response.data().getEventWidget_Q().status());
                         // System.out.println("WW "+response.data().getEventWidget_Q().widget().get(0).event_widget_path());
                         //images[0] = eventWidgetPath;
                         // System.out.println("This is image"+images[0]);
-                        if(response.data().getEventWidget_Q().status().equals("Success"))
+                        if (response.data().getEventWidget_Q().status().equals("Success"))
 
                         {
-                            for(int i =0;i<response.data().getEventWidget_Q().widget().size();i++)
-                            {
+                            for (int i = 0; i < response.data().getEventWidget_Q().widget().size(); i++) {
 
                                 String eventId = response.data().getEventWidget_Q().widget().get(0).event_id();
                                 eventWidgetPath = response.data().getEventWidget_Q().widget().get(0).event_widget_path();
@@ -200,8 +186,6 @@ public class HomeFragment extends Fragment {
                         });
 
 
-
-
                     }
 
                     @Override
@@ -218,50 +202,47 @@ public class HomeFragment extends Fragment {
 
 
         MyAppolloClient.getMyAppolloClient(myToken).query(
-               GetPosts.builder().build()).enqueue(
-               new ApolloCall.Callback<GetPosts.Data>() {
-                   @Override
-                   public void onResponse(@Nonnull Response<GetPosts.Data> response) {
+                GetPosts.builder().build()).enqueue(
+                new ApolloCall.Callback<GetPosts.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<GetPosts.Data> response) {
 
-                       if(response.data().getPosts_Q()!=null) {
-                           String status = response.data().getPosts_Q().status();
-                           String message = response.data().getPosts_Q().message();
-                           Log.d("mesa", message);
-                           if (status.equals("Success")) {
-                               Log.i("", "inside success");
+                        if (response.data().getPosts_Q() != null) {
+                            String status = response.data().getPosts_Q().status();
+                            String message = response.data().getPosts_Q().message();
+                            Log.d("mesa", message);
+                            if (status.equals("Success")) {
+                                Log.i("", "inside success");
 
-                               for (int i = 0; i < response.data().getPosts_Q().posts().size(); i++) {
-                                   Log.i("Here", response.data().getPosts_Q().posts().get(i).userId() +
-                                           response.data().getPosts_Q().posts().get(i).postId()
-                                   );
-like=false;
+                                for (int i = 0; i < response.data().getPosts_Q().posts().size(); i++) {
+                                    Log.i("Here", response.data().getPosts_Q().posts().get(i).userId() +
+                                            response.data().getPosts_Q().posts().get(i).postId()
+                                    );
+                                    like = false;
 //                                   String likedLikedUserId = response.data().getPosts_Q().posts().get(0).likedUsersList().get(0).likedUserId();
 //                                   if(userId1.equals(likedLikedUserId))
 //                                   {
 //                                       like= true;
 //                                   }
 
-                                   for(int j=0;j<response.data().getPosts_Q().posts().get(i).likedUsersList().size();j++)
-                                   {
-                                       String likedUserId = response.data().getPosts_Q().posts().get(i).likedUsersList().get(j).likedUserId();
-                                       if(userId1.equals(likedUserId)) {
-                                           like = true;
-                                           break;
-                                       }
-                                   }
-                                   newsFeedList = new NewsFeed(
-                                           response.data().getPosts_Q().posts().get(i).userId(),
-                                           response.data().getPosts_Q().posts().get(i).postId(),
-                                           response.data().getPosts_Q().posts().get(i).profileImagePath(),
-                                           response.data().getPosts_Q().posts().get(i).filePath(),
-                                           response.data().getPosts_Q().posts().get(i).name(),
-                                           response.data().getPosts_Q().posts().get(i).location(),
-                                           response.data().getPosts_Q().posts().get(i).timeago(),
-                                           response.data().getPosts_Q().posts().get(i).description(),
-                                           response.data().getPosts_Q().posts().get(i).likesCount(),
-                                           response.data().getPosts_Q().posts().get(i).commentsCount(),like);
-
-
+                                    for (int j = 0; j < response.data().getPosts_Q().posts().get(i).likedUsersList().size(); j++) {
+                                        String likedUserId = response.data().getPosts_Q().posts().get(i).likedUsersList().get(j).likedUserId();
+                                        if (userId1.equals(likedUserId)) {
+                                            like = true;
+                                            break;
+                                        }
+                                    }
+                                    newsFeedList = new NewsFeed(
+                                            response.data().getPosts_Q().posts().get(i).userId(),
+                                            response.data().getPosts_Q().posts().get(i).postId(),
+                                            response.data().getPosts_Q().posts().get(i).profileImagePath(),
+                                            response.data().getPosts_Q().posts().get(i).filePath(),
+                                            response.data().getPosts_Q().posts().get(i).name(),
+                                            response.data().getPosts_Q().posts().get(i).location(),
+                                            response.data().getPosts_Q().posts().get(i).timeago(),
+                                            response.data().getPosts_Q().posts().get(i).description(),
+                                            response.data().getPosts_Q().posts().get(i).likesCount(),
+                                            response.data().getPosts_Q().posts().get(i).commentsCount(), like);
 
 
                                     newsFeedArrayList.add(newsFeedList);
@@ -293,21 +274,19 @@ like=false;
                                                 prepareNewsfeed(myToken);
                                                 Toast.makeText(getActivity(), myToken, Toast.LENGTH_LONG).show();
 
-                                           }
-                                       }
-                                   });
-                               }
+                                            }
+                                        }
+                                    });
+                                }
 
-                           }
-                       }
-                       else
-                       {
-                           getActivity().runOnUiThread(new Runnable() {
-                               @Override
-                               public void run() {
-                                   Toast.makeText(getActivity(), "No posts available to display", Toast.LENGTH_SHORT).show();
-                               }
-                           });
+                            }
+                        } else {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getActivity(), "No posts available to display", Toast.LENGTH_SHORT).show();
+                                }
+                            });
 
                         }
                     }
@@ -352,7 +331,7 @@ like=false;
 
     }
 
-    public void autoScroll(){
+    public void autoScroll() {
         final Handler handler = new Handler();
         final Runnable Update = () -> {
             if (currentPage == images.length) {

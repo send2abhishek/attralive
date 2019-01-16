@@ -18,7 +18,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:background="@drawable/bg2">
-                <LinearLayout
+               <!-- <LinearLayout
                     android:layout_marginTop="13dip"
                     android:orientation="horizontal"
                     android:layout_width="wrap_content"
@@ -39,7 +39,7 @@
                         android:textSize="20sp"
                         android:lineHeight="24sp"
                         android:lineSpacingExtra="0.01sp"/>
-                </LinearLayout>
+                </LinearLayout>-->
 
             </RelativeLayout>
             <RelativeLayout

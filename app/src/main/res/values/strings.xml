@@ -12,6 +12,7 @@
     <string name="action_about">About</string>
     <string name="action_facilities">Facilities</string>
     <string name="action_holidayCalender">Holiday Calender</string>
+    <string name="action_rating">Give Rating</string>
     <string name="landD">L&amp;D</string>
     <string name="commingSoon">Coming Soon</string>
     <string name="title_home">Home</string>
@@ -27,6 +28,8 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="new_password">New Password</string>
     <string name="cancel">Cancle</string>
+    <string name="update_profile">Update Profile</string>
+
 
     <!--Dashboard Screen String-->
     <string name="likes">Likes</string>
@@ -97,6 +100,7 @@
     <string name="usernameerror_text">Email should be in correct format</string>
     <string name="passworderror_text">Password can not be empty</string>
     <string name="save">Save</string>
+    <string name="view_map"><u>View Map</u></string>
 
     //Registration Screen
     <string name="signup_text">SIGN UP!</string>
@@ -110,7 +114,7 @@
     <string name="tnms">Terms and Conditions</string>
     <string name="close">Close</string>
     <string name="error_checkbox">Please agree to the terms and conditions</string>
-
+    <string name="itle_activity_maps">Map</string>
 
     <string name="termscontent">
         1. The app will be hosted on Amazon Web Services (AWS) cloud till Attraction 2018 till 28th Feb 2018 \n
@@ -122,7 +126,7 @@
         7. The terms and conditions will be updated, for the app with additional features and usage post Attraction 2018\n
         8. On acceptance of these terms and conditions, Attra will not be liable for any personal data misuse
     </string>
-    <string name="about_us_content">Attraction 2018 is an Attra in-house built application by Digital Practice team, L &amp; D Team and with inputs from Corporate Strategy.\nIt reinstates our focused direction towards \'Attra 3.0 journey\' and thus first time our own in-house customized mobile application has been launched.\nThe application was made within a quick turnaround of approximately only two weeks.\n\nWe will appreciate your feedbacks on this application. Please reach out to <b><u>mobility@attra.com.au</u></b> in case of your feedbacks and suggestions.</string>
+    <string name="about_us_content">Attraction 2018 is an Attra in-house built application by Digital Practice team, L &amp; D Team and with inputs from Corporate Strategy.\nIt reinstates our focused direction towards \'Attra 3.0 journey\' and thus first time our own in-house customized mobile application has been launched.\nThe application was made within a quick turnaround of approximately only two weeks.\n\nWe will appreciate your feedbacks on this application. Please reach out to <b><u>mobile.appsupport@attra.com.au</u></b> in case of your feedbacks and suggestions.</string>
 
     <string name="okbtn">OK</string>
     <string name="submit_btn">Submit</string>
@@ -186,6 +190,7 @@
     <string name="Kannada_Rajyotsava">Kannada Rajyotsava</string>
     <string name="Christmas">Christmas</string>
     <string name="title_activity_event_location">Map</string>
+    <string name="title_activity_maps">Map</string>
 
 
 </resources>

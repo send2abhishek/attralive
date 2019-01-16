@@ -1,15 +1,15 @@
 package com.attra.attralive.activity;
 
-import android.app.Notification;
-
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,7 +24,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -105,7 +104,7 @@ public class DashboardActivity extends AppCompatActivity
                     channelName, NotificationManager.IMPORTANCE_LOW));
         }
 
-                    //txtMessage.setText(message);
+        //txtMessage.setText(message);
 
         // If a notification message is tapped, any data accompanying the notification
         // message is available in the intent extras. In this sample the launcher
@@ -141,6 +140,11 @@ public class DashboardActivity extends AppCompatActivity
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        Menu menuNav=navigationView.getMenu();
+        MenuItem nav_facilities = menuNav.findItem(R.id.nav_facilities);
+        MenuItem nav_landD = menuNav.findItem(R.id.nav_landD);
+        nav_facilities.setEnabled(false);
+        nav_landD.setEnabled(false);
         View headerView = navigationView.getHeaderView(0);
         userName = headerView.findViewById(R.id.tv_menuUserName);
         userEmail = headerView.findViewById(R.id.tv_email);
@@ -151,14 +155,12 @@ public class DashboardActivity extends AppCompatActivity
             myToken = sharedPreferences.getString("authToken", "");
             userId1 = sharedPreferences.getString("userId", "");
 
-            username = sharedPreferences.getString("userName","");
-            refreshToken=sharedPreferences.getString("refreshToken","");
-      //      Toast.makeText(getApplicationContext(), userId, Toast.LENGTH_LONG).show();
-            Log.i("token in dashboard",myToken);
-            Log.i("user id in dashboard",userId1);
-            Log.i("user name in dashboard",username);
-
-
+            username = sharedPreferences.getString("userName", "");
+            refreshToken = sharedPreferences.getString("refreshToken", "");
+            //      Toast.makeText(getApplicationContext(), userId, Toast.LENGTH_LONG).show();
+            Log.i("token in dashboard", myToken);
+            Log.i("user id in dashboard", userId1);
+            Log.i("user name in dashboard", username);
             userName.setText(username);
 
 
@@ -320,10 +322,28 @@ public class DashboardActivity extends AppCompatActivity
             loadFragment(fragment);
 
         } else if (id == R.id.nav_facilities) {
-           /* fragment = new Gallery();
-            loadFragment(fragment);*/
-            Intent intent = new Intent(getApplicationContext(), UserDetailsActivity.class);
-            startActivity(intent);
+            Intent Email = new Intent(Intent.ACTION_SEND);
+            Email.setType("text/email");
+            Email.putExtra(Intent.EXTRA_EMAIL, new String[] { "mobile.appsupport@attra.com.au" });
+            Email.putExtra(Intent.EXTRA_SUBJECT, "Feedback");
+            Email.putExtra(Intent.EXTRA_TEXT, "Dear ...," + "");
+            startActivity(Intent.createChooser(Email, "Send Feedback:"));
+            return true;
+
+        } else if (id == R.id.nav_giveRating) {
+            Uri uri = Uri.parse("market://details?id=" + getApplicationContext().getPackageName());
+            Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+            // To count with Play market backstack, After pressing back button,
+            // to taken back to our application, we need to add following flags to intent.
+            goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
+                    Intent.FLAG_ACTIVITY_NEW_DOCUMENT |
+                    Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+            try {
+                startActivity(goToMarket);
+            } catch (ActivityNotFoundException e) {
+                startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("http://play.google.com/store/apps/details?id=" + getApplicationContext().getPackageName())));
+            }
 
         } else if (id == R.id.nav_about) {
             fragment = new AboutUsFragment();
@@ -389,9 +409,9 @@ public class DashboardActivity extends AppCompatActivity
             ((View) actionView.findViewById(R.id.textView)).setVisibility(View.GONE);
 
 
-            notificationList= new ArrayList<com.attra.attralive.model.Notification>();
-            Log.i("Network availabiltiy",""+isNetworkAvailable(getApplicationContext()));
-            if(isNetworkAvailable(getApplicationContext()) )
+            notificationList = new ArrayList<com.attra.attralive.model.Notification>();
+            Log.i("Network availabiltiy", "" + isNetworkAvailable(getApplicationContext()));
+            if (isNetworkAvailable(getApplicationContext()))
 
                 MyAppolloClient.getMyAppolloClient(myToken).query(
                         GetNotificationList.builder().userId(userId1)
@@ -413,11 +433,11 @@ public class DashboardActivity extends AppCompatActivity
                                                 myTextLayoutView.setText(Integer.toString(notificationSize));
 
                                                 for (GetNotificationList.Notification noti : response.data().getUserNotification_Q().notifications()) {
-                                                    com.attra.attralive.model.Notification noitification= new com.attra.attralive.model.Notification(noti.postType(), noti.postId(), noti.ownerId(), noti.action(), noti.userId(), noti.userName(), noti
-                                                            .time(), noti.postMessage(),noti.userImage(),noti.readStatus());
-                                                   notificationList.add(
-                                                           noitification);
-                                                          // new Notification(noti.postType(), "", "", "", noti.action(), "", noti.userName(), "", "Y"));
+                                                    com.attra.attralive.model.Notification noitification = new com.attra.attralive.model.Notification(noti.postType(), noti.postId(), noti.ownerId(), noti.action(), noti.userId(), noti.userName(), noti
+                                                            .time(), noti.postMessage(), noti.userImage(), noti.readStatus());
+                                                    notificationList.add(
+                                                            noitification);
+                                                    // new Notification(noti.postType(), "", "", "", noti.action(), "", noti.userName(), "", "Y"));
                                                     Log.i("notifications", noti.action());
                                                 }
                                             }
@@ -437,9 +457,9 @@ public class DashboardActivity extends AppCompatActivity
                             }
                         }
                 );
-            } else {
-                Toast.makeText(this, "Please check network connectivity", Toast.LENGTH_SHORT).show();
-            }
+        } else {
+            Toast.makeText(this, "Please check network connectivity", Toast.LENGTH_SHORT).show();
+        }
         if (mImageLayoutView != null) {
             mImageLayoutView.setOnClickListener(new View.OnClickListener() {
                 @Override

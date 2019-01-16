@@ -25,6 +25,7 @@ import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
 import com.attra.attralive.Service.MyAppolloClient;
 import com.attra.attralive.util.GetNewRefreshToken;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import javax.annotation.Nonnull;
 
@@ -63,8 +64,8 @@ public class LoginActivity extends AppCompatActivity {
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         loginPrefsEditor = loginPreferences.edit();
         saveLogin = loginPreferences.getBoolean("saveLogin", false);
-        // String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-//        Log.i("refresh token....",refreshedToken);
+         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        Log.i("refresh token....",refreshedToken);
         if (saveLogin == true) {
             etusername.setText(loginPreferences.getString("username", ""));
             userPassword.setText(loginPreferences.getString("password", ""));

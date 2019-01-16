@@ -1,111 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:paddingTop="26dp"
-    tools:context=".fragment.EventDetailsFragment"
-    >
+    tools:context=".fragment.EventDetailsFragment">
+
     <LinearLayout
+        android:id="@+id/ll_qrcode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:id="@+id/ll_qrcode">
+        android:visibility="gone">
+
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
             <TextView
-                android:layout_marginLeft="33dp"
                 android:id="@+id/tv_regid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="33dp"
 
-                android:paddingLeft="35dp"
-                android:paddingRight="34dp"
-                android:paddingTop="38dp"
                 android:layout_marginTop="0dp"
-                android:paddingBottom="37dp"
                 android:background="@drawable/blue_rectangle"
                 android:gravity="center"
+                android:paddingLeft="35dp"
+                android:paddingTop="38dp"
+                android:paddingRight="34dp"
+                android:paddingBottom="37dp"
                 android:text="@string/registrationid"
                 android:textColor="#fefefe"
                 android:textSize="12dp" />
+
             <ImageView
+                android:id="@+id/im_qrcode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="31dp"
+                android:layout_alignParentEnd="true"
                 android:layout_marginLeft="10dp"
-                android:paddingLeft="13dp"
-                android:paddingTop="14dp"
-                android:paddingBottom="14dp"
-                android:paddingRight="12dp"
-                android:src="@drawable/qrcode"
+                android:layout_marginRight="31dp"
                 android:layout_toRightOf="@+id/tv_regid"
                 android:background="@drawable/grey_rectangle"
-                android:layout_alignParentEnd="true"
-                android:id="@+id/im_qrcode"
-                />
+                android:paddingLeft="13dp"
+                android:paddingTop="14dp"
+                android:paddingRight="12dp"
+                android:paddingBottom="14dp"
+                android:src="@drawable/qrcode" />
 
         </RelativeLayout>
 
 
     </LinearLayout>
-<android.support.v7.widget.CardView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:cardCornerRadius="2dp"
-    android:layout_marginTop="20dp"
-    android:layout_marginLeft="33dp"
-    android:layout_marginRight="31dp">
-    <LinearLayout
+
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="33dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="31dp"
+        app:cardCornerRadius="2dp">
 
-        android:orientation="vertical"
-        >
-
-        <TextView
-            android:layout_marginLeft="44dp"
-            android:paddingTop="17dp"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="2"
-            android:drawablePadding="10dp"
-            android:drawableLeft="@drawable/ic_place_red_24dp"
-            android:text="@string/hello_blank_fragment"
-            android:paddingRight="17dp"
-            android:id="@+id/tv_eventvenue"/>
+
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_eventvenue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="44dp"
+                    android:drawableLeft="@drawable/ic_place_red_24dp"
+                    android:drawablePadding="10dp"
+                    android:maxLines="2"
+                    android:paddingTop="17dp"
+                    android:paddingRight="17dp"
+                    android:text="@string/hello_blank_fragment" />
+
+                <TextView
+                    android:id="@+id/tv_viewMap"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:paddingTop="17dp"
+                    android:text="@string/view_map"
+                    android:textColor="@color/lightBlue" />
+
+            </LinearLayout>
 
 
-    <TextView
-        android:layout_marginLeft="44dp"
-        android:paddingTop="17dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:maxLines="2"
-        android:drawablePadding="10dp"
-        android:drawableLeft="@drawable/ic_date_range_blue_24dp"
-        android:text="26 JAN,2019"
-        android:paddingRight="17dp"
-        android:id="@+id/tv_eventdate"/>
-    <TextView
-        android:layout_marginLeft="44dp"
-        android:paddingTop="17dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:maxLines="2"
-        android:drawablePadding="10dp"
-        android:drawableLeft="@drawable/ic_restore_black_24dp"
-        android:text="WED-05:00PM"
-        android:paddingRight="17dp"
-        android:paddingBottom="17dp"
-        android:id="@+id/tv_eventtime"
-        />
-    </LinearLayout>
-</android.support.v7.widget.CardView>
+            <TextView
+                android:id="@+id/tv_eventdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="44dp"
+                android:drawableLeft="@drawable/ic_date_range_blue_24dp"
+                android:drawablePadding="10dp"
+                android:maxLines="2"
+                android:paddingTop="17dp"
+                android:paddingRight="17dp"
+                android:text="26 JAN,2019" />
+
+            <TextView
+                android:id="@+id/tv_eventtime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="44dp"
+                android:drawableLeft="@drawable/ic_restore_black_24dp"
+                android:drawablePadding="10dp"
+                android:maxLines="2"
+                android:paddingTop="17dp"
+                android:paddingRight="17dp"
+                android:paddingBottom="17dp"
+                android:text="WED-05:00PM" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
     <!--<android.support.v7.widget.CardView
         android:id="@+id/crd_regbutton"
         android:layout_width="wrap_content"
@@ -178,18 +196,18 @@
         android:id="@+id/bt_regbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/lightBlue"
-        android:textColor="@color/white"
         android:layout_gravity="center"
-        android:padding="10dp"
-        android:gravity="center"
+        android:layout_marginTop="12dp"
         android:layout_marginRight="16dp"
+        android:background="@color/lightBlue"
+        android:gravity="center"
+        android:padding="10dp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        android:textSize="18sp"
-        android:text="@string/register"
         android:shadowColor="@color/shadowcolor"
+        android:text="@string/register"
         android:textAlignment="center"
-        android:layout_marginTop="12dp"/>
+        android:textColor="@color/white"
+        android:textSize="18sp" />
 
 </LinearLayout>

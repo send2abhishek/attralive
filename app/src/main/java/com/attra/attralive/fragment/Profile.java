@@ -128,7 +128,7 @@ public class Profile extends Fragment {
         submitdata.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent1 = new Intent(getContext(),EditProfile.class);
+                Intent intent1 = new Intent(getContext(), EditProfile.class);
                 startActivity(intent1);
             }
         });
@@ -597,10 +597,11 @@ public class Profile extends Fragment {
                            /* String message = response.data().getProfileDetails_Q().message();
                             String status = response.data().getProfileDetails_Q().status();*/
                                 if (status.equals("Success")) {
-                                    //String username = response.data().getProfileDetails_Q().name();
+                                    String username = response.data().getProfileDetails_Q().name();
+                                    Log.i("username", username);
                                     //  String emaiId = response.data().getProfileDetails_Q().email();
                                     final String password = "*********";
-                                    final String username = userName;
+                                    final String useNname = userName;
                                     String design = response.data().getProfileDetails_Q().designation();
                                     String phoneNo = response.data().getProfileDetails_Q().mobileNumber();
                                     String loc = response.data().getProfileDetails_Q().location();
@@ -614,8 +615,8 @@ public class Profile extends Fragment {
                                             Picasso.with(getActivity()).load(imgPath).fit().into(profilePic);
                                             userDesign.setText(design);
                                             //   Picasso.with(getActivity()).load(qrCodePath).fit().into(qrCode);
-                                            if (username != null) {
-                                                username_view.setText(username);
+                                            if (useNname != null) {
+                                                username_view.setText(useNname);
                                             }
                                             if (password != null) {
                                                 password_view.setText(password);
