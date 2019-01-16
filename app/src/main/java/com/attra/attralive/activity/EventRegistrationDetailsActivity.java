@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
@@ -22,7 +23,6 @@ import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
 import com.attra.attralive.Service.MyAppolloClient;
-import com.attra.attralive.fragment.EventDetailsFragment;
 import com.attra.attralive.fragment.EventRegisteredDetailsFragment;
 import com.attra.attralive.fragment.FAQFragment;
 import com.attra.attralive.util.GetNewRefreshToken;
@@ -42,6 +42,7 @@ public class EventRegistrationDetailsActivity extends AppCompatActivity {
     private final List<Fragment> mFragmentList = new ArrayList<>();
     private final List<String> mFragmentTitleList = new ArrayList<>();
     ViewPagerAdapter adapter;
+    TextView viewMap;
     EventRegisteredDetailsFragment fragment;
     FAQFragment faqFragment;
     Intent intent;
@@ -63,6 +64,13 @@ public class EventRegistrationDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Attraction 2019");
         intent=getIntent();
         location=intent.getStringExtra("location");
+        viewMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),MapsActivity.class);
+                startActivity(intent);
+            }
+        });
 //       Toast.makeText(getApplicationContext(),intent.getStringExtra("location").toString(),Toast.LENGTH_LONG).show();
        /* getEventDetails();*/
        // setupViewPager(viewPager);
@@ -118,6 +126,7 @@ public class EventRegistrationDetailsActivity extends AppCompatActivity {
             enddate = response.data().getEventDetails_Q().eventD().get(0).Schedule().end_date();
             endtime = response.data().getEventDetails_Q().eventD().get(0).Schedule().end_time();
             eventId = response.data().getEventDetails_Q().eventD().get(0).id();
+
             int count=response.data().getEventDetails_Q().eventD().get(0).registeredUsers().size();
                 for (int i = 0; i < count; i++) {
                     reguserId = response.data().getEventDetails_Q().eventD().get(0).registeredUsers().get(i).userId();

@@ -1,5 +1,6 @@
 package com.attra.attralive.fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,6 +21,7 @@ import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
 import com.attra.attralive.Service.MyAppolloClient;
 import com.attra.attralive.activity.EventRegistrationDetailsActivity;
+import com.attra.attralive.activity.MapsActivity;
 import com.attra.attralive.util.GetNewRefreshToken;
 import com.squareup.picasso.Picasso;
 
@@ -62,6 +64,16 @@ public class EventRegisteredDetailsFragment extends Fragment {
         qrcode=view.findViewById(R.id.im_qrcode);
         linearLayout=view.findViewById(R.id.ll_qrcode);
         System.out.println("fragment");
+
+        eventvenue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity().getApplication(),MapsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
         sharedPreferences = getActivity().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
             myToken = sharedPreferences.getString("authToken", "");

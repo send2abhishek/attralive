@@ -184,7 +184,7 @@ public class PasswordRecover extends AppCompatActivity {
                                 if (status.equals("Success")) {
                                     progressdialog.dismiss();
                                     Toast.makeText(PasswordRecover.this, "Password Successfully Changed", Toast.LENGTH_LONG).show();
-                                    Intent i=new Intent(PasswordRecover.this,PasswordRecover.class);
+                                    Intent i=new Intent(PasswordRecover.this,LoginActivity.class);
                                     startActivity(i);
                                 } else if ((status.equals("Failure"))) {
                                     if (message.equals("Invalid OTP")) {

@@ -14,7 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -22,13 +21,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
-import com.apollographql.apollo.ApolloClient;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
@@ -75,20 +71,11 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 public class UserDetailsActivity extends AppCompatActivity {
     MaterialSpinner location, bu;
     Button continueBtn;
-
-    TextView dob;
     List<String> buList = new ArrayList<String>();
     List<String> locationList = new ArrayList<String>();
-    private RadioGroup radioGroup;
-    private RadioButton radioButton;
-
     ApiService apiService;
 
     OkHttpClient client;
-
-
-    Fragment fragment = null;
-
 
     Uri picUri;
     private ArrayList<String> permissionsToRequest;
@@ -97,22 +84,12 @@ public class UserDetailsActivity extends AppCompatActivity {
     private final static int ALL_PERMISSIONS_RESULT = 107;
     private final static int IMAGE_RESULT = 200;
 
+    String status, message, path, myToken, username, userId, userBu, designation, workLoc, mobile, employeeId;
 
-    EditText postDescription;
-
-    String status, message, path, description, myToken, username, userId;
-    ImageView uploadimage;
-
-    ImageView fabCamera, capturedImage, upload;
+    ImageView upload;
     Bitmap mBitmap;
-    TextView successMsg, Description;
-    Button post;
-
-
-    String emailId, password, userBu, designation, workLoc, mobile, employeeId;
     EditText empId, phNo, userDesign;
-    String buValue, userName;
-    private static ApolloClient apolloClient;
+    String userName;
 
     private SharedPreferences sharedPreferences;
 
@@ -336,7 +313,7 @@ public class UserDetailsActivity extends AppCompatActivity {
         Log.i("initRetrofitClient", "initRetrofitClient");
         client = new OkHttpClient.Builder().build();
 
-        apiService = new Retrofit.Builder().baseUrl("http://10.200.44.25:4001").client(client).build().create(ApiService.class);
+        apiService = new Retrofit.Builder().baseUrl("http://13.232.225.201:80").client(client).build().create(ApiService.class);
     }
 
     @Override
@@ -441,11 +418,9 @@ public class UserDetailsActivity extends AppCompatActivity {
             fos.flush();
             fos.close();
 
-
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
             MultipartBody.Part body = MultipartBody.Part.createFormData("imageFile", file.getName(), reqFile);
             Log.i("file.getName()", file.getName());
-
 
             RequestBody newuserId = createPartFromString(userId);
             RequestBody type = createPartFromString("profilePicture");
@@ -500,7 +475,6 @@ public class UserDetailsActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     private RequestBody createPartFromString(String data) {
@@ -527,11 +501,11 @@ public class UserDetailsActivity extends AppCompatActivity {
                             subscribeToTopic(workLoc);
                             subscribeToTopic("Attra");
                             Log.d("res_message in User", message);
-                            sharedPreferences = getApplicationContext().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, 0);
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString("location", workLoc);
-                            editor.putString("profileImagePath", path);
-                            editor.commit();
+//                            sharedPreferences = getApplicationContext().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, 0);
+//                            SharedPreferences.Editor editor = sharedPreferences.edit();
+//                            editor.putString("location", workLoc);
+//                            editor.putString("profileImagePath", path);
+//                            editor.commit();
                             Intent intent1 = new Intent(getApplicationContext(), DashboardActivity.class);
                             startActivity(intent1);
                         } else if (status.equals("Failure")) {
