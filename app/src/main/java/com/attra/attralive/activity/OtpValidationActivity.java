@@ -72,7 +72,8 @@ public class OtpValidationActivity extends AppCompatActivity {
             Log.i("email id", emailId);
         }
         getusername=emailId.split("\\@");
-        userName=getusername[0].replace(".","");
+        userName=getusername[0].replace("."," ");
+        userName=userName.substring(0,1).toUpperCase()+userName.substring(1);
 
         validateOTP = findViewById(R.id.validate);
         motpNumber1 = (EditText) findViewById(R.id.otp_num1);

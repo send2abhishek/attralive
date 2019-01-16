@@ -68,25 +68,20 @@ public class HomeFragment extends Fragment {
     boolean like = false;
     ImageView descImage;
     ArrayList<String> Number;
-    /*OkHttpClient client=new OkHttpClient();
-    Picasso picasso = new Picasso.Builder(getActivity())
-            .downloader(new OkHttp3Downloader(client))
-            .build();*/
+
     String refreshToken,myToken,accesstoken,postId,location,profileimagepath;
 
     SharedPreferences sharedPreferences;
 
     ViewPager viewPager;
 
-    String images[] = {"https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png","https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png","https://dsd8ltrb0t82s.cloudfront.net/EventsQRCodes/Att_5c2353c4daea021e34431842.png"};
+    ArrayList<String> images;
 
-    //String[] images= new String[1];
-    //String images[] = {"https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png","https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png"};
     SliderAdapter myCustomPagerAdapter;
 
     private static int currentPage = 0;
     String userId1,username;
-
+String status;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -119,6 +114,7 @@ public class HomeFragment extends Fragment {
         newsFeed = view.findViewById(R.id.rv_newsFeed);
         newsFeedArrayList = new ArrayList<NewsFeed>();
         Number = new ArrayList<>();
+        images=new ArrayList<>();
         linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         GetEventWidgetsFromService();
         prepareNewsfeed(myToken);
@@ -128,8 +124,6 @@ public class HomeFragment extends Fragment {
         newsFeed.setLayoutManager(linearLayoutManager);
         newsFeed.setAdapter(newsFeedListAdapter);
         viewPager = view.findViewById(R.id.viewPager);
-        myCustomPagerAdapter = new SliderAdapter(getActivity(), images);
-        viewPager.setAdapter(myCustomPagerAdapter);
         autoScroll();
         ImageView imageView = view.findViewById(R.id.imageView);
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.blogreadimage);
@@ -141,10 +135,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
         return view;
-
-
     }
 
     public class VerticalSpaceItemDecoration extends RecyclerView.ItemDecoration {
@@ -166,26 +157,23 @@ public class HomeFragment extends Fragment {
     {
         System.out.println("Inside GetEvent method");
         MyAppolloClient.getMyAppolloClient(myToken).query(
-                GetEventWidgets.builder().status("A").location(location).build()).enqueue(
+                GetEventWidgets.builder().status("A").location("bangalore").build()).enqueue(
                 new ApolloCall.Callback<GetEventWidgets.Data>() {
                     @Override
                     public void onResponse(@Nonnull Response<GetEventWidgets.Data> response) {
-                        Log.i("Inside getevent ","inside response method");
+                        status=response.data().getEventWidget_Q().status();
+                        System.out.println("Inside getevent "+status);
                         String eventWidgetPath = "";
-                        //System.out.println("gg"+response.data().getEventWidget_Q().status());
-                        // System.out.println("WW "+response.data().getEventWidget_Q().widget().get(0).event_widget_path());
-                        //images[0] = eventWidgetPath;
-                        // System.out.println("This is image"+images[0]);
-                        if(response.data().getEventWidget_Q().status().equals("Success"))
+
+                        if(status.equals("Success"))
 
                         {
                             for(int i =0;i<response.data().getEventWidget_Q().widget().size();i++)
                             {
 
-                                String eventId = response.data().getEventWidget_Q().widget().get(0).event_id();
-                                eventWidgetPath = response.data().getEventWidget_Q().widget().get(0).event_widget_path();
-
-                                images[i] = eventWidgetPath;
+                                String eventId = response.data().getEventWidget_Q().widget().get(i).event_id();
+                                eventWidgetPath = response.data().getEventWidget_Q().widget().get(i).event_widget_path();
+                                images.add(eventWidgetPath);
 
                             }
 
@@ -195,6 +183,7 @@ public class HomeFragment extends Fragment {
                             public void run() {
                                 myCustomPagerAdapter = new SliderAdapter(getActivity(), images);
                                 viewPager.setAdapter(myCustomPagerAdapter);
+                               // myCustomPagerAdapter.notifyDataSetChanged();
 
                             }
                         });
@@ -355,7 +344,7 @@ like=false;
     public void autoScroll(){
         final Handler handler = new Handler();
         final Runnable Update = () -> {
-            if (currentPage == images.length) {
+            if (currentPage == images.size()) {
                 currentPage = 0;
             }
             viewPager.setCurrentItem(currentPage++, true);

@@ -1,5 +1,5 @@
 query getEventWidgets
-($status:String!,$Location:String!)
+($status:String!,$location:String!)
 {
 getEventWidget_Q(status:$status,Location:$location) {
 status
@@ -9,6 +9,5 @@ status
  event_widget_path
  event_id
  }
-
- }
+}
 }

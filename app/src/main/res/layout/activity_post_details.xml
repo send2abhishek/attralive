@@ -263,13 +263,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_alignParentBottom="true">
-        <View
+        <!--<View
 
             android:id="@+id/line1"
             android:layout_width="fill_parent"
             android:layout_height="2dp"
             android:background="#c0c0c0"
-            />
+            />-->
         <LinearLayout
             android:background="#fff"
             android:paddingTop="10dp"
@@ -281,20 +281,21 @@
             android:paddingLeft="5dp"
             >
             <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:src="@drawable/ic_behance"
                 android:layout_gravity="center"
                 android:id="@+id/im_commentProfilePic"
                 />
             <EditText
-                android:paddingLeft="3dp"
+                android:paddingLeft="5dp"
                 android:layout_width="0dp"
                 android:layout_weight="8"
                 android:layout_height="wrap_content"
-                android:hint="Add Comments"
+                android:hint="@string/add_comments"
                 android:textSize="15sp"
                 android:id="@+id/et_Comment"
+                android:background="@android:color/transparent"
                 />
             <Button
                 android:layout_width="0dp"

@@ -78,6 +78,8 @@ public class EventRegistrationDetailsActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "refr" + refreshToken, Toast.LENGTH_LONG).show();
             userId = sharedPreferences.getString("userId", "");
             name = sharedPreferences.getString("userName", "");
+            userId = sharedPreferences.getString("userId", "");
+            name = sharedPreferences.getString("userName", "");
             Log.i("user id in userDtail", userId);
             Log.i("refresh id in userDtail", refreshToken);
             Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
@@ -100,7 +102,7 @@ public class EventRegistrationDetailsActivity extends AppCompatActivity {
     private void getEventDetails(String accesstoken)
 {
     MyAppolloClient.getMyAppolloClient(accesstoken).
-            query(GetEventDetails.builder().status("A").location("Bangalore").build()).enqueue(new ApolloCall.Callback<GetEventDetails.Data>() {
+            query(GetEventDetails.builder().status("A").location("Bangalore").userId(userId).build()).enqueue(new ApolloCall.Callback<GetEventDetails.Data>() {
         @Override
         public void onResponse(@Nonnull Response<GetEventDetails.Data> response) {
             if(response.data().getEventDetails_Q().eventD()!=null){

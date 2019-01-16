@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import javax.annotation.Nonnull;
 
 import graphqlandroid.GetPostDetails;
+import graphqlandroid.GetRefreshToken;
 import graphqlandroid.LikePost;
 import graphqlandroid.PostComments;
 
@@ -54,6 +55,7 @@ SharedPreferences sharedPreferences;
 String myToken,username,userId,refreshToken;
 Button post;
 Boolean isLiked=false;
+String status,message;
 AllPostLikes allPostLikes;
 AllComments allComments;
 String postIdinput;
@@ -105,6 +107,7 @@ String worklocation,profileimage,noficimage;
         rvcomments.setLayoutManager(linearLayoutManager1);
         rvcomments.setAdapter(postCommentsAdapter);
         likedUserAdapter = new LikedUserAdapter(PostDetailsActivity.this, allpostlikeslist);
+       // likes.addItemDecoration(new LinePagerIndicatorDecoration());
         likes.setLayoutManager(linearLayoutManager2);
         likes.setAdapter(likedUserAdapter);
         sharedPreferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
@@ -117,6 +120,7 @@ String worklocation,profileimage,noficimage;
             worklocation=sharedPreferences.getString("location","");
             profileimage=sharedPreferences.getString("profileImagePath","");
         }
+        System.out.println("profileimagepath"+profileimage);
        getPostDetails(myToken);
 likeimage.setOnClickListener(new View.OnClickListener() {
     @Override
@@ -141,15 +145,15 @@ likeimage.setOnClickListener(new View.OnClickListener() {
    post.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View v) {
-        allComments = new AllComments(username, addcomments.getText().toString(), worklocation, profileimage, "just now");
+        allComments = new AllComments(username, addcomments.getText().toString(), worklocation, "https://dsd8ltrb0t82s.cloudfront.net/ProfilePictures/1547467278816-image.jpeg", "just now");
         allpostcomments.add(allComments);
         postCommentsAdapter.notifyDataSetChanged();
         callPostComments(myToken);
         addcomments.setText("");
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        //imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         v.setVisibility(View.GONE);
-
     }
 });
 
@@ -177,8 +181,8 @@ likeimage.setOnClickListener(new View.OnClickListener() {
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if(itemId == android.R.id.home){
-          finish();
-          startActivity(getIntent());
+Intent intent=new Intent(PostDetailsActivity.this,DashboardActivity.class);
+startActivity(intent);
         }
         return true;
 
@@ -247,8 +251,11 @@ likeimage.setOnClickListener(new View.OnClickListener() {
         MyAppolloClient.getMyAppolloClient(accesstoken).query(GetPostDetails.builder().postId(postIdinput).build()).enqueue(new ApolloCall.Callback<GetPostDetails.Data>() {
             @Override
             public void onResponse(@Nonnull Response<GetPostDetails.Data> response) {
-                System.out.println("hhh"+response.data().getPostDetails_Q().postDetails().get(0).commentsCount());
+                status=response.data().getPostDetails_Q().status();
+                message=response.data().getPostDetails_Q().message();
+               // System.out.println("hhh"+response.data().getPostDetails_Q().postDetails().get(0).commentsCount());
                 if (response.data().getPostDetails_Q() != null) {
+                    if(status.equals("Success")){
                     postId = response.data().getPostDetails_Q().postDetails().get(0).postId();
                     postuserId = response.data().getPostDetails_Q().postDetails().get(0).userId();
                     location = response.data().getPostDetails_Q().postDetails().get(0).location();
@@ -269,12 +276,10 @@ likeimage.setOnClickListener(new View.OnClickListener() {
                             commentMsg = response.data().getPostDetails_Q().postDetails().get(0).comments().get(i).commentMsg();
                             allComments = new AllComments(commentedUserName, commentMsg, commentedUserLocation, commentedUserProfilePath, commentedTimeago);
                             allpostcomments.add(allComments);
-
                         }
                     }
                     if (response.data().getPostDetails_Q().postDetails().get(0).likes().size() > 0) {
                         for (int k = 0; k < response.data().getPostDetails_Q().postDetails().get(0).likes().size(); k++) {
-
                             likedUserId = response.data().getPostDetails_Q().postDetails().get(0).likes().get(k).likedUserId();
                             likedUserProfilePath = response.data().getPostDetails_Q().postDetails().get(0).likes().get(k).likedUserProfilePath();
                             if (userId.equals(likedUserId)) {
@@ -309,6 +314,13 @@ likeimage.setOnClickListener(new View.OnClickListener() {
                             likedUserAdapter.notifyDataSetChanged();
                         }
                     });
+                       // callRefreshToken(refreshToken);
+                }
+        if(status.equals("Failure") && message.equals("Invalid token: access token is invalid"))
+            {
+                Log.d("refreshtokengetrefresh",refreshToken);
+                callRefreshToken(refreshToken);
+            }
 
                 }
             }
@@ -318,5 +330,51 @@ likeimage.setOnClickListener(new View.OnClickListener() {
 
             }
         });
+    }
+    private void callRefreshToken(String refreshToken)
+    {
+        MyAppolloClient.getMyAppolloClient(GetNewRefreshToken.Authorization).query(
+                GetRefreshToken.builder().refreshToken(refreshToken).grant_type("refresh_token")
+                        .build()).enqueue(
+                new ApolloCall.Callback<GetRefreshToken.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<GetRefreshToken.Data> response) {
+                        String message = response.data().getRefreshToken_Q().message();
+                        String status = response.data().getRefreshToken_Q().status();
+                        if(status.equals("Success")){
+                            String accessToken= response.data().getRefreshToken_Q().accessToken();
+                            String tokenExpiry = response.data().getRefreshToken_Q().accessTokenExpiresAt();
+                            String newRefreshToken = response.data().getRefreshToken_Q().RefreshToken();
+                            String refreshTokenExpiry = response.data().getRefreshToken_Q().accessTokenExpiresAt();
+                            String user = response.data().getRefreshToken_Q().user();
+                            String userName = response.data().getRefreshToken_Q().name();
+                            Log.i("access Token",accessToken);
+                            String authToken="Bearer"+" "+accessToken;
+                            Log.i("brarer token",authToken);
+                            SharedPreferences  preferences = getApplicationContext().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, 0);
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString("authToken",authToken);
+                            editor.putString("refreshToken",newRefreshToken);
+                            editor.commit();
+                            PostDetailsActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    sharedPreferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
+                                    if (sharedPreferences.contains("authToken")) {
+                                        String myToken = sharedPreferences.getString("authToken", "");
+                                        getPostDetails(myToken);
+                                        //Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
+
+                                    }
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+                    }
+                }
+        );
     }
 }

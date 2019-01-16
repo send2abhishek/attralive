@@ -28,8 +28,6 @@ public class SplashScreen extends AppCompatActivity {
     private static int splashTimeOut = 3500;
     TextView tv_attralive;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

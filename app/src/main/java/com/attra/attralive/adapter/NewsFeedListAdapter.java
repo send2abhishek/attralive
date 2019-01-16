@@ -154,7 +154,7 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
             public void onClick(View view) {
 
                 String postid = newsFeed.getPostId();
-                String likedUserId = newsFeed.getUserid();
+                String postedUserId = newsFeed.getUserid();
 
 
 
@@ -187,9 +187,9 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
                 });
                 //displaying the popup
                 Log.i("loggeduserId",userId);
-                Log.i("likeduserID",likedUserId);
+                Log.i("likeduserID",postedUserId);
 
-                if(userId.equals(likedUserId))
+                if(userId.equals(postedUserId))
                 {
                     popup.show();
                 }

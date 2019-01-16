@@ -221,7 +221,8 @@ public class LoginActivity extends AppCompatActivity {
                         authToken = "Bearer" + " " + accessToken;
                         //refreshToken="Bearer"+" "+RefreshToken;
                         Log.i("brarer token", authToken);
-                        userName=username.replace(".","");
+                        userName=username.replace("."," ");
+                        userName=userName.substring(0,1).toUpperCase()+userName.substring(1);
                         Log.d("name",userName);
                         Log.d("username",username);
                     }

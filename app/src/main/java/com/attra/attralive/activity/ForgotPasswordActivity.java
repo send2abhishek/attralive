@@ -68,7 +68,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                     progressdialog.show();
                     Log.i("Forgot password click", email);
 
-                    MyAppolloClient.getMyAppolloClient("").mutate(ForgotPassword.builder().email(emailId.getText().toString()).build()).enqueue(new ApolloCall.Callback<ForgotPassword.Data>() {
+                    MyAppolloClient.getMyAppolloClient(" ").mutate(ForgotPassword.builder().email(emailId.getText().toString()).build()).enqueue(new ApolloCall.Callback<ForgotPassword.Data>() {
                         @Override
                         public void onResponse(@Nonnull Response<ForgotPassword.Data> response) {
                             String status = response.data().forgotPassword_M().status();

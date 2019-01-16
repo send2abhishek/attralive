@@ -70,7 +70,8 @@
 
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
-
+<!-- Post Details Page-->
+    <string name="add_comments">Add Comments</string>
     <!--Notification String-->
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
     <string name="default_notification_channel_name" translatable="true">Weather</string>
@@ -81,9 +82,9 @@
     <string name="notifications">Notifications</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    //Event screen
+    <!--Event screen-->
     <string name="register">REGISTER</string>
-    //Login Screen
+    <!--Login Screen-->
     <string name="welcome">Hi! Welcome to</string>
     <string name="attra">Attra</string>
     <string name="live">LIVE</string>
@@ -98,7 +99,7 @@
     <string name="passworderror_text">Password can not be empty</string>
     <string name="save">Save</string>
 
-    //Registration Screen
+    <!--Registration Screen-->
     <string name="signup_text">SIGN UP!</string>
     <string name="fullname_text">FULL NAME</string>
     <string name="regemail_text">EMAIL</string>

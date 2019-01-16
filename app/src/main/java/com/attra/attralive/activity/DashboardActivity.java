@@ -150,18 +150,12 @@ public class DashboardActivity extends AppCompatActivity
         if (sharedPreferences.contains("authToken")) {
             myToken = sharedPreferences.getString("authToken", "");
             userId1 = sharedPreferences.getString("userId", "");
-
             username = sharedPreferences.getString("userName","");
             refreshToken=sharedPreferences.getString("refreshToken","");
-      //      Toast.makeText(getApplicationContext(), userId, Toast.LENGTH_LONG).show();
             Log.i("token in dashboard",myToken);
             Log.i("user id in dashboard",userId1);
             Log.i("user name in dashboard",username);
-
-
             userName.setText(username);
-
-
         }
         getProfileDetail(myToken);
     }
@@ -178,7 +172,6 @@ public class DashboardActivity extends AppCompatActivity
         // by doing this, the activity will be notified each time a new message arrives
         LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
                 new IntentFilter(Config.PUSH_NOTIFICATION));
-
         // clear the notification area when the app is opened
         NotificationUtils.clearNotifications(getApplicationContext());
     }
@@ -231,6 +224,12 @@ public class DashboardActivity extends AppCompatActivity
                                     String username = response.data().getProfileDetails_Q().name();
                                     String emaiId = response.data().getProfileDetails_Q().email();
                                     String imgPath = response.data().getProfileDetails_Q().profileImagePath();
+                                    String location=response.data().getProfileDetails_Q().location();
+                                    sharedPreferences = getApplicationContext().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, 0);
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.putString("location", location);
+                                    editor.putString("profileImagePath", imgPath);
+                                    editor.commit();
                                     Log.i("profile image path", imgPath);
                                     Log.i("username in dashbard", username);
                                     DashboardActivity.this.runOnUiThread(new Runnable() {

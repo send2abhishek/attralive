@@ -150,19 +150,14 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
        tvlocation=findViewById(R.id.tv_title);
        imageView = findViewById(R.id.img_userImage);
 
-       Picasso.with(NewsFeedPostActivity.this)
+      Picasso.with(NewsFeedPostActivity.this)
                .load(profileimage).
                memoryPolicy(MemoryPolicy.NO_CACHE)
                .into(imageView);
 
        Etusername.setText(username);
        tvlocation.setText(worklocation);
-
-
-
         System.out.println(username);
-
-
         postDescription = findViewById(R.id.descText);
        // capturedImage = findViewById(R.id.capturedImage);
         fabCamera = findViewById(R.id.openCameraOptions);
@@ -241,7 +236,7 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
     private void initRetrofitClient() {
 client         = new OkHttpClient.Builder().build();
 
-        apiService = new Retrofit.Builder().baseUrl("http://13.232.225.201:80").client(client).build().create(ApiService.class);
+        apiService = new Retrofit.Builder().baseUrl("http://10.200.44.25:4001").client(client).build().create(ApiService.class);
     }
 
     public Intent CallGetVideoMethod()
