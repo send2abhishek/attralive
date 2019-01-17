@@ -26,7 +26,7 @@ import java.util.ArrayList;
 
 public class SliderAdapter extends PagerAdapter {
     Context context;
-    String images[];
+    ArrayList<String> images;
     LayoutInflater layoutInflater;
     int image;
     VideoView mVideoView;
@@ -56,7 +56,7 @@ public class SliderAdapter extends PagerAdapter {
 
     // Tag for the instance state bundle.
     private static final String PLAYBACK_TIME = "play_time";
-    public SliderAdapter(Context context, String images[]) {
+    public SliderAdapter(Context context, ArrayList<String> images) {
         this.context = context;
         this.images = images;
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -64,7 +64,7 @@ public class SliderAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return images.length;
+        return images.size();
     }
 
     @Override
@@ -89,7 +89,7 @@ public class SliderAdapter extends PagerAdapter {
 //        else
 //        {
             Picasso.with(context)
-                    .load(images[position])
+                    .load(images.get(position))
                     .into(imageView);
        // }
         container.addView(itemView);

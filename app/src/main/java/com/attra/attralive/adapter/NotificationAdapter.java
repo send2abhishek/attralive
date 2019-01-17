@@ -49,7 +49,7 @@ public class NotificationAdapter extends  RecyclerView.Adapter<NotificationAdapt
     @Override
     public void onBindViewHolder(@NonNull productViewHolder productViewHolder, int i) {
         Notification notification = notiList.get(i);
-        String str = "<b>"+notification.getUserName()+"</b> has"+notification.getAction()+"on your post";
+        String str = "<b>"+notification.getUserName()+"</b> has "+notification.getAction()+" on your post";
         productViewHolder.textViewTitle.setText(Html.fromHtml(str));
         productViewHolder.textViewShortDesc.setText(notification.getTime());
         productViewHolder.textpostID.setText(notification.getPostId());

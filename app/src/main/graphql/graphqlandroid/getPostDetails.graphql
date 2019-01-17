@@ -2,6 +2,8 @@ query getPostDetails($postId:String!)
 {
   getPostDetails_Q(postId:$postId)
   {
+  status
+      message
     postDetails
     {
       postId
