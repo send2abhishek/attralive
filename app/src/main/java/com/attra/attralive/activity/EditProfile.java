@@ -114,15 +114,13 @@ public class EditProfile extends AppCompatActivity {
         changePassword = findViewById(R.id.changePassword);
         cancelButton = findViewById(R.id.cancelBtn);
         welcomeUserName = findViewById(R.id.WelcomeUserName);
-
         /*getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
         getSupportActionBar().setTitle(R.string.update_profile);
-
         sharedPreferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
-        if (sharedPreferences.contains("authToken")) {
+        if (sharedPreferences.contains("authToken"))
+        {
             Toast.makeText(this, "Shared pref val " + "sharedPreferences.getString(\"authToken\", \"\")", Toast.LENGTH_SHORT).show();
             myToken = sharedPreferences.getString("authToken", "");
-
             userId = sharedPreferences.getString("userId", "");
             userName = sharedPreferences.getString("userName", "");
             Log.i("user id in userDtail", userId);
@@ -492,7 +490,7 @@ public class EditProfile extends AppCompatActivity {
         Log.i("initRetrofitClient", "initRetrofitClient");
         client = new OkHttpClient.Builder().build();
 
-        apiService = new Retrofit.Builder().baseUrl("http://13.232.225.201:80").client(client).build().create(ApiService.class);
+        apiService = new Retrofit.Builder().baseUrl("http://10.200.42.46:4001").client(client).build().create(ApiService.class);
     }
 
     //    public Intent getPickImageChooserIntent() {

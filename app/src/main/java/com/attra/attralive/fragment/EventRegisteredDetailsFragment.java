@@ -43,7 +43,7 @@ public class EventRegisteredDetailsFragment extends Fragment {
 
     String eventtitle,venue,startdate,enddate,starttime,endtime,description,status,message,eventId;
     Boolean isRegistered;
-    TextView eventvenue,eventdate,eventtime;
+    TextView eventvenue,eventdate,eventtime,map;
     Button register;
     TextView regdetails;
     ImageView qrcode;
@@ -62,18 +62,16 @@ public class EventRegisteredDetailsFragment extends Fragment {
         register=view.findViewById(R.id.bt_regbutton);
         regdetails=view.findViewById(R.id.tv_regid);
         qrcode=view.findViewById(R.id.im_qrcode);
+        map = view.findViewById(R.id.tv_viewMap);
         linearLayout=view.findViewById(R.id.ll_qrcode);
         System.out.println("fragment");
-
-        eventvenue.setOnClickListener(new View.OnClickListener() {
+        map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity().getApplication(),MapsActivity.class);
                 startActivity(intent);
             }
         });
-
-
         sharedPreferences = getActivity().getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
             myToken = sharedPreferences.getString("authToken", "");

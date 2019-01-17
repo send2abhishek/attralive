@@ -313,7 +313,7 @@ public class UserDetailsActivity extends AppCompatActivity {
         Log.i("initRetrofitClient", "initRetrofitClient");
         client = new OkHttpClient.Builder().build();
 
-        apiService = new Retrofit.Builder().baseUrl("http://13.232.225.201:80").client(client).build().create(ApiService.class);
+        apiService = new Retrofit.Builder().baseUrl("http://10.200.42.46:4001").client(client).build().create(ApiService.class);
     }
 
     @Override

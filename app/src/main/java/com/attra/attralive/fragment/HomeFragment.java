@@ -148,10 +148,7 @@ public class HomeFragment extends Fragment {
                         status=response.data().getEventWidget_Q().status();
                         System.out.println("Inside getevent "+status);
                         String eventWidgetPath = "";
-
                         if(status.equals("Success"))
-
-
                         {
                             for (int i = 0; i < response.data().getEventWidget_Q().widget().size(); i++) {
 

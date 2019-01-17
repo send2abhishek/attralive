@@ -40,6 +40,7 @@ public class RegistrationActivity extends AppCompatActivity {
     String status,message;
     String numRegex   = ".*[0-9].*";
     String alphaRegex = ".*[a-zA-Z].*";
+    String passwordcomplexity="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$";
     private CheckBox mi_agree;
     @SuppressLint("ResourceAsColor")
     @Override
@@ -142,8 +143,9 @@ public class RegistrationActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!((password.getText().toString().trim().matches(numRegex))&&
-                        ( password.getText().toString().trim().matches(alphaRegex))) ) {
+                if (!( password.getText().toString().trim().matches(passwordcomplexity)) ) {
+                    //(password.getText().toString().trim().matches(numRegex))&&
+                    //                        ( password.getText().toString().trim().matches(alphaRegex))&&
                     // passworderror.setText("");
                     passworderror.setTextColor(getResources().getColor(R.color.redcolor));
                     passworderror.setText("Password should contain alphanumeric");

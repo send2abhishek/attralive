@@ -64,13 +64,13 @@ public class EventRegistrationDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Attraction 2019");
         intent=getIntent();
         location=intent.getStringExtra("location");
-        viewMap.setOnClickListener(new View.OnClickListener() {
+        /*viewMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(),MapsActivity.class);
                 startActivity(intent);
             }
-        });
+        });*/
 //       Toast.makeText(getApplicationContext(),intent.getStringExtra("location").toString(),Toast.LENGTH_LONG).show();
        /* getEventDetails();*/
        // setupViewPager(viewPager);

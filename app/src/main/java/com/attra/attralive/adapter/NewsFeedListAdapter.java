@@ -156,9 +156,6 @@ public class NewsFeedListAdapter extends RecyclerView.Adapter<NewsFeedListAdapte
                 String postid = newsFeed.getPostId();
                 String postedUserId = newsFeed.getUserid();
 
-
-
-
                 //creating a popup menu
                 PopupMenu popup = new PopupMenu(mcontext,view);
                 //inflating menu from xml resource

@@ -74,7 +74,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
 <!-- Post Details Page-->
-    <string name="add_comments">Add Comments</string>
+    <string name="add_comments">Leave Your Comments Here</string>
     <!--Notification String-->
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
     <string name="default_notification_channel_name" translatable="true">Weather</string>
