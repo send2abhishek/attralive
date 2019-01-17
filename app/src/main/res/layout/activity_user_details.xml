@@ -125,7 +125,7 @@
                     app:ms_floatingLabelText="Work Location"
                     app:ms_hint="Select Location"
                     app:ms_multiline="false"
-                    app:ms_thickness="0.5dp" />
+                    app:ms_thickness="0.3dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -150,7 +150,7 @@
                     app:ms_floatingLabelText=" BU"
                     app:ms_hint="Select BU"
                     app:ms_multiline="false"
-                    app:ms_thickness="0.5dp" />
+                    app:ms_thickness="0.3dp" />
             </LinearLayout>
 
             <LinearLayout
