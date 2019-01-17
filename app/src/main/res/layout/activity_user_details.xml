@@ -96,8 +96,6 @@
                         android:hint="Employee ID"
                         android:lineHeight="17sp"
                         android:textColorHint="#949c97"
-                        android:inputType="number"
-                        android:maxLength="6"
                         android:maxLines="1"
                         android:textSize="14sp"
                         app:hintEnabled="false" />
@@ -179,8 +177,6 @@
                         android:hint="Phone"
                         android:maxLines="1"
                         android:lineHeight="17sp"
-                        android:maxLength="13"
-                        android:minLines="10"
                         android:inputType="phone"
                         android:textColorHint="#949c97"
                         android:textSize="14sp" />
