@@ -74,7 +74,7 @@ public class UserDetailsActivity extends AppCompatActivity {
     List<String> buList = new ArrayList<String>();
     List<String> locationList = new ArrayList<String>();
     ApiService apiService;
-
+    TextView welcomeUserName;
     OkHttpClient client;
 
     Uri picUri;
@@ -84,11 +84,11 @@ public class UserDetailsActivity extends AppCompatActivity {
     private final static int ALL_PERMISSIONS_RESULT = 107;
     private final static int IMAGE_RESULT = 200;
 
-    String status, message, path, myToken, username, userId, userBu, designation, workLoc, mobile, employeeId;
+    String status, message, path, myToken, username, userId, userBu, workLoc, mobile, employeeId;
 
     ImageView upload;
     Bitmap mBitmap;
-    EditText empId, phNo, userDesign;
+    EditText empId, phNo;
     String userName;
 
     private SharedPreferences sharedPreferences;
@@ -97,8 +97,9 @@ public class UserDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_details);
-        userDesign = findViewById(R.id.et_designation);
         bu = findViewById(R.id.sp_selectbu);
+        welcomeUserName = findViewById(R.id.WelcomeUserName);
+
         location = findViewById(R.id.sp_userWorkLocation);
         continueBtn = findViewById(R.id.continuebutton);
         empId = findViewById(R.id.et_empId);
@@ -117,6 +118,11 @@ public class UserDetailsActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
 
         }
+        if (userName != null) {
+            welcomeUserName.setText(userName);
+        } else {
+            welcomeUserName.setText("User!!");
+        }
         getUserBU();
         getUserLocation();
         askPermissions();
@@ -131,51 +137,64 @@ public class UserDetailsActivity extends AppCompatActivity {
 
             }
         });
-        if (continueBtn != null)
+        if (continueBtn != null) {
             continueBtn.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
 
-                    String userName = "Awnish";
-                    designation = userDesign.getText().toString();
-                    workLoc = location.getSelectedItem().toString();
-                    userBu = bu.getSelectedItem().toString();
-                    mobile = phNo.getText().toString();
-                    employeeId = empId.getText().toString();
-
-
-                    if (employeeId.trim().equals("")) {
-                        empId.setError("Employee Id is required");
-                        empId.requestFocus();
-                    } else if (designation.trim().equals("")) {
-                        userDesign.setError("Designation is required");
-                        userDesign.requestFocus();
-                    } else if (workLoc.trim().equals("")) {
+                    if (location.getSelectedItem() != null && (!location.getSelectedItem().toString().trim().equals(""))) {
+                        workLoc = location.getSelectedItem().toString();
+                    } else {
                         ((TextView) location.getSelectedView()).setError("Select Location");
                         ((TextView) location.getSelectedView()).requestFocus();
-                    } else if (userBu.trim().equals("")) {
+                    }
+                    if (bu.getSelectedItem() != null && (!bu.getSelectedItem().toString().trim().equals(""))) {
+                        userBu = bu.getSelectedItem().toString();
+                    } else {
                         ((TextView) bu.getSelectedView()).setError("Select BU");
                         ((TextView) bu.getSelectedView()).requestFocus();
-                    } else if (mobile.length() < 10) {
-                        phNo.setError("Enter valid Contact Number");
-                        phNo.requestFocus();
-                    } else {
-                        if (mBitmap != null) {
-                            Log.i("mBitmap", mBitmap + "");
-                            multipartImageUpload();
-                        } else {
-                            path = "https://dsd8ltrb0t82s.cloudfront.net/ProfilePictures/1546848719271-image.jpeg";
-                            CallSubmitDataService();
-                        }
-
                     }
 
 
-                }
-            });
-    }
+                    if (empId.getText() != null && (!empId.getText().toString().trim().equals(""))) {
+                        employeeId = empId.getText().toString();
+                    } else {
+                        empId.setError("Employee Id is required");
+                        empId.requestFocus();
+                    }
 
+
+                    if (phNo.getText() != null && (!phNo.getText().toString().trim().equals(""))) {
+                        mobile = phNo.getText().toString();
+                    } else {
+                        phNo.setError(" Contact Number cannot be empty");
+                        phNo.requestFocus();
+                    }
+                    if (phNo.getText() != null && (phNo.getText().toString().trim()).length() < 10) {
+                        phNo.setError("Enter valid Contact Number");
+                        phNo.requestFocus();
+                    }
+
+                    if (mBitmap != null) {
+                        Log.i("mBitmap", mBitmap + "");
+                        multipartImageUpload();
+                    }
+
+                    path = "https://dsd8ltrb0t82s.cloudfront.net/ProfilePictures/1546848719271-image.jpeg";
+                    if (empId != null && workLoc != null && userBu != null && mobile != null)
+                        CallSubmitDataService();
+                    else
+                        Log.i("Mandatory", "One of the mandatory field is null");
+
+
+                }
+
+            });
+        } else {
+            Log.i("continueBtn ", "continueBtn is null");
+        }
+    }
     public void onSelectImageClick(View view) {
         Log.i("onselectimageclick", "onselectimageclick");
         CropImage.startPickImageActivity(this);
@@ -486,7 +505,7 @@ public class UserDetailsActivity extends AppCompatActivity {
 
         Log.i("CallSubmitDataService", "CallSubmitDataService" + "  ====  " + path + "   token" + myToken);
         MyAppolloClient.getMyAppolloClient(myToken).mutate(
-                UserDetailsUpdate.builder().userId(userId).name(userName).designation(designation).empId(employeeId).location(workLoc)
+                UserDetailsUpdate.builder().userId(userId).name(userName).empId(employeeId).location(workLoc)
                         .bu(userBu).mobileNumber(mobile).profileImagePath(path)
                         .build()).enqueue(
                 new ApolloCall.Callback<UserDetailsUpdate.Data>() {
