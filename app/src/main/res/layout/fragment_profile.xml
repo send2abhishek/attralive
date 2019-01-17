@@ -55,8 +55,8 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/profileImage"
-                    android:layout_width="125dp"
-                    android:layout_height="125dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:layout_marginLeft="20dp"
                     android:src="@drawable/profile" />
 
@@ -74,7 +74,7 @@
                     android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/userName"
+                    android:id="@+id/WelcomeUserName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/welcomeText"
@@ -188,34 +188,6 @@
                             android:textColorHint="#949c97"
                             android:textSize="14sp"
                             app:hintEnabled="false" />
-                    </android.support.design.widget.TextInputLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:src="@drawable/icon_desig_fill" />
-
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp">
-
-                        <android.support.design.widget.TextInputEditText
-                            android:id="@+id/et_designation"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="16dp"
-                            android:drawablePadding="18dp"
-                            android:hint="Designation"
-                            android:lineHeight="24sp"
-                            android:textColorHint="#949c97"
-                            android:textSize="14sp" />
                     </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
 
