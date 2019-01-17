@@ -102,7 +102,6 @@ public class EditProfile extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile_detail);
-        userDesign = findViewById(R.id.et_designation);
         bu = findViewById(R.id.sp_selectbu);
         location = findViewById(R.id.sp_userWorkLocation);
         continueBtn = findViewById(R.id.updateBtn);
@@ -115,7 +114,6 @@ public class EditProfile extends AppCompatActivity {
         cancelButton = findViewById(R.id.cancelBtn);
         welcomeUserName = findViewById(R.id.WelcomeUserName);
 
-        /*getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
         getSupportActionBar().setTitle(R.string.update_profile);
 
         sharedPreferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
@@ -133,8 +131,6 @@ public class EditProfile extends AppCompatActivity {
         } else {
             Log.i("userId in shared pref", "UserID in shared pref is null");
         }
-        //empId.setText("322356");
-        passwordView.setText("**********************");
         userNameView.setEnabled(false);
         empId.setEnabled(false);
         getUserBU("0");
@@ -170,54 +166,70 @@ public class EditProfile extends AppCompatActivity {
             cancelButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                   /* Intent intent = new Intent(getApplicationContext(), Profile.class);
-                    startActivity(intent);*/
 
                     finish();
                 }
             });
         }
         if (continueBtn != null)
+        {
             continueBtn.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
-                    designation = userDesign.getText().toString();
-                    workLoc = location.getSelectedItem().toString();
-                    userBu = bu.getSelectedItem().toString();
-                    mobile = phNo.getText().toString();
-                    employeeId = empId.getText().toString();
-
-
-                    if (employeeId.trim().equals("")) {
-                        empId.setError("Employee Id is required");
-                        empId.requestFocus();
-                    } else if (designation.trim().equals("")) {
-                        userDesign.setError("Designation is required");
-                        userDesign.requestFocus();
-                    } else if (workLoc.trim().equals("")) {
+                    if (location.getSelectedItem() != null && (!location.getSelectedItem().toString().trim().equals(""))) {
+                        workLoc = location.getSelectedItem().toString();
+                    } else {
                         ((TextView) location.getSelectedView()).setError("Select Location");
                         ((TextView) location.getSelectedView()).requestFocus();
-                    } else if (userBu.trim().equals("")) {
+                    }
+                    if (bu.getSelectedItem() != null && (!bu.getSelectedItem().toString().trim().equals(""))) {
+                        userBu = bu.getSelectedItem().toString();
+                    } else {
                         ((TextView) bu.getSelectedView()).setError("Select BU");
                         ((TextView) bu.getSelectedView()).requestFocus();
-                    } else if (mobile.length() < 10) {
-                        phNo.setError("Enter valid Contact Number");
-                        phNo.requestFocus();
-                    } else {
-                        if (mBitmap != null) {
-                            Log.i("mBitmap", mBitmap + "");
-                            multipartImageUpload();
-                        } else {
-                            path = "https://dsd8ltrb0t82s.cloudfront.net/ProfilePictures/1546848719271-image.jpeg";
-                            CallSubmitDataService();
-                        }
-
                     }
 
 
+                    if (empId.getText() != null && (!empId.getText().toString().trim().equals(""))) {
+                        employeeId = empId.getText().toString();
+                    } else {
+                        empId.setError("Employee Id is required");
+                        empId.requestFocus();
+                    }
+
+
+                    if (phNo.getText() != null && (!phNo.getText().toString().trim().equals(""))) {
+                        mobile = phNo.getText().toString();
+                    } else {
+                        phNo.setError(" Contact Number cannot be empty");
+                        phNo.requestFocus();
+                    }
+                    if (phNo.getText() != null&&(phNo.getText().toString().trim()).length() < 10) {
+                        phNo.setError("Enter valid Contact Number");
+                        phNo.requestFocus();
+                    }
+
+                    if (mBitmap != null) {
+                        Log.i("mBitmap", mBitmap + "");
+                        multipartImageUpload();
+                    }
+
+                    path = "https://dsd8ltrb0t82s.cloudfront.net/ProfilePictures/1546848719271-image.jpeg";
+                    if(empId!=null &&workLoc!=null &&userBu!=null &&mobile!=null)
+                        CallSubmitDataService();
+                    else
+                        Log.i("Mandatory","One of the mandatory field is null");
+
+
+
                 }
+
             });
+    }else
+    {
+        Log.i("continueBtn ","continueBtn is null");
+    }
     }
 
     private void getProfileDetail() {
@@ -238,31 +250,23 @@ public class EditProfile extends AppCompatActivity {
                             Log.i("mstatus in profile", status);
                             if (response.data().getProfileDetails_Q().name() != null) {
                                 if (status.equals("Success")) {
-                                    String design = response.data().getProfileDetails_Q().designation();
                                     String phoneNo = response.data().getProfileDetails_Q().mobileNumber();
                                     String loc = response.data().getProfileDetails_Q().location();
                                     String businessUnit = response.data().getProfileDetails_Q().bu();
                                     String imgPath = response.data().getProfileDetails_Q().profileImagePath();
-                                    //  String qrCodePath = response.data().getProfileDetails_Q().userQRCodeLink();
                                     String emailId = response.data().getProfileDetails_Q().email();
                                     EditProfile.this.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
                                             Picasso.with(getApplicationContext()).load(imgPath).fit().into(upload);
-                                            userDesign.setText(design);
-                                            //   Picasso.with(getActivity()).load(qrCodePath).fit().into(qrCode);
-                                            // String split=emailId.spli
-                                            /*if(userName!=null)
+                                           if(userName!=null)
                                             welcomeUserName.setText(userName);
-                                            else
-                                                welcomeUserName.setText("User!!!!");*/
-                                            welcomeUserName.setText("Awnish Kumar");
+                                           else
+                                               welcomeUserName.setText("User!!");
                                             if (emailId != null) {
                                                 userNameView.setText(emailId);
                                             }
-                                            if (password != null) {
-                                                passwordView.setText("**********");
-                                            }
+                                            passwordView.setText("**************");
                                             phNo.setText(phoneNo);
                                             if (response.data().getProfileDetails_Q().empId() != null) {
                                                 String emplyeeId = response.data().getProfileDetails_Q().empId();
@@ -271,39 +275,7 @@ public class EditProfile extends AppCompatActivity {
                                                 Log.i("Employee id", "Profile==>getProfileDetails==>Employee id is null");
                                             }
 
-                                            /*if(userBuAdapter!=null &&businessUnit!=null) {
-                                                Log.i("BU spinner","EditProfile==>getprofileDetails="+businessUnit);
-                                                 bu.setAdapter(userBuAdapter);
-                                                 bu.setSelection( userBuAdapter.getPosition(businessUnit));
-                                            }
-                                            else
-                                            {
-                                                Log.i("Bu Spinner","EditProfile==>getprofileDetails= either bu or adpater is null");
-                                            }
-                                            if(locationAdapter!=null && loc!=null)
-                                            {
-                                                location.setAdapter(locationAdapter);
-                                               location.setSelection( locationAdapter.getPosition(loc));
-                                                Log.i("Location spinner","EditProfile==>getprofileDetails="+loc);
-                                            }else
-                                            {
-                                                Log.i("Location Spinner","EditProfile==>getprofileDetails= either loc or adpater is null");
-                                            }*/
-                                            //location.setText(loc);
-                                           /* if (userBuAdapter != null && businessUnit != null) {
-                                                bu.setText(businessUnit);
-                                                // bu.setSelection(userBuAdapter.getPosition(businessUnit));
-                                                Toast.makeText(getContext(), "location position is ==" + userBuAdapter.getPosition(loc), Toast.LENGTH_SHORT).show();
-                                            } else
-                                                Toast.makeText(getContext(), "user bu null == ", Toast.LENGTH_SHORT).show();
-                                            //  bu.setSelection(1);
-                                            if (locationAdapter != null && loc != null) {
-                                                location.setText(loc);
-                                                Log.i("profile==>loc","profile==>getprofiledetails==>loc"+loc+ "loc position  "+locationAdapter.getPosition(loc));
-                                                // location.setSelection(locationAdapter.getPosition(loc));
-                                                Toast.makeText(getContext(), "location position is ==" + locationAdapter.getPosition(loc), Toast.LENGTH_SHORT).show();
-                                            } else
-                                                Toast.makeText(getContext(), "user location null == ", Toast.LENGTH_SHORT).show();*/
+
                                             if (loc != null) {
                                                 getUserLocation(loc);
                                             } else {
@@ -675,7 +647,6 @@ public class EditProfile extends AppCompatActivity {
                             System.out.println(data);
 
                             Map jsonJavaRootObject = new Gson().fromJson(data, Map.class);
-                            //System.out.println(jsonJavaRootObject.get("status"));
                             status = jsonJavaRootObject.get("status").toString();
                             message = jsonJavaRootObject.get("message").toString();
                             path = jsonJavaRootObject.get("path").toString();
@@ -719,7 +690,7 @@ public class EditProfile extends AppCompatActivity {
     private void CallSubmitDataService() {
         Log.i("CallSubmitDataService", "CallSubmitDataService" + "  ====  " + path + "   token" + myToken);
         MyAppolloClient.getMyAppolloClient(myToken).mutate(
-                UserDetailsUpdate.builder().userId(userId).name(userName).designation(designation).empId(employeeId).location(workLoc)
+                UserDetailsUpdate.builder().userId(userId).name(userName).empId(employeeId).location(workLoc)
                         .bu(userBu).mobileNumber(mobile).profileImagePath(path)
                         .build()).enqueue(
                 new ApolloCall.Callback<UserDetailsUpdate.Data>() {
@@ -729,7 +700,6 @@ public class EditProfile extends AppCompatActivity {
                         String status = response.data().updateUserDetails_M().status();
                         final String message = response.data().updateUserDetails_M().message();
                         Log.d("res_message in User", message);
-                        // Log.d("res_status userDetails", status);
                         if (status.equals("Success")) {
                             Log.d("res_message in User", message);
                             subscribeToTopic(workLoc);
