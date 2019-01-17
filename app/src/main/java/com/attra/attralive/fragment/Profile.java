@@ -41,7 +41,6 @@ import okhttp3.OkHttpClient;
  */
 public class Profile extends Fragment {
     TextView username_view, password_view, DOB, gender, phone, email, submit, empId, location, bu,welcomeUserName;
-    //  MaterialSpinner location,bu;
     private SharedPreferences sharedPreferences;
     String myToken, userId, userName;
     public static final String PREFS_AUTH = "my_auth";
@@ -85,8 +84,6 @@ public class Profile extends Fragment {
             Log.i("user id in userDtail", userId);
 
         }
-
-        // Inflate the layout for this fragment
 
         getActivity().setTitle(R.string.profile);
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
