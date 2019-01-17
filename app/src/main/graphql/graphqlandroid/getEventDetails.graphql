@@ -1,6 +1,8 @@
 query getEventDetails($status:String!,$location:String!,$userId:String!)
 {
-  getEventDetails_Q(status:$status,Location:$location,userId:$userId)
+
+  getEventDetails_Q(status:$status,Location:$location, userId:$userId)
+
   {
     eventD
     {

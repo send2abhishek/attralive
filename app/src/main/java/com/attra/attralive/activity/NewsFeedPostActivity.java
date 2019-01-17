@@ -114,11 +114,16 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
         sharedPreferences = getSharedPreferences(PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
             myToken = sharedPreferences.getString("authToken", "");
-            username = sharedPreferences.getString("userName", "");
-            userID = sharedPreferences.getString("userId", "");
-            refreshToken = sharedPreferences.getString("refreshToken", "");
-            worklocation = sharedPreferences.getString("location", "");
-            profileimage = sharedPreferences.getString("profileImagePath", "");
+
+            username = sharedPreferences.getString("userName","");
+            userID = sharedPreferences.getString("userId","");
+            refreshToken=sharedPreferences.getString("refreshToken","");
+            worklocation=sharedPreferences.getString("location","");
+            profileimage=sharedPreferences.getString("profileImagePath","");
+
+
+            System.out.println("user name "+username);
+
             //username = sharedPreferences.getString("username","");
 
         }
@@ -212,7 +217,11 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
     private void initRetrofitClient() {
         client = new OkHttpClient.Builder().build();
 
+
         apiService = new Retrofit.Builder().baseUrl("http://10.200.42.46:4001").client(client).build().create(ApiService.class);
+
+
+
     }
 
     public Intent CallGetVideoMethod() {
@@ -265,9 +274,14 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
 
                 Log.i("uri", result.getUri().toString());
                 try {
-                    mBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), result.getUri());
-//                    mBitmap = BitmapFactory.decodeFile(result.getUri().toString());
-//                    capturedImage.setImageBitmap(mBitmap);
+
+                    mBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),result.getUri());
+
+                    mBitmap = Bitmap.createScaledBitmap(mBitmap, mBitmap.getWidth() / 2, mBitmap.getHeight() / 2, false);
+
+                    int size = (mBitmap.getRowBytes() * mBitmap.getHeight()) / 1024;
+                   System.out.println("Size of the file to be uploaded "+size);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

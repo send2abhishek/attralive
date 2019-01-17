@@ -55,17 +55,20 @@ public class HomeFragment extends Fragment {
     LinearLayoutManager linearLayoutManager;
     NewsFeed newsFeedList;
     TextView postFeed;
+    String eventWidgetPath = "";
     boolean like = false;
     ImageView descImage;
     ArrayList<String> Number;
-    String refreshToken,myToken,accesstoken,postId,location,profileimagepath;
+    String refreshToken, myToken, accesstoken, postId, location, profileimagepath;
     SharedPreferences sharedPreferences;
     ViewPager viewPager;
+
     ArrayList<String> images;
+
     SliderAdapter myCustomPagerAdapter;
     private static int currentPage = 0;
     String status;
- String userId1, username;
+    String userId1, username;
 
 
     public HomeFragment() {
@@ -89,8 +92,12 @@ public class HomeFragment extends Fragment {
             location = sharedPreferences.getString("location", "");
             profileimagepath = sharedPreferences.getString("profileImagePath", "");
             //      Toast.makeText(getApplicationContext(), userId, Toast.LENGTH_LONG).show();
+
             Log.i("token in dashboard", myToken);
+            Log.i("location in dashboard", location);
+
             Log.i("user id in dashboard", userId1);
+
 
         }
 
@@ -98,7 +105,7 @@ public class HomeFragment extends Fragment {
         newsFeed = view.findViewById(R.id.rv_newsFeed);
         newsFeedArrayList = new ArrayList<NewsFeed>();
         Number = new ArrayList<>();
-        images=new ArrayList<>();
+        images = new ArrayList<>();
         linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         GetEventWidgetsFromService();
         prepareNewsfeed(myToken);
@@ -140,21 +147,30 @@ public class HomeFragment extends Fragment {
     private void GetEventWidgetsFromService() {
         System.out.println("Inside GetEvent method");
         MyAppolloClient.getMyAppolloClient(myToken).query(
-                GetEventWidgets.builder().status("A").location("bangalore").build()).enqueue(
+
+                GetEventWidgets.builder().status("A").location("Bangalore").build()).enqueue(
                 new ApolloCall.Callback<GetEventWidgets.Data>() {
                     @Override
                     public void onResponse(@Nonnull Response<GetEventWidgets.Data> response) {
+                        Log.i("Inside getevent ", "inside response method");
 
-                        status=response.data().getEventWidget_Q().status();
-                        System.out.println("Inside getevent "+status);
+
+                        if (response.data().getEventWidget_Q().status().equals("Success"))
+
+
+                            status = response.data().getEventWidget_Q().status();
+                        System.out.println("Inside getevent " + status);
                         String eventWidgetPath = "";
-                        if(status.equals("Success"))
+                        if (status.equals("Success"))
+
+
                         {
                             for (int i = 0; i < response.data().getEventWidget_Q().widget().size(); i++) {
 
                                 String eventId = response.data().getEventWidget_Q().widget().get(i).event_id();
                                 eventWidgetPath = response.data().getEventWidget_Q().widget().get(i).event_widget_path();
                                 images.add(eventWidgetPath);
+
 
                             }
 
@@ -164,7 +180,7 @@ public class HomeFragment extends Fragment {
                             public void run() {
                                 myCustomPagerAdapter = new SliderAdapter(getActivity(), images);
                                 viewPager.setAdapter(myCustomPagerAdapter);
-                               // myCustomPagerAdapter.notifyDataSetChanged();
+                                // myCustomPagerAdapter.notifyDataSetChanged();
 
                             }
                         });

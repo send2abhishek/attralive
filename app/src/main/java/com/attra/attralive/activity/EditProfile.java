@@ -32,6 +32,8 @@ import com.attra.attralive.R;
 import com.attra.attralive.Service.ApiService;
 import com.attra.attralive.Service.MyAppolloClient;
 import com.attra.attralive.util.GetNewRefreshToken;
+import com.attra.attralive.util.GetURLs;
+import com.attra.attralive.util.GetURLs;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -80,6 +82,7 @@ public class EditProfile extends AppCompatActivity {
     ArrayAdapter<String> locationAdapter;
     ArrayAdapter<String> userBuAdapter;
     ApiService apiService;
+    GetURLs gt;
     OkHttpClient client;
     TextView userNameView, passwordView, changePassword;
     Fragment fragment = null;
@@ -257,10 +260,14 @@ public class EditProfile extends AppCompatActivity {
                                         @Override
                                         public void run() {
                                             Picasso.with(getApplicationContext()).load(imgPath).fit().into(upload);
+
+                                            //   Picasso.with(getActivity()).load(qrCodePath).fit().into(qrCode);
+                                            // String split=emailId.spli
                                            if(userName!=null)
                                             welcomeUserName.setText(userName);
                                            else
                                                welcomeUserName.setText("User!!");
+
                                             if (emailId != null) {
                                                 userNameView.setText(emailId);
                                             }
@@ -461,8 +468,13 @@ public class EditProfile extends AppCompatActivity {
     private void initRetrofitClient() {
         Log.i("initRetrofitClient", "initRetrofitClient");
         client = new OkHttpClient.Builder().build();
+     apiService = new Retrofit.Builder().baseUrl("http://10.200.42.46:4001").client(client).build().create(ApiService.class);
 
-        apiService = new Retrofit.Builder().baseUrl("http://10.200.42.46:4001").client(client).build().create(ApiService.class);
+        String url = GetURLs.BaseUrl;
+
+        //apiService = new Retrofit.Builder().baseUrl(url).client(client).build().create(GetURLs.class);
+
+
     }
 
     //    public Intent getPickImageChooserIntent() {
