@@ -1,7 +1,7 @@
 query getEventWidgets
 ($status:String!,$Location:String!)
 {
-getEventWidget_Q(status:$status,Location:$location) {
+getEventWidget_Q(status:$status,Location:$Location) {
 status
  message
  widget

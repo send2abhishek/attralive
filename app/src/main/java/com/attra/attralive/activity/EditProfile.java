@@ -26,13 +26,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
-import com.apollographql.apollo.ApolloClient;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.attra.attralive.R;
 import com.attra.attralive.Service.ApiService;
 import com.attra.attralive.Service.MyAppolloClient;
 import com.attra.attralive.util.GetNewRefreshToken;
+import com.attra.attralive.util.GetURLs;
+import com.attra.attralive.util.GetURLs;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -80,30 +81,18 @@ public class EditProfile extends AppCompatActivity {
     List<String> locationList = new ArrayList<String>();
     ArrayAdapter<String> locationAdapter;
     ArrayAdapter<String> userBuAdapter;
-
-
     ApiService apiService;
-
+    GetURLs gt;
     OkHttpClient client;
-
     TextView userNameView, passwordView, changePassword;
-
     Fragment fragment = null;
-
-
     Uri picUri;
     private ArrayList<String> permissionsToRequest;
     private ArrayList<String> permissionsRejected = new ArrayList<>();
     private ArrayList<String> permissions = new ArrayList<>();
     private final static int ALL_PERMISSIONS_RESULT = 107;
     private final static int IMAGE_RESULT = 200;
-
-
-    EditText postDescription;
-
     String status, message, path, description, myToken, username, userId;
-    ImageView uploadimage;
-
     ImageView fabCamera, capturedImage, upload;
     Bitmap mBitmap;
     String password, userBu, designation, workLoc, mobile, employeeId;
@@ -120,37 +109,27 @@ public class EditProfile extends AppCompatActivity {
         bu = findViewById(R.id.sp_selectbu);
         location = findViewById(R.id.sp_userWorkLocation);
         continueBtn = findViewById(R.id.updateBtn);
-
-
         empId = findViewById(R.id.et_empId);
-
-
         phNo = findViewById(R.id.et_mobilenumber);
-
-
         upload = findViewById(R.id.profileImage);
-
-
         userNameView = findViewById(R.id.et_username);
-
         passwordView = findViewById(R.id.et_password);
         changePassword = findViewById(R.id.changePassword);
         cancelButton = findViewById(R.id.cancelBtn);
         welcomeUserName = findViewById(R.id.WelcomeUserName);
 
+        /*getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
+        getSupportActionBar().setTitle(R.string.update_profile);
+
         sharedPreferences = getSharedPreferences(GetNewRefreshToken.PREFS_AUTH, Context.MODE_PRIVATE);
         if (sharedPreferences.contains("authToken")) {
             Toast.makeText(this, "Shared pref val " + "sharedPreferences.getString(\"authToken\", \"\")", Toast.LENGTH_SHORT).show();
             myToken = sharedPreferences.getString("authToken", "");
-
             userId = sharedPreferences.getString("userId", "");
             userName = sharedPreferences.getString("userName", "");
             Log.i("user id in userDtail", userId);
             Toast.makeText(getApplicationContext(), myToken, Toast.LENGTH_LONG).show();
-
             String username = sharedPreferences.getString("userName", "");
-
-
         }
         if (userName != null) {
             userNameView.setText(userName);
@@ -161,8 +140,8 @@ public class EditProfile extends AppCompatActivity {
         passwordView.setText("**********************");
         userNameView.setEnabled(false);
         empId.setEnabled(false);
-        //getUserBU();
-        //  getUserLocation();
+        getUserBU("0");
+          getUserLocation("0");
         getProfileDetail();
 
         askPermissions();
@@ -242,8 +221,6 @@ public class EditProfile extends AppCompatActivity {
 
                 }
             });
-
-
     }
 
     private void getProfileDetail() {
@@ -400,6 +377,13 @@ public class EditProfile extends AppCompatActivity {
                                 locationAdapter = new ArrayAdapter<>(EditProfile.this,
                                         android.R.layout.simple_spinner_item, locationList);
                                 locationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                                if(loc.equals("0"))
+                                {
+                                    location.setAdapter(locationAdapter);
+                                    location.setSelection(Integer.parseInt(loc));
+                                    location.setEnableFloatingLabel(true);
+                                }
                                 location.setAdapter(locationAdapter);
                                 Log.i("loc position", "" + locationAdapter.getPosition(loc));
                                 int locPos = locationAdapter.getPosition(loc) + 1;
@@ -444,12 +428,18 @@ public class EditProfile extends AppCompatActivity {
                         EditProfile.this.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                int buPos = userBuAdapter.getPosition(businessUnit) + 1;
-                                Log.i("bu position", "" + userBuAdapter.getPosition(businessUnit));
-                                bu.setAdapter(userBuAdapter);
-                                bu.setSelection(buPos);
-                                /*  location.setHint("Select an item");*/
-                                location.setEnableFloatingLabel(true);
+                                if (businessUnit.equals("0")) {
+                                    bu.setAdapter(userBuAdapter);
+                                    bu.setSelection(Integer.parseInt(businessUnit));
+                                    location.setEnableFloatingLabel(true);
+                                } else {
+                                    int buPos = userBuAdapter.getPosition(businessUnit) + 1;
+                                    Log.i("bu position", "" + userBuAdapter.getPosition(businessUnit));
+                                    bu.setAdapter(userBuAdapter);
+                                    bu.setSelection(buPos);
+                                    /*  location.setHint("Select an item");*/
+                                    location.setEnableFloatingLabel(true);
+                                }
                             }
                         });
 
@@ -468,8 +458,6 @@ public class EditProfile extends AppCompatActivity {
         permissions.add(WRITE_EXTERNAL_STORAGE);
         permissions.add(READ_EXTERNAL_STORAGE);
         permissionsToRequest = findUnAskedPermissions(permissions);
-
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
 
@@ -506,6 +494,10 @@ public class EditProfile extends AppCompatActivity {
     private void initRetrofitClient() {
         Log.i("initRetrofitClient", "initRetrofitClient");
         client = new OkHttpClient.Builder().build();
+
+        String url = GetURLs.BaseUrl;
+
+        //apiService = new Retrofit.Builder().baseUrl(url).client(client).build().create(GetURLs.class);
 
         apiService = new Retrofit.Builder().baseUrl("http://10.200.23.107:4001").client(client).build().create(ApiService.class);
     }

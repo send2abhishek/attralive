@@ -6,6 +6,7 @@
     <string name="nav_header_subtitle">awnish.kumar</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+    <string name="update_profile">Update Profile</string>
 
     <!--Navigation Menu String-->
     <string name="action_logout">Logout</string>

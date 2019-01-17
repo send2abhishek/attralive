@@ -79,7 +79,7 @@ public class HomeFragment extends Fragment {
 
     ViewPager viewPager;
 
-    String images[] = {"https://dsd8ltrb0t82s.cloudfront.net/Banner/thankyou.PNG","https://dsd8ltrb0t82s.cloudfront.net/Banner/sankranti.PNG"};
+    String images[]= {"https://dsd8ltrb0t82s.cloudfront.net/Banner/thankyou.PNG","https://dsd8ltrb0t82s.cloudfront.net/Banner/sankranti.PNG"};
 
     //String[] images= new String[1];
     //String images[] = {"https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png","https://dsd8ltrb0t82s.cloudfront.net/NewsFeedsPictures/1546607539810-ic_launcher.png"};
@@ -112,6 +112,8 @@ public class HomeFragment extends Fragment {
             profileimagepath = sharedPreferences.getString("profileImagePath", "");
             //      Toast.makeText(getApplicationContext(), userId, Toast.LENGTH_LONG).show();
             Log.i("token in dashboard",myToken);
+            Log.i("location in dashboard",location);
+
             Log.i("user id in dashboard",userId1);
 
         }
@@ -167,7 +169,7 @@ public class HomeFragment extends Fragment {
     {
         System.out.println("Inside GetEvent method");
         MyAppolloClient.getMyAppolloClient(myToken).query(
-                GetEventWidgets.builder().status("A").location(location).build()).enqueue(
+                GetEventWidgets.builder().status("A").location("Bangalore").build()).enqueue(
                 new ApolloCall.Callback<GetEventWidgets.Data>() {
                     @Override
                     public void onResponse(@Nonnull Response<GetEventWidgets.Data> response) {
@@ -183,10 +185,11 @@ public class HomeFragment extends Fragment {
                             for(int i =0;i<response.data().getEventWidget_Q().widget().size();i++)
                             {
 
-                                String eventId = response.data().getEventWidget_Q().widget().get(0).event_id();
-                                eventWidgetPath = response.data().getEventWidget_Q().widget().get(0).event_widget_path();
+                                String eventId = response.data().getEventWidget_Q().widget().get(i).event_id();
+                                eventWidgetPath = response.data().getEventWidget_Q().widget().get(i).event_widget_path();
 
-                                images[i] = eventWidgetPath;
+                                System.out.println("search"+eventWidgetPath);
+                                images[i]=eventWidgetPath;
 
                             }
 

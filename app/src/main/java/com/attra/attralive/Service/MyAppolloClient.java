@@ -3,6 +3,7 @@ package com.attra.attralive.Service;
 import android.util.Log;
 
 import com.apollographql.apollo.ApolloClient;
+import com.attra.attralive.util.GetURLs;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -14,12 +15,7 @@ public class MyAppolloClient {
 
 
    // private static final String URL = "http://13.232.225.201:80/graphql";
-    //   private static  final String URL = "http://10.200.44.23:4001/graphql";
-
-
-
-    private static  final String URL = "http://10.200.23.107:4001/graphql";
-
+       private static  final String URL = GetURLs.BaseUrl; // "http://13.232.225.201:80/graphql";
 
 
     private static ApolloClient apolloClient;

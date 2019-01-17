@@ -243,7 +243,7 @@ public class NewsFeedPostActivity extends AppCompatActivity implements View.OnCl
     private void initRetrofitClient() {
 client         = new OkHttpClient.Builder().build();
 
-        apiService = new Retrofit.Builder().baseUrl("http://10.200.23.107:4001").client(client).build().create(ApiService.class);
+        apiService = new Retrofit.Builder().baseUrl("http://10.200.44.20:4001").client(client).build().create(ApiService.class);
     }
 
     public Intent CallGetVideoMethod()
@@ -302,6 +302,14 @@ client         = new OkHttpClient.Builder().build();
                 Log.i("uri",result.getUri().toString());
                 try {
                     mBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),result.getUri());
+//                   int size = mBitmap.getByteCount();
+
+
+
+//                    mBitmap = Bitmap.createScaledBitmap(mBitmap, mBitmap.getWidth() / 2, mBitmap.getHeight() / 2, false);
+//
+//                    int size = (mBitmap.getRowBytes() * mBitmap.getHeight()) / 1024;
+                  // System.out.println("Size of the file to be uploaded "+size);
 //                    mBitmap = BitmapFactory.decodeFile(result.getUri().toString());
 //                    capturedImage.setImageBitmap(mBitmap);
                 } catch (IOException e) {
